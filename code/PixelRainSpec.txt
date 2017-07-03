@@ -1,0 +1,8 @@
+Customizable Pixel Rain
+
+About: pixels, selectable by approximate color, leave a fading trail of customizable length.
+UI: color picker, max color difference  slider, trail length slider.
+Logic: per frame
+    make a mask of wanted pixels (either using alpha channel or just boolean)
+	generate overlay of rain
+	blend
