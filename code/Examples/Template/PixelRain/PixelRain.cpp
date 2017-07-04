@@ -1,24 +1,3 @@
-/*******************************************************************/
-/*                                                                 */
-/*                      ADOBE CONFIDENTIAL                         */
-/*                   _ _ _ _ _ _ _ _ _ _ _ _ _                     */
-/*                                                                 */
-/* Copyright 2007 Adobe Systems Incorporated                       */
-/* All Rights Reserved.                                            */
-/*                                                                 */
-/* NOTICE:  All information contained herein is, and remains the   */
-/* property of Adobe Systems Incorporated and its suppliers, if    */
-/* any.  The intellectual and technical concepts contained         */
-/* herein are proprietary to Adobe Systems Incorporated and its    */
-/* suppliers and may be covered by U.S. and Foreign Patents,       */
-/* patents in process, and are protected by trade secret or        */
-/* copyright law.  Dissemination of this information or            */
-/* reproduction of this material is strictly forbidden unless      */
-/* prior written permission is obtained from Adobe Systems         */
-/* Incorporated.                                                   */
-/*                                                                 */
-/*******************************************************************/
-
 /*	Skeleton.cpp	
 
 	This is a compiling husk of a project. Fill it in with interesting
@@ -99,11 +78,11 @@ ParamsSetup (
 	AEFX_CLR_STRUCT(def);
 
 	PF_ADD_FLOAT_SLIDERX(	STR(StrID_Gain_Param_Name), 
-							PIXELRAIN_GAIN_MIN, 
-							PIXELRAIN_GAIN_MAX, 
-							PIXELRAIN_GAIN_MIN, 
-							PIXELRAIN_GAIN_MAX, 
-							PIXELRAIN_GAIN_DFLT,
+							PIXELRAIN_LENGTH_MIN, 
+							PIXELRAIN_LENGTH_MAX, 
+							PIXELRAIN_LENGTH_MIN, 
+							PIXELRAIN_LENGTH_MAX, 
+							PIXELRAIN_LENGTH_DFLT,
 							PF_Precision_HUNDREDTHS,
 							0,
 							0,
@@ -123,7 +102,7 @@ ParamsSetup (
 }
 
 static PF_Err
-MySimpleGainFunc16 (
+CheckColorPixFunc16 (
 	void		*refcon, 
 	A_long		xL, 
 	A_long		yL, 
@@ -151,7 +130,7 @@ MySimpleGainFunc16 (
 }
 
 static PF_Err
-MySimpleGainFunc8 (
+CheckColorPixFunc (
 	void		*refcon, 
 	A_long		xL, 
 	A_long		yL, 
@@ -162,7 +141,10 @@ MySimpleGainFunc8 (
 
 	GainInfo	*giP	= reinterpret_cast<GainInfo*>(refcon);
 	PF_FpLong	tempF	= 0;
-					
+		
+	// using euclidean variance, altered for human perception
+	
+
 	if (giP){
 		tempF = giP->gainF * PF_MAX_CHAN8 / 100.0;
 		if (tempF > PF_MAX_CHAN8){
@@ -203,7 +185,7 @@ Render (
 												&params[PIXELRAIN_INPUT]->u.ld,	// src 
 												NULL,							// area - null for all pixels
 												(void*)&giP,					// refcon - your custom data pointer
-												MySimpleGainFunc16,				// pixel function pointer
+												CheckColorPixFunc16,				// pixel function pointer
 												output));
 	} else {
 		ERR(suites.Iterate8Suite1()->iterate(	in_data,
@@ -212,7 +194,7 @@ Render (
 												&params[PIXELRAIN_INPUT]->u.ld,	// src 
 												NULL,							// area - null for all pixels
 												(void*)&giP,					// refcon - your custom data pointer
-												MySimpleGainFunc8,				// pixel function pointer
+												CheckColorPixFunc,				// pixel function pointer
 												output));	
 	}
 

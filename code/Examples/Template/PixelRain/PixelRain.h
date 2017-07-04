@@ -67,12 +67,14 @@ typedef short int			int16;
 #define	STAGE_VERSION	PF_Stage_DEVELOP
 #define	BUILD_VERSION	1
 
+/* Function macros */
+#define SQ( X ) ( X * X )
 
 /* Parameter defaults */
 
-#define	PIXELRAIN_GAIN_MIN		0
-#define	PIXELRAIN_GAIN_MAX		100
-#define	PIXELRAIN_GAIN_DFLT		10
+#define	PIXELRAIN_LENGTH_MIN		0
+#define	PIXELRAIN_LENGTH_MAX		1000
+#define	PIXELRAIN_LENGTH_DFLT		30
 
 enum {
 	PIXELRAIN_INPUT = 0,
