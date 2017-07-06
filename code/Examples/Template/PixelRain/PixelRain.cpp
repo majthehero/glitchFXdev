@@ -76,26 +76,45 @@ ParamsSetup (
 	PF_ParamDef	def;	
 
 	AEFX_CLR_STRUCT(def);
-
-	PF_ADD_FLOAT_SLIDERX(	STR(StrID_Gain_Param_Name), 
+	// length slider
+	PF_ADD_FLOAT_SLIDERX(	STR(StrID_Length_Param_Name), 
 							PIXELRAIN_LENGTH_MIN, 
 							PIXELRAIN_LENGTH_MAX, 
 							PIXELRAIN_LENGTH_MIN, 
 							PIXELRAIN_LENGTH_MAX, 
 							PIXELRAIN_LENGTH_DFLT,
-							PF_Precision_HUNDREDTHS,
+							PF_Precision_INTEGER,
 							0,
 							0,
-							GAIN_DISK_ID);
-
+							LENGTH_DISK_ID);
 	AEFX_CLR_STRUCT(def);
-
+	// color diff slider
+	PF_ADD_FLOAT_SLIDERX(STR(StrID_Diff_Param_Name),
+		PIXELRAIN_DIFF_MIN,
+		PIXELRAIN_DIFF_MAX,
+		PIXELRAIN_DIFF_MIN,
+		PIXELRAIN_DIFF_MAX,
+		PIXELRAIN_DIFF_DFLT,
+		PF_Precision_HUNDREDTHS,
+		0,
+		0,
+		DIFF_DISK_ID);
+	AEFX_CLR_STRUCT(def);
+	// color picker
 	PF_ADD_COLOR(	STR(StrID_Color_Param_Name), 
 					PF_HALF_CHAN8,
 					PF_MAX_CHAN8,
 					PF_MAX_CHAN8,
 					COLOR_DISK_ID);
-	
+	AEFX_CLR_STRUCT(def);
+	// advanced alpha blending checkbox - TODO not implemented
+	PF_ADD_CHECKBOX(STR(StrID_AdvAlpha_Param_Name),
+		"Not implemented",
+		false,
+		0,
+		ADVALPHA_DISK_ID);
+	AEFX_CLR_STRUCT(def);
+
 	out_data->num_params = PIXELRAIN_NUM_PARAMS;
 
 	return err;
@@ -111,11 +130,11 @@ CheckColorPixFunc16 (
 {
 	PF_Err		err = PF_Err_NONE;
 
-	GainInfo	*giP	= reinterpret_cast<GainInfo*>(refcon);
+	LengthInfo	*liP	= reinterpret_cast<LengthInfo*>(refcon);
 	PF_FpLong	tempF	= 0;
 					
-	if (giP){
-		tempF = giP->gainF * PF_MAX_CHAN16 / 100.0;
+	if (liP){
+		tempF = liP->lengthF * PF_MAX_CHAN16 / 100.0;
 		if (tempF > PF_MAX_CHAN16){
 			tempF = PF_MAX_CHAN16;
 		};
@@ -139,14 +158,14 @@ CheckColorPixFunc (
 {
 	PF_Err		err = PF_Err_NONE;
 
-	GainInfo	*giP	= reinterpret_cast<GainInfo*>(refcon);
+	LengthInfo	*liP	= reinterpret_cast<LengthInfo*>(refcon);
 	PF_FpLong	tempF	= 0;
 		
 	// using euclidean variance, altered for human perception
 	
 
-	if (giP){
-		tempF = giP->gainF * PF_MAX_CHAN8 / 100.0;
+	if (liP){
+		tempF = liP->lengthF * PF_MAX_CHAN8 / 100.0;
 		if (tempF > PF_MAX_CHAN8){
 			tempF = PF_MAX_CHAN8;
 		};
@@ -171,12 +190,12 @@ Render (
 	AEGP_SuiteHandler	suites(in_data->pica_basicP);
 
 	/*	Put interesting code here. */
-	GainInfo			giP;
-	AEFX_CLR_STRUCT(giP);
+	LengthInfo			liP;
+	AEFX_CLR_STRUCT(liP);
 	A_long				linesL	= 0;
 
 	linesL 		= output->extent_hint.bottom - output->extent_hint.top;
-	giP.gainF 	= params[PIXELRAIN_GAIN]->u.fs_d.value;
+	liP.lengthF 	= params[PIXELRAIN_LENGTH]->u.fs_d.value;
 	
 	if (PF_WORLD_IS_DEEP(output)){
 		ERR(suites.Iterate16Suite1()->iterate(	in_data,
@@ -184,7 +203,7 @@ Render (
 												linesL,							// progress final
 												&params[PIXELRAIN_INPUT]->u.ld,	// src 
 												NULL,							// area - null for all pixels
-												(void*)&giP,					// refcon - your custom data pointer
+												(void*)&liP,					// refcon - your custom data pointer
 												CheckColorPixFunc16,				// pixel function pointer
 												output));
 	} else {
@@ -193,7 +212,7 @@ Render (
 												linesL,							// progress final
 												&params[PIXELRAIN_INPUT]->u.ld,	// src 
 												NULL,							// area - null for all pixels
-												(void*)&giP,					// refcon - your custom data pointer
+												(void*)&liP,					// refcon - your custom data pointer
 												CheckColorPixFunc,				// pixel function pointer
 												output));	
 	}

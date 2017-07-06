@@ -76,21 +76,29 @@ typedef short int			int16;
 #define	PIXELRAIN_LENGTH_MAX		1000
 #define	PIXELRAIN_LENGTH_DFLT		30
 
+#define	PIXELRAIN_DIFF_MIN		0
+#define	PIXELRAIN_DIFF_MAX		1
+#define	PIXELRAIN_DIFF_DFLT		0.3
+
 enum {
 	PIXELRAIN_INPUT = 0,
-	PIXELRAIN_GAIN,
+	PIXELRAIN_LENGTH,
+	PIXELRAIN_DIFF,
 	PIXELRAIN_COLOR,
+	PIXELRAIN_ADVALPHA,
 	PIXELRAIN_NUM_PARAMS
 };
 
 enum {
-	GAIN_DISK_ID = 1,
+	LENGTH_DISK_ID = 1,
+	DIFF_DISK_ID,
 	COLOR_DISK_ID,
+	ADVALPHA_DISK_ID
 };
 
-typedef struct GainInfo{
-	PF_FpLong	gainF;
-} GainInfo, *GainInfoP, **GainInfoH;
+typedef struct LengthInfo{
+	PF_FpLong	lengthF;
+} LengthInfo, *LengthInfoP, **LengthInfoH;
 
 #ifdef __cplusplus
 	extern "C" {

@@ -32,8 +32,10 @@ TableString		g_strs[StrID_NUMTYPES] = {
 	StrID_NONE,						"",
 	StrID_Name,						"PixelRain",
 	StrID_Description,				"An empty (skeletal, if you will) effect sample,\r for your modifying pleasure.\rCopyright 2007 Adobe Systems Incorporated.",
-	StrID_Gain_Param_Name,			"Gain",
+	StrID_Length_Param_Name,			"Length",
+	StrID_Diff_Param_Name,			"Color difference",
 	StrID_Color_Param_Name,			"Color",
+	StrID_AdvAlpha_Param_Name,			"Alpha blending",
 };
 
 

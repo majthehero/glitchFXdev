@@ -1,17 +1,3 @@
-﻿  Compiling the PiPL
-  Microsoft (R) C/C++ Optimizing Compiler Version 19.00.24215.1 for x64
-  Copyright (C) Microsoft Corporation.  All rights reserved.
-  
-  PixelRainPiPL.r
-  Microsoft (R) C/C++ Optimizing Compiler Version 19.00.24215.1 for x64
-  Copyright (C) Microsoft Corporation.  All rights reserved.
-  
-  PixelRainPiPL.rrc
-  AEGP_SuiteHandler.cpp
-  MissingSuiteError.cpp
-  PixelRain.cpp
-  PixelRain_Strings.cpp
-  Generating Code...
-     Creating library x64\Debug\/PixelRain.lib and object x64\Debug\/PixelRain.exp
+﻿  PixelRain.cpp
   PixelRain.vcxproj -> C:\Program Files\Adobe\Common\Plug-ins\7.0\MediaCore\\PixelRain.aex
   PixelRain.vcxproj -> x64\Debug\PixelRain.pdb (Full PDB)
