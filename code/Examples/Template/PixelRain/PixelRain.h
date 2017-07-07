@@ -61,8 +61,8 @@ typedef short int			int16;
 
 /* Tests enable / disable */
 // TEST1 renders pixel mask
-#define TEST1
-// #undef TEST1
+//#define TEST1
+#undef TEST1
 
 /* Versioning information */
 

@@ -24,7 +24,7 @@
 	Revision history:
 
 	1.0 Started from Skeleton template.			maj		3/7/2017
-
+	1.1 Correctly generates pixel mask.			maj		7/7/2017
 */
 
 #include "PixelRain.h"
@@ -121,7 +121,7 @@ ParamsSetup (
 }
 
 static PF_Err
-CheckColorPixFunc16 (
+CheckColorPixFunc16 ( // TODO not implemented
 	void		*refcon, 
 	A_long		xL, 
 	A_long		yL, 
@@ -129,22 +129,10 @@ CheckColorPixFunc16 (
 	PF_Pixel16	*outP)
 {
 	PF_Err		err = PF_Err_NONE;
-
-	LengthInfo	*liP	= reinterpret_cast<LengthInfo*>(refcon);
-	PF_FpLong	tempF	= 0;
-					
-	if (liP){
-		tempF = liP->lengthF * PF_MAX_CHAN16 / 100.0;
-		if (tempF > PF_MAX_CHAN16){
-			tempF = PF_MAX_CHAN16;
-		};
-
-		outP->alpha		=	inP->alpha;
-		outP->red		=	MIN((inP->red	+ (A_u_char) tempF), PF_MAX_CHAN16);
-		outP->green		=	MIN((inP->green	+ (A_u_char) tempF), PF_MAX_CHAN16);
-		outP->blue		=	MIN((inP->blue	+ (A_u_char) tempF), PF_MAX_CHAN16);
-	}
-
+	outP->alpha		=	255;
+	outP->red		=	128;
+	outP->green		=	64;
+	outP->blue		=	64;
 	return err;
 }
 
@@ -188,6 +176,17 @@ CheckColorPixFunc (
 	return err;
 }
 
+static PF_Err
+GenerateTrailRowFunc(
+	void *refcon,
+	A_long thread_indexL,
+	A_long i,
+	A_long iterationsL) 
+{
+	PF_Err err = PF_Err_NONE;
+
+}
+
 static PF_Err 
 Render (
 	PF_InData		*in_data,
@@ -204,15 +203,14 @@ Render (
 	psi.advAlpha = params[PIXELRAIN_ADVALPHA]->u.bd.value;
 	psi.diff = params[PIXELRAIN_DIFF]->u.fs_d.value;
 	psi.tgtColor = params[PIXELRAIN_COLOR]->u.cd.value;
+
 	/* 1. Generate pixel mask */
 	PF_EffectWorld * colorMaskP = new PF_EffectWorld(params[PIXELRAIN_INPUT]->u.ld);
-	
 	suites.WorldSuite1()->new_world(NULL,
 		params[PIXELRAIN_INPUT]->u.ld.width,
 		params[PIXELRAIN_INPUT]->u.ld.height,
 		NULL,
 		colorMaskP);
-
 	if (PF_WORLD_IS_DEEP(output)) { // for 16bpp colors TODO not implemented
 		ERR(suites.Iterate16Suite1()->iterate(in_data,
 			0,								// progress base
@@ -220,7 +218,7 @@ Render (
 			&params[PIXELRAIN_INPUT]->u.ld,	// src 
 			NULL,							// area - null for all pixels
 			(void*)&psi,					// refcon - your custom data pointer
-			CheckColorPixFunc16,				// pixel function pointer
+			CheckColorPixFunc16,			// pixel function pointer
 			colorMaskP));
 	} else {
 		ERR(suites.Iterate8Suite1()->iterate(in_data,
@@ -232,7 +230,6 @@ Render (
 			CheckColorPixFunc,				// pixel function pointer
 			colorMaskP));
 	}
-
 #ifdef TEST1
 	suites.WorldTransformSuite1()->copy(NULL,
 		colorMaskP,
@@ -241,6 +238,11 @@ Render (
 		NULL);
 	return err;
 #endif
+
+	/* 2. Generate trails */
+	ERR(suites.Iterate8Suite1()->iterate_generic(params[PIXELRAIN_INPUT]->u.ld.height,
+		NULL,
+		GenerateTrailRowFunc));
 
 	/* od tle naprej je skeleton koda
 		Put interesting code here. *
