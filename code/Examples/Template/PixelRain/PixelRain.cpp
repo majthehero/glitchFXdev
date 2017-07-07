@@ -109,7 +109,7 @@ ParamsSetup (
 	AEFX_CLR_STRUCT(def);
 	// advanced alpha blending checkbox - TODO not implemented
 	PF_ADD_CHECKBOX(STR(StrID_AdvAlpha_Param_Name),
-		"Not implemented",
+		"",
 		false,
 		0,
 		ADVALPHA_DISK_ID);
@@ -157,25 +157,34 @@ CheckColorPixFunc (
 	PF_Pixel8	*outP)
 {
 	PF_Err		err = PF_Err_NONE;
-
-	LengthInfo	*liP	= reinterpret_cast<LengthInfo*>(refcon);
-	PF_FpLong	tempF	= 0;
-		
+	PixSelInfo *psiP = (PixSelInfo*)refcon;
+	PF_Pixel8 tgtColor = psiP->tgtColor;
 	// using euclidean variance, altered for human perception
-	
-
-	if (liP){
-		tempF = liP->lengthF * PF_MAX_CHAN8 / 100.0;
-		if (tempF > PF_MAX_CHAN8){
-			tempF = PF_MAX_CHAN8;
-		};
-
-		outP->alpha		=	inP->alpha;
-		outP->red		=	MIN((inP->red	+ (A_u_char) tempF), PF_MAX_CHAN8);
-		outP->green		=	MIN((inP->green	+ (A_u_char) tempF), PF_MAX_CHAN8);
-		outP->blue		=	MIN((inP->blue	+ (A_u_char) tempF), PF_MAX_CHAN8);
+	float deltaR, deltaG, deltaB;
+	deltaR = (float)(inP->red - tgtColor.red);
+	deltaG = (float)(inP->green - tgtColor.green);
+	deltaB = (float)(inP->blue - tgtColor.blue);
+	float eucVarAlt = EUC_VAR_ALT(deltaR, deltaG, deltaB);
+	float maxVar = EUC_VAR_ALT(255, 255, 255);
+	// advanced alpha blending	
+	outP->alpha = (A_u_char) (eucVarAlt / maxVar * 255);
+	// basic boolean blending
+	if (!psiP->advAlpha) {
+		if (outP->alpha > (A_u_char)(psiP->diff*255))
+			outP->alpha = 255;
+		else
+			outP->alpha = 0;
 	}
-
+	else {
+		PF_FpLong tempAlpha = outP->alpha * (5*psiP->diff);
+		if (tempAlpha > 255) tempAlpha = 255;
+		outP->alpha = (A_u_char)tempAlpha;
+	}
+#ifdef TEST1
+	outP->red = 255;
+	outP->green = 0;
+	outP->blue = 255;
+#endif
 	return err;
 }
 
@@ -186,15 +195,58 @@ Render (
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output )
 {
-	PF_Err				err		= PF_Err_NONE;
-	AEGP_SuiteHandler	suites(in_data->pica_basicP);
+	/* 0. Data seg */
+	PF_Err err = PF_Err_NONE;
+	AEGP_SuiteHandler suites(in_data->pica_basicP);
+	A_long linesL = output->extent_hint.bottom - output->extent_hint.top;
+	PixSelInfo psi;
+	AEFX_CLR_STRUCT(psi);
+	psi.advAlpha = params[PIXELRAIN_ADVALPHA]->u.bd.value;
+	psi.diff = params[PIXELRAIN_DIFF]->u.fs_d.value;
+	psi.tgtColor = params[PIXELRAIN_COLOR]->u.cd.value;
+	/* 1. Generate pixel mask */
+	PF_EffectWorld * colorMaskP = new PF_EffectWorld(params[PIXELRAIN_INPUT]->u.ld);
+	
+	suites.WorldSuite1()->new_world(NULL,
+		params[PIXELRAIN_INPUT]->u.ld.width,
+		params[PIXELRAIN_INPUT]->u.ld.height,
+		NULL,
+		colorMaskP);
 
-	/*	Put interesting code here. */
-	LengthInfo			liP;
+	if (PF_WORLD_IS_DEEP(output)) { // for 16bpp colors TODO not implemented
+		ERR(suites.Iterate16Suite1()->iterate(in_data,
+			0,								// progress base
+			linesL,							// progress final
+			&params[PIXELRAIN_INPUT]->u.ld,	// src 
+			NULL,							// area - null for all pixels
+			(void*)&psi,					// refcon - your custom data pointer
+			CheckColorPixFunc16,				// pixel function pointer
+			colorMaskP));
+	} else {
+		ERR(suites.Iterate8Suite1()->iterate(in_data,
+			0,								// progress base
+			linesL,							// progress final
+			&params[PIXELRAIN_INPUT]->u.ld,	// src 
+			NULL,							// area - null for all pixels
+			(void*)&psi,					// refcon - your custom data pointer
+			CheckColorPixFunc,				// pixel function pointer
+			colorMaskP));
+	}
+
+#ifdef TEST1
+	suites.WorldTransformSuite1()->copy(NULL,
+		colorMaskP,
+		output,
+		NULL,
+		NULL);
+	return err;
+#endif
+
+	/* od tle naprej je skeleton koda
+		Put interesting code here. *
+	LengthInfo liP;
 	AEFX_CLR_STRUCT(liP);
-	A_long				linesL	= 0;
-
-	linesL 		= output->extent_hint.bottom - output->extent_hint.top;
+	
 	liP.lengthF 	= params[PIXELRAIN_LENGTH]->u.fs_d.value;
 	
 	if (PF_WORLD_IS_DEEP(output)){
@@ -216,7 +268,7 @@ Render (
 												CheckColorPixFunc,				// pixel function pointer
 												output));	
 	}
-
+	*/
 	return err;
 }
 

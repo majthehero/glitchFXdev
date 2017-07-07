@@ -59,6 +59,11 @@ typedef short int			int16;
 
 #include "PixelRain_Strings.h"
 
+/* Tests enable / disable */
+// TEST1 renders pixel mask
+#define TEST1
+// #undef TEST1
+
 /* Versioning information */
 
 #define	MAJOR_VERSION	1
@@ -69,7 +74,7 @@ typedef short int			int16;
 
 /* Function macros */
 #define SQ( X ) ( X * X )
-
+#define EUC_VAR_ALT( R, G, B) ( 2 * SQ( R ) + 4 * SQ( G ) + 3 * SQ( B ) )
 /* Parameter defaults */
 
 #define	PIXELRAIN_LENGTH_MIN		0
@@ -99,6 +104,13 @@ enum {
 typedef struct LengthInfo{
 	PF_FpLong	lengthF;
 } LengthInfo, *LengthInfoP, **LengthInfoH;
+
+// info required to generate pix mask - select pixels to affect
+typedef struct PixSelInfo {
+	PF_Pixel tgtColor;
+	PF_FpLong diff;
+	PF_Boolean advAlpha; // use advanced alpha blending
+} PixSelInfo;
 
 #ifdef __cplusplus
 	extern "C" {
