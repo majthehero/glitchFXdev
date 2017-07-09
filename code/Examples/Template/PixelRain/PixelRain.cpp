@@ -177,14 +177,41 @@ CheckColorPixFunc (
 }
 
 static PF_Err
-GenerateTrailRowFunc(
-	void *refcon,
-	A_long thread_indexL,
+GenerateTrailColFunc(
+	void *refcon, // trailInfoP
+	A_long thread_indexL, // if 0, answer abort and progress report requests
 	A_long i,
 	A_long iterationsL) 
 {
 	PF_Err err = PF_Err_NONE;
+	TrailInfo *tilP = (TrailInfo*)refcon;
+	PF_InData *in_data = tilP->in_data;
 
+	A_long columnI = i;
+	A_long w = tilP->input->width;
+	A_long h = tilP->input->height;
+	A_long rowbytes = tilP->input->rowbytes;
+
+	PF_Pixel8 *trail = (PF_Pixel8*)calloc((int)tilP->lengthF, sizeof(PF_Pixel8)); // TEST are pixels initialized to black
+	// TODO not sure if needed. Have to think this algo through a bit more.
+
+	PF_Pixel8 *inP = NULL;
+	PF_Pixel8 *maskP = NULL;
+	PF_Pixel8 *outP = NULL;
+	PF_GET_PIXEL_DATA8(tilP->input, NULL, &inP);
+	PF_GET_PIXEL_DATA8(tilP->pixelMask, NULL, &maskP);
+	PF_GET_PIXEL_DATA8(tilP->output, NULL, &outP);
+
+	// iterate through column
+	for (int i = 0; i < iterationsL; i++) {
+		
+		
+		
+		/*PF_PixelPtr inPtr = (PF_PixelPtr)((char*)input_data + i*rowbytes + columnI*sizeof(PF_Pixel8));
+		PF_PixelPtr maskPtr = (PF_PixelPtr)((char*)mask_data + i*rowbytes + columnI * sizeof(PF_Pixel8));
+		
+*/
+	}
 }
 
 static PF_Err 
@@ -240,13 +267,16 @@ Render (
 #endif
 
 	/* 2. Generate trails */
-	ERR(suites.Iterate8Suite1()->iterate_generic(params[PIXELRAIN_INPUT]->u.ld.height,
-		NULL,
-		GenerateTrailRowFunc));
+	TrailInfo *tilP = new TrailInfo();
+	tilP->lengthF = params[PIXELRAIN_LENGTH]->u.fs_d.value;
+	tilP->in_data = in_data;
+	ERR(suites.Iterate8Suite1()->iterate_generic(params[PIXELRAIN_INPUT]->u.ld.width,
+		tilP,
+		GenerateTrailColFunc));
 
 	/* od tle naprej je skeleton koda
 		Put interesting code here. *
-	LengthInfo liP;
+	TrailInfo liP;
 	AEFX_CLR_STRUCT(liP);
 	
 	liP.lengthF 	= params[PIXELRAIN_LENGTH]->u.fs_d.value;

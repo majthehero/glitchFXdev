@@ -63,6 +63,10 @@ typedef short int			int16;
 // TEST1 renders pixel mask
 //#define TEST1
 #undef TEST1
+// TEST2 checks how accessing pixels works
+#define TEST2
+//#undef TEST2
+
 
 /* Versioning information */
 
@@ -101,9 +105,13 @@ enum {
 	ADVALPHA_DISK_ID
 };
 
-typedef struct LengthInfo{
+typedef struct TrailInfo{
 	PF_FpLong	lengthF;
-} LengthInfo, *LengthInfoP, **LengthInfoH;
+	PF_LayerDef *input; // read-only, unless same as output, see below
+	PF_LayerDef *output; // each thread should only modify/write to one column
+	PF_LayerDef *pixelMask;
+	PF_InData *in_data; // needed for accessor macros
+} TrailInfo;
 
 // info required to generate pix mask - select pixels to affect
 typedef struct PixSelInfo {

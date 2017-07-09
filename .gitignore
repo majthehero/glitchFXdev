@@ -30,3 +30,4 @@
 *.exe
 *.out
 *.app
+/code/Examples/Template/PixelRain/Win/PixelRain.VC.VC.opendb
