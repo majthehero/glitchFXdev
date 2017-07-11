@@ -46,6 +46,8 @@ typedef short int			int16;
 	#include <Windows.h>
 #endif
 
+#include <iostream>
+
 #include "entry.h"
 #include "AE_Effect.h"
 #include "AE_EffectCB.h"
@@ -64,9 +66,11 @@ typedef short int			int16;
 //#define TEST1
 #undef TEST1
 // TEST2 checks how accessing pixels works
-#define TEST2
-//#undef TEST2
-
+//#define TEST2
+#undef TEST2
+// TEST3 renders generated trails
+#define TEST3
+//#undef TEST3
 
 /* Versioning information */
 

@@ -193,25 +193,57 @@ GenerateTrailColFunc(
 	A_long rowbytes = tilP->input->rowbytes;
 
 	PF_Pixel8 *trail = (PF_Pixel8*)calloc((int)tilP->lengthF, sizeof(PF_Pixel8)); // TEST are pixels initialized to black
+	int trail_size = 0;
 	// TODO not sure if needed. Have to think this algo through a bit more.
 
-	PF_Pixel8 *inP = NULL;
-	PF_Pixel8 *maskP = NULL;
-	PF_Pixel8 *outP = NULL;
+	PF_Pixel8 *inP = (PF_Pixel8*)tilP->input->data;
+	PF_Pixel8 *maskP = (PF_Pixel8*)tilP->pixelMask->data;
+	PF_Pixel8 *outP = (PF_Pixel8*)tilP->output->data;
 	PF_GET_PIXEL_DATA8(tilP->input, NULL, &inP);
 	PF_GET_PIXEL_DATA8(tilP->pixelMask, NULL, &maskP);
 	PF_GET_PIXEL_DATA8(tilP->output, NULL, &outP);
-
 	// iterate through column
 	for (int i = 0; i < iterationsL; i++) {
-		
-		
-		
-		/*PF_PixelPtr inPtr = (PF_PixelPtr)((char*)input_data + i*rowbytes + columnI*sizeof(PF_Pixel8));
-		PF_PixelPtr maskPtr = (PF_PixelPtr)((char*)mask_data + i*rowbytes + columnI * sizeof(PF_Pixel8));
-		
-*/
+		/* don't want div by zero */
+		if (inP->alpha < 0.001 && maskP->alpha < 0.001) {
+			/* add pixel to trail */
+			char alpha = (char)((inP->alpha / 255.0 * maskP->alpha / 255.0) * 255);
+			if (alpha > 0.02) {
+				std::cerr << inP->alpha << " * " << maskP->alpha << " = " << alpha << "\n"; // TEST if this work correctly, then remove
+				PF_Pixel8 temp = *inP;
+				temp.alpha = alpha;
+				trail[trail_size] = temp;
+				trail_size++;
+			}
+			/* add trail to output */
+			PF_Pixel8 *tempPix = new PF_Pixel8();
+			tempPix->alpha = 0;
+			tempPix->red = 0;
+			tempPix->green = 0;
+			tempPix->blue = 0;
+			for (int j = trail_size - 1; j >= 0; j--) { // latest pixels should contribute more
+				if (255 - tempPix->alpha < trail[j].alpha) {
+					break;
+				}
+				tempPix->alpha += trail[j].alpha;
+				tempPix->red += (char)(trail[j].red * trail[j].alpha / 255.0);
+				tempPix->green += (char)(trail[j].green * trail[j].alpha / 255.0);
+				tempPix->blue += (char)(trail[j].blue * trail[j].alpha / 255.0);
+			}
+			outP->alpha = tempPix->alpha;
+			outP->red = tempPix->red;
+			outP->green = tempPix->green;
+			outP->blue = tempPix->blue;
+		}
+		/* change pixel pointers */
+		inP += tilP->input->rowbytes;
+		outP += tilP->input->rowbytes;
+		maskP += tilP->input->rowbytes;
+		PF_GET_PIXEL_DATA8(tilP->input, NULL, &inP);
+		PF_GET_PIXEL_DATA8(tilP->pixelMask, NULL, &maskP);
+		PF_GET_PIXEL_DATA8(tilP->output, NULL, &outP);
 	}
+	return err;
 }
 
 static PF_Err 
@@ -239,14 +271,14 @@ Render (
 		NULL,
 		colorMaskP);
 	if (PF_WORLD_IS_DEEP(output)) { // for 16bpp colors TODO not implemented
-		ERR(suites.Iterate16Suite1()->iterate(in_data,
-			0,								// progress base
-			linesL,							// progress final
-			&params[PIXELRAIN_INPUT]->u.ld,	// src 
-			NULL,							// area - null for all pixels
-			(void*)&psi,					// refcon - your custom data pointer
-			CheckColorPixFunc16,			// pixel function pointer
-			colorMaskP));
+		//ERR(suites.Iterate16Suite1()->iterate(in_data,
+		//	0,								// progress base
+		//	linesL,							// progress final
+		//	&params[PIXELRAIN_INPUT]->u.ld,	// src 
+		//	NULL,							// area - null for all pixels
+		//	(void*)&psi,					// refcon - your custom data pointer
+		//	CheckColorPixFunc16,			// pixel function pointer
+		//	colorMaskP));
 	} else {
 		ERR(suites.Iterate8Suite1()->iterate(in_data,
 			0,								// progress base
@@ -270,37 +302,21 @@ Render (
 	TrailInfo *tilP = new TrailInfo();
 	tilP->lengthF = params[PIXELRAIN_LENGTH]->u.fs_d.value;
 	tilP->in_data = in_data;
+	tilP->input = &params[PIXELRAIN_INPUT]->u.ld;
+	tilP->pixelMask = colorMaskP;
+	tilP->output = output;
 	ERR(suites.Iterate8Suite1()->iterate_generic(params[PIXELRAIN_INPUT]->u.ld.width,
 		tilP,
 		GenerateTrailColFunc));
-
-	/* od tle naprej je skeleton koda
-		Put interesting code here. *
-	TrailInfo liP;
-	AEFX_CLR_STRUCT(liP);
+#ifdef TEST3
+	suites.WorldTransformSuite1()->copy(NULL,
+		colorMaskP,
+		output,
+		NULL,
+		NULL);
+	return err;
+#endif
 	
-	liP.lengthF 	= params[PIXELRAIN_LENGTH]->u.fs_d.value;
-	
-	if (PF_WORLD_IS_DEEP(output)){
-		ERR(suites.Iterate16Suite1()->iterate(	in_data,
-												0,								// progress base
-												linesL,							// progress final
-												&params[PIXELRAIN_INPUT]->u.ld,	// src 
-												NULL,							// area - null for all pixels
-												(void*)&liP,					// refcon - your custom data pointer
-												CheckColorPixFunc16,				// pixel function pointer
-												output));
-	} else {
-		ERR(suites.Iterate8Suite1()->iterate(	in_data,
-												0,								// progress base
-												linesL,							// progress final
-												&params[PIXELRAIN_INPUT]->u.ld,	// src 
-												NULL,							// area - null for all pixels
-												(void*)&liP,					// refcon - your custom data pointer
-												CheckColorPixFunc,				// pixel function pointer
-												output));	
-	}
-	*/
 	return err;
 }
 
