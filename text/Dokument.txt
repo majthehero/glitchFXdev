@@ -1,0 +1,24 @@
+Uvod
+
+Cilj diplomske naloge je raziskati metode razvoja vtiènikov za programsko orodje Adobe After Effects. Adobe After Effects je programski paket, namenjen montaži videa in izdelavi vizualnih efektov. Ena izmed njegovih dobrih lastnosti je razširljivost s pomoèjo vtiènikov, ki omogoèajo dodajanje poljubnih funckionalnosti programskemu paketu. Razširjanje je omogoèeno prek programskega vmesnika in prosto dostopne razvojne dokumentacije za uporabo le tega. 
+
+Vtiènike za AE lahko delimo v 4 kategorije: splošno namenske vtiènike (AEGP), vizualne uèinke (effect), vhodno izhodne vtiènike (IO) in takoimenovane artie vtiènike, ki podpirajo napredne tehnologije, kot so 3d grafika in podobno. Ker sem se odloèil za razvoj vizualnih uèinkov, je izbira med tipi vtiènikov jasna. Vtièniki za vizualne uèinke implementirajo VFX kot operacijo nad posameznimi slièicami v videu. Programski vmesnik AE ponuja nemalo operacij, ki pospešijo izvajanje operacij nad piksli in skrajšajo èas razvoja, saj ponujajo visokonivojski dostop do vgrajenih funkcij AE. 
+
+Splošno namenski vtièniki zahtevajo veè resursov od sistema, na katerem teèejo, omogoèajo pa programerju veè možnosti itegracije z AE, spreminjanje uporabniškega vmesnika in odzivanje na interno stanje celotnega programskega paketa. Omogoèajo mnogo veè, kot potrebujemo za implementacijo tipiènih vizualnih uèinkov. Vhodno izhodni vtièniki so namenjeni dodajanju podpore za branje in pisanje novih datoteènih formatov, implementaciji kodekov in podobno. !TODO opiši artie efekte ker si pozabil kaj je njihov pojnt.
+
+
+Pri razvoju VFX je seveda prvi korak ugotavljanje namena vizualnega uèinka oziroma definiranje umetniške vizije. Pred tem sem pregledal obstojeèe vtiènike. Po namenu sem jih loèil v tri kategorije. Prva kategorija so vtièniki za popravljanje izvornih posnetkov, kot so odstranjevanje šuma, popravljanje raznih vizualnih artefaktov in podobno. Namen teh vtiènikov je reševanje slabih posnetkov, kadar ponovni zajem videa oziroma ponovno snemanje ni mogoèe, zaradi cene, pomanjkanja èasa ali drugih razlogov. Le redko lahko s pomoèjo teh vtiènikov dosežemo rezultate enake kvalitete, kot èe bi bili posnetki dobri. 
+
+V drugo kategorijo štejem efekte, ki so namenjeni dodajanju vrednosti posnetki v post produkciji. Veèino vizualnih uèinkov pravzaprav lahko štejemo v to kategorijo. Sem spadajo tudi vsi tisti efekti, ki vizualno pomagajo pripovedništvu, pomagajo ustvariti fiktiven svet, like in podobno. 
+
+V tretjo kategorijo uvršèam destruktivne efekte - to so tisti, ki ne dodajajo informacij sliki, ampak nasprotno zmanjšajo kvaliteto slike za dosego nekega vizualnega sloga ali pa pomagajo ustvarjati vzdušje in v gledalcu, èe so uspešno uporabljeni, lahko vzbudijo doloèena èustva. 
+
+V zadnjih letih se je pojavila smer digitalne vizualne umetnosti imenovana glitch art (umetnost napak) !TODO prevod. !TODO zgodovina glitch art
+
+
+Vizualni in posebni uèinki 
+
+Vizualni in posebni uèinki vkljuèujejo razliène tehnologije in postopke, ki jih uporabljamo v filmu in videu, da ustvarimo slike, ki jih ne bi mogli posneti naravnost na kamero. Vizualni in posebni uèinki se uporabljajo že skozi celotno zgodovino filma. Prvi film, ki je uporabil posebne uèinke, je Usmrtitev Marije I. Škotske (Execution of Mary, Queen of Scots), posnet leta 1895. V njem so s pomoèjo ustavitve kamere in zamenjave igralke z lutko lahko preprièljivo prikazali, kako kraljici Mariji s sekiro odseka glavo. V tem filmu je s pomoèjo posebnih uèinkov prviè režiser lahko prikazal zgodbo, ki je brez ne bi mogel. Nekateri viri navajajo, da so nekateri gledalci verjeli, da so glavno igralko med snemanjem tudi v resnici obglavili. To je bil tudi prvi film, v katerem je žensko vlogo igral moški.
+
+V naslednjih desetletjih se je skupaj s filmom razvijala tudi tehnologija in uporaba posebnih uèinkov. Leta 1903 je film Veliki rop vlaka (The Great Train Robbery) prvi uporabil sestavljanje slike s pomoèjo èrnega 
+

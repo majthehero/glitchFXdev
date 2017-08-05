@@ -1,0 +1,32 @@
+1. vizualni učinki
+1.2. vizualni vs posebni: posbni == praktični
+
+2 zogodovina: 1895 prvi efekt v the execution of mary, queen of scots (prod. Thomas Edison, dir. Alfred Clark)
+				1903 the great train robbery - uporaba black matte + double exposure za vstavljanje drugega posnetka
+				30ta: projeciranje live action na miniature, obratno in podobno (projekcija od zadaj!)
+					zamenja šele blue/green screen in digitalna kompozicija
+					blue screen v king kongu leta 30 - na črno bel film se da z modrim filtrom narest mnogo
+				50ta: disney sodium vapor: traveling mattes hkrati s sliko (marry poppins)
+					tehnika v 80ih dopolnjena s UV matte in UV barvanimi miniaturami)
+				60ta: projekcija od spredaj
+				70ta: bluescreen v filmu
+				80ta: bluescreen brez bluespilla
+				1980: končno standardiziran optični tiskalnik Acme-Dunn Optical Printer
+					
+3. digitalni vizualni učinki:
+	v 50ih je John Whitney sr uporabil analogni računalnik za usmerjanje protiletalskih izstrelkov kot pripomoček za animacijo
+	1973: prvi 3D CGI v Westworld, firma triple-I, tudi Futureworld in Tron kansneje 1982
+	1985: prvi 3D CGI lik (pixar, young sherlock holmes)
+	1992: prve obstoječe živali kot 3D CGI - Batman Returns (pingvini in netopirji)
+	1993: Jurski park.
+	
+
+4. produkcija videa
+	preprod
+	prod - posebni učinki
+	post - vizualni učinki
+	
+	
+					
+lexicon: vizualni učinki, posebni ućinki, digitalna kompozicija, greenscreen, matte, double exposure, digitalni vizualni učinki,
+praktični učinki, 
