@@ -177,71 +177,53 @@ CheckColorPixFunc (
 }
 
 static PF_Err
-GenerateTrailColFunc(
+GenerateTrailColFunc8(
 	void *refcon, // trailInfoP
-	A_long thread_indexL, // if 0, answer abort and progress report requests
+	A_long thread_indexL, // if 0, answer abort and progress report requests -- probably if needed
 	A_long i,
 	A_long iterationsL) 
 {
 	PF_Err err = PF_Err_NONE;
 	TrailInfo *tilP = (TrailInfo*)refcon;
 	PF_InData *in_data = tilP->in_data;
+	AEGP_SuiteHandler suites(in_data->pica_basicP);
 
 	A_long columnI = i;
 	A_long w = tilP->input->width;
 	A_long h = tilP->input->height;
 	A_long rowbytes = tilP->input->rowbytes;
 
-	PF_Pixel8 *trail = (PF_Pixel8*)calloc((int)tilP->lengthF, sizeof(PF_Pixel8)); // TEST are pixels initialized to black
-	int trail_size = 0;
-	// TODO not sure if needed. Have to think this algo through a bit more.
-
 	PF_Pixel8 *inP = (PF_Pixel8*)tilP->input->data;
 	PF_Pixel8 *maskP = (PF_Pixel8*)tilP->pixelMask->data;
 	PF_Pixel8 *outP = (PF_Pixel8*)tilP->output->data;
-	PF_GET_PIXEL_DATA8(tilP->input, NULL, &inP);
+	PF_GET_PIXEL_DATA8(tilP->input, NULL, &inP); // add columnI to move to correct column
 	PF_GET_PIXEL_DATA8(tilP->pixelMask, NULL, &maskP);
 	PF_GET_PIXEL_DATA8(tilP->output, NULL, &outP);
+	inP += columnI;
+	maskP += columnI;
+	outP += columnI;
+	PF_Pixel8 sampledColor;
+	int lastRowNum = 0;
+
 	// iterate through column
-	for (int i = 0; i < iterationsL; i++) {
-		/* don't want div by zero */
-		if (inP->alpha < 0.001 && maskP->alpha < 0.001) {
-			/* add pixel to trail */
-			char alpha = (char)((inP->alpha / 255.0 * maskP->alpha / 255.0) * 255);
-			if (alpha > 0.02) {
-				std::cerr << inP->alpha << " * " << maskP->alpha << " = " << alpha << "\n"; // TEST if this work correctly, then remove
-				PF_Pixel8 temp = *inP;
-				temp.alpha = alpha;
-				trail[trail_size] = temp;
-				trail_size++;
-			}
-			/* add trail to output */
-			PF_Pixel8 *tempPix = new PF_Pixel8();
-			tempPix->alpha = 0;
-			tempPix->red = 0;
-			tempPix->green = 0;
-			tempPix->blue = 0;
-			for (int j = trail_size - 1; j >= 0; j--) { // latest pixels should contribute more
-				if (255 - tempPix->alpha < trail[j].alpha) {
-					break;
-				}
-				tempPix->alpha += trail[j].alpha;
-				tempPix->red += (char)(trail[j].red * trail[j].alpha / 255.0);
-				tempPix->green += (char)(trail[j].green * trail[j].alpha / 255.0);
-				tempPix->blue += (char)(trail[j].blue * trail[j].alpha / 255.0);
-			}
-			outP->alpha = tempPix->alpha;
-			outP->red = tempPix->red;
-			outP->green = tempPix->green;
-			outP->blue = tempPix->blue;
+	// sample -> drip method
+	for (int j = 0; j < iterationsL - 1; j++) { // -1 bc we do not need to sample the last pixel
+		// sample
+		if (maskP->alpha > 0) {
+			suites.Sampling8Suite1()->nn_sample(NULL, columnI, j, NULL, &sampledColor);
+			lastRowNum = j;
 		}
-		/* change pixel pointers */
-		inP += tilP->input->rowbytes;
-		outP += tilP->input->rowbytes;
-		maskP += tilP->input->rowbytes;
-		PF_GET_PIXEL_DATA8(tilP->input, NULL, &inP);
-		PF_GET_PIXEL_DATA8(tilP->pixelMask, NULL, &maskP);
-		PF_GET_PIXEL_DATA8(tilP->output, NULL, &outP);
+		// drip
+		else if (j - lastRowNum < tilP->lengthF) {
+			outP->alpha = 255 - maskP->alpha;
+			outP->red = sampledColor.red;
+			outP->green = sampledColor.green;
+			outP->blue = sampledColor.blue;
+		}
+		// next row
+		inP += rowbytes;
+		outP += rowbytes;
+		maskP += rowbytes;
 	}
 	return err;
 }
@@ -264,7 +246,7 @@ Render (
 	psi.tgtColor = params[PIXELRAIN_COLOR]->u.cd.value;
 
 	/* 1. Generate pixel mask */
-	PF_EffectWorld * colorMaskP = new PF_EffectWorld(params[PIXELRAIN_INPUT]->u.ld);
+	PF_EffectWorld * colorMaskP = NULL; // = new PF_EffectWorld(params[PIXELRAIN_INPUT]->u.ld) // remove later
 	suites.WorldSuite1()->new_world(NULL,
 		params[PIXELRAIN_INPUT]->u.ld.width,
 		params[PIXELRAIN_INPUT]->u.ld.height,
@@ -289,25 +271,30 @@ Render (
 			CheckColorPixFunc,				// pixel function pointer
 			colorMaskP));
 	}
-#ifdef TEST1
-	suites.WorldTransformSuite1()->copy(NULL,
-		colorMaskP,
-		output,
-		NULL,
-		NULL);
-	return err;
-#endif
+
+	//suites.WorldTransformSuite1()->copy(NULL,
+	//	colorMaskP,
+	//	output,
+	//	NULL,
+	//	NULL);
+	//return err;
 
 	/* 2. Generate trails */
 	TrailInfo *tilP = new TrailInfo();
 	tilP->lengthF = params[PIXELRAIN_LENGTH]->u.fs_d.value;
 	tilP->in_data = in_data;
-	tilP->input = &params[PIXELRAIN_INPUT]->u.ld;
-	tilP->pixelMask = colorMaskP;
-	tilP->output = output;
+	tilP->input = &params[PIXELRAIN_INPUT]->u.ld; // frame image data
+	tilP->pixelMask = colorMaskP; 
+	tilP->output;
+	suites.WorldSuite1()->new_world(NULL,
+		params[PIXELRAIN_INPUT]->u.ld.width,
+		params[PIXELRAIN_INPUT]->u.ld.height,
+		NULL,
+		tilP->output);
 	ERR(suites.Iterate8Suite1()->iterate_generic(params[PIXELRAIN_INPUT]->u.ld.width,
 		tilP,
-		GenerateTrailColFunc));
+		GenerateTrailColFunc8));
+
 #ifdef TEST3
 	suites.WorldTransformSuite1()->copy(NULL,
 		colorMaskP,

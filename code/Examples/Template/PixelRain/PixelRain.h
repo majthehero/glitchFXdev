@@ -113,7 +113,7 @@ typedef struct TrailInfo{
 	PF_FpLong	lengthF;
 	PF_LayerDef *input; // read-only, unless same as output, see below
 	PF_LayerDef *output; // each thread should only modify/write to one column
-	PF_LayerDef *pixelMask;
+	PF_LayerDef *pixelMask; // read-only after generated
 	PF_InData *in_data; // needed for accessor macros
 } TrailInfo;
 
