@@ -61,17 +61,6 @@ typedef short int			int16;
 
 #include "PixelRain_Strings.h"
 
-/* Tests enable / disable */
-// TEST1 renders pixel mask
-//#define TEST1
-#undef TEST1
-// TEST2 checks how accessing pixels works
-//#define TEST2
-#undef TEST2
-// TEST3 renders generated trails
-#define TEST3
-//#undef TEST3
-
 /* Versioning information */
 
 #define	MAJOR_VERSION	1
@@ -99,6 +88,7 @@ enum {
 	PIXELRAIN_DIFF,
 	PIXELRAIN_COLOR,
 	PIXELRAIN_ADVALPHA,
+	PIXELRAIN_DBG_OPTYPE,
 	PIXELRAIN_NUM_PARAMS
 };
 
@@ -106,7 +96,8 @@ enum {
 	LENGTH_DISK_ID = 1,
 	DIFF_DISK_ID,
 	COLOR_DISK_ID,
-	ADVALPHA_DISK_ID
+	ADVALPHA_DISK_ID,
+	OPTYPE_DISK_ID
 };
 
 typedef struct TrailInfo{

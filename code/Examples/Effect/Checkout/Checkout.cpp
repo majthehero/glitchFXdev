@@ -56,7 +56,6 @@ GlobalSetup (
 																		kDuckSuiteVersion1,
 																		out_data,
 																		"No Duck Suite! That's OK, it just means the Sweetie SDK sample wasn't loaded.");
-
 		dsP->Quack(2);
 
 	} catch (A_Err &thrown_err) {

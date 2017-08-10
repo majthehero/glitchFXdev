@@ -29,5 +29,6 @@ typedef enum {
 	StrID_Diff_Param_Name,
 	StrID_Color_Param_Name,
 	StrID_AdvAlpha_Param_Name,
+	StrID_DBG_OPTYPE_Param_Name,
 	StrID_NUMTYPES
 } StrIDType;

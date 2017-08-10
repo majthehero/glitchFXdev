@@ -115,24 +115,13 @@ ParamsSetup (
 		ADVALPHA_DISK_ID);
 	AEFX_CLR_STRUCT(def);
 
+	//debug slider to see relevant output
+	PF_ADD_FLOAT_SLIDERX(STR(StrID_DBG_OPTYPE_Param_Name),
+		1, 3, 1, 3, 1, PF_Precision_INTEGER, 0, 0, OPTYPE_DISK_ID);
+	AEFX_CLR_STRUCT(def);
+
 	out_data->num_params = PIXELRAIN_NUM_PARAMS;
 
-	return err;
-}
-
-static PF_Err
-CheckColorPixFunc16 ( // TODO not implemented
-	void		*refcon, 
-	A_long		xL, 
-	A_long		yL, 
-	PF_Pixel16	*inP, 
-	PF_Pixel16	*outP)
-{
-	PF_Err		err = PF_Err_NONE;
-	outP->alpha		=	255;
-	outP->red		=	128;
-	outP->green		=	64;
-	outP->blue		=	64;
 	return err;
 }
 
@@ -147,6 +136,7 @@ CheckColorPixFunc (
 	PF_Err		err = PF_Err_NONE;
 	PixSelInfo *psiP = (PixSelInfo*)refcon;
 	PF_Pixel8 tgtColor = psiP->tgtColor;
+	
 	// using euclidean variance, altered for human perception
 	float deltaR, deltaG, deltaB;
 	deltaR = (float)(inP->red - tgtColor.red);
@@ -155,33 +145,36 @@ CheckColorPixFunc (
 	float eucVarAlt = EUC_VAR_ALT(deltaR, deltaG, deltaB);
 	float maxVar = EUC_VAR_ALT(255, 255, 255);
 	// advanced alpha blending	
-	outP->alpha = (A_u_char) (eucVarAlt / maxVar * 255);
+	char visibility = 255 - (A_u_char)(eucVarAlt / maxVar * 255);
+	outP->alpha = visibility;
+	outP->red = visibility;
+	outP->green = visibility;
+	outP->blue = visibility;
+	// advanced blending
+	if (psiP->advAlpha) {
+		double ratio = psiP->diff;
+		outP->alpha = (char)(outP->alpha * ratio);
+		if (outP->alpha > 254.0) outP->alpha = 255;
+		if (outP->alpha < 1.0) outP->alpha = 0;
+	}
 	// basic boolean blending
-	if (!psiP->advAlpha) {
-		if (outP->alpha > (A_u_char)(psiP->diff*255))
-			outP->alpha = 255;
-		else
-			outP->alpha = 0;
-	}
 	else {
-		PF_FpLong tempAlpha = outP->alpha * (5*psiP->diff);
-		if (tempAlpha > 255) tempAlpha = 255;
-		outP->alpha = (A_u_char)tempAlpha;
+		if ((float)outP->alpha / 255.0 > (psiP->diff)) {
+			outP->alpha = 255;
+		}
+		else {
+			outP->alpha = 0;
+		}
 	}
-#ifdef TEST1
-	outP->red = 255;
-	outP->green = 0;
-	outP->blue = 255;
-#endif
 	return err;
 }
 
 static PF_Err
 GenerateTrailColFunc8(
 	void *refcon, // trailInfoP
-	A_long thread_indexL, // if 0, answer abort and progress report requests -- probably if needed
-	A_long i,
-	A_long iterationsL) 
+	A_long thread_indexL, // thread index, for abort and prog report
+	A_long i, // OUTER LOOP current iteration
+	A_long iterationsL)  // OUTER LOOP num of iterations
 {
 	PF_Err err = PF_Err_NONE;
 	TrailInfo *tilP = (TrailInfo*)refcon;
@@ -189,41 +182,69 @@ GenerateTrailColFunc8(
 	AEGP_SuiteHandler suites(in_data->pica_basicP);
 
 	A_long columnI = i;
-	A_long w = tilP->input->width;
-	A_long h = tilP->input->height;
-	A_long rowbytes = tilP->input->rowbytes;
+	A_long outWidth = tilP->output->width;
+	A_long outHeight = tilP->output->height;
+	A_long rowbytes = tilP->output->rowbytes;
 
-	PF_Pixel8 *inP = (PF_Pixel8*)tilP->input->data;
-	PF_Pixel8 *maskP = (PF_Pixel8*)tilP->pixelMask->data;
-	PF_Pixel8 *outP = (PF_Pixel8*)tilP->output->data;
-	PF_GET_PIXEL_DATA8(tilP->input, NULL, &inP); // add columnI to move to correct column
-	PF_GET_PIXEL_DATA8(tilP->pixelMask, NULL, &maskP);
-	PF_GET_PIXEL_DATA8(tilP->output, NULL, &outP);
+	PF_Pixel8 *inP = NULL;
+	PF_Pixel8 *maskP = NULL;
+	PF_Pixel8 *outP = NULL;
+	PF_GET_PIXEL_DATA8(reinterpret_cast<PF_EffectWorld*>(tilP->input), NULL, &inP); 
+	PF_GET_PIXEL_DATA8(reinterpret_cast<PF_EffectWorld*>(tilP->pixelMask), NULL, &maskP);
+	PF_GET_PIXEL_DATA8(reinterpret_cast<PF_EffectWorld*>(tilP->output), NULL, &outP);
+	PF_Pixel8 *sampledColorP = new PF_Pixel8();
+	//sampledColorP->alpha	= 0;
+	//sampledColorP->red	= 0;
+	//sampledColorP->blue	= 0;
+	//sampledColorP->green	= 0;
+	// jump to chosen column
 	inP += columnI;
 	maskP += columnI;
 	outP += columnI;
-	PF_Pixel8 sampledColor;
+	//PF_Pixel8 sampledColorP;
 	int lastRowNum = 0;
 
 	// iterate through column
 	// sample -> drip method
-	for (int j = 0; j < iterationsL - 1; j++) { // -1 bc we do not need to sample the last pixel
+	for (int j = 0; j < outHeight; j++) {
+		/* this is test of iterator coorrectness
+		if (j % 5 == 0) {
+			outP->alpha = 255;
+			outP->red = 255;
+			outP->green = 0;
+			outP->blue = 0;
+		}
+		else {
+			outP->alpha = 255;
+			outP->red = 0;
+			outP->green = 128;
+			outP->blue = 128;
+		}
+		if (columnI == 0) {
+			outP->alpha = 255;
+			outP->red = 255;
+			outP->green = 255;
+			outP->blue = 255;
+		}*/
 		// sample
 		if (maskP->alpha > 0) {
-			suites.Sampling8Suite1()->nn_sample(NULL, columnI, j, NULL, &sampledColor);
+			sampledColorP->alpha = inP->alpha;
+			sampledColorP->red = inP->red;
+			sampledColorP->green = inP->green;
+			sampledColorP->blue = inP->blue;
 			lastRowNum = j;
 		}
 		// drip
 		else if (j - lastRowNum < tilP->lengthF) {
 			outP->alpha = 255 - maskP->alpha;
-			outP->red = sampledColor.red;
-			outP->green = sampledColor.green;
-			outP->blue = sampledColor.blue;
+			outP->red	= sampledColorP->red;
+			outP->green = sampledColorP->green;
+			outP->blue	= sampledColorP->blue;
 		}
 		// next row
-		inP += rowbytes;
-		outP += rowbytes;
-		maskP += rowbytes;
+		inP += rowbytes / sizeof(PF_Pixel8);
+		outP += rowbytes / sizeof(PF_Pixel8);
+		maskP += rowbytes / sizeof(PF_Pixel8);
 	}
 	return err;
 }
@@ -235,9 +256,10 @@ Render (
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output )
 {
-	/* 0. Data seg */
+
 	PF_Err err = PF_Err_NONE;
 	AEGP_SuiteHandler suites(in_data->pica_basicP);
+
 	A_long linesL = output->extent_hint.bottom - output->extent_hint.top;
 	PixSelInfo psi;
 	AEFX_CLR_STRUCT(psi);
@@ -246,12 +268,14 @@ Render (
 	psi.tgtColor = params[PIXELRAIN_COLOR]->u.cd.value;
 
 	/* 1. Generate pixel mask */
-	PF_EffectWorld * colorMaskP = NULL; // = new PF_EffectWorld(params[PIXELRAIN_INPUT]->u.ld) // remove later
-	suites.WorldSuite1()->new_world(NULL,
-		params[PIXELRAIN_INPUT]->u.ld.width,
-		params[PIXELRAIN_INPUT]->u.ld.height,
+	PF_EffectWorld * colorMaskP = new PF_EffectWorld();
+	ERR(suites.WorldSuite1()->new_world(NULL,
+		output->width,
+		output->height,
 		NULL,
-		colorMaskP);
+		colorMaskP));
+	if (err != PF_Err_NONE) return err;
+
 	if (PF_WORLD_IS_DEEP(output)) { // for 16bpp colors TODO not implemented
 		//ERR(suites.Iterate16Suite1()->iterate(in_data,
 		//	0,								// progress base
@@ -261,7 +285,8 @@ Render (
 		//	(void*)&psi,					// refcon - your custom data pointer
 		//	CheckColorPixFunc16,			// pixel function pointer
 		//	colorMaskP));
-	} else {
+	}
+	else {
 		ERR(suites.Iterate8Suite1()->iterate(in_data,
 			0,								// progress base
 			linesL,							// progress final
@@ -271,39 +296,68 @@ Render (
 			CheckColorPixFunc,				// pixel function pointer
 			colorMaskP));
 	}
-
-	//suites.WorldTransformSuite1()->copy(NULL,
-	//	colorMaskP,
-	//	output,
-	//	NULL,
-	//	NULL);
-	//return err;
+	if (err != PF_Err_NONE) return err;
+	// debug show pixelmask
+	if (int(params[PIXELRAIN_DBG_OPTYPE]->u.fs_d.value) == 1) {
+		suites.WorldTransformSuite1()->copy(NULL,
+			colorMaskP,
+			output,
+			NULL,
+			NULL);
+		return err;
+	}
 
 	/* 2. Generate trails */
-	TrailInfo *tilP = new TrailInfo();
+	TrailInfo til;
+	AEFX_CLR_STRUCT(til);
+	TrailInfo *tilP = &til;
 	tilP->lengthF = params[PIXELRAIN_LENGTH]->u.fs_d.value;
 	tilP->in_data = in_data;
-	tilP->input = &params[PIXELRAIN_INPUT]->u.ld; // frame image data
-	tilP->pixelMask = colorMaskP; 
-	tilP->output;
-	suites.WorldSuite1()->new_world(NULL,
-		params[PIXELRAIN_INPUT]->u.ld.width,
-		params[PIXELRAIN_INPUT]->u.ld.height,
-		NULL,
-		tilP->output);
-	ERR(suites.Iterate8Suite1()->iterate_generic(params[PIXELRAIN_INPUT]->u.ld.width,
-		tilP,
-		GenerateTrailColFunc8));
+	tilP->input = &params[PIXELRAIN_INPUT]->u.ld;
+	tilP->pixelMask = reinterpret_cast<PF_LayerDef*>(colorMaskP);
 
-#ifdef TEST3
-	suites.WorldTransformSuite1()->copy(NULL,
-		colorMaskP,
-		output,
+	PF_EffectWorld * trailsWorld = new PF_EffectWorld();
+	ERR(suites.WorldSuite1()->new_world(
 		NULL,
-		NULL);
-	return err;
-#endif
+		output->width,
+		output->height,
+		NULL,
+		trailsWorld
+	));
+	if (err != PF_Err_NONE) return err;
+
+	tilP->output = reinterpret_cast<PF_LayerDef*>(trailsWorld);
+
+	ERR(suites.Iterate8Suite1()->iterate_generic(
+		output->width,
+		(void*)tilP,
+		GenerateTrailColFunc8
+	));
+	if (err != PF_Err_NONE) return err;
 	
+
+	// debug show trails output
+	if (int(params[PIXELRAIN_DBG_OPTYPE]->u.fs_d.value) == 2) {
+		ERR(suites.WorldTransformSuite1()->copy(
+			NULL,
+			tilP->output,
+			output,
+			NULL,
+			NULL
+		));
+		return err;
+	}
+
+	/* 3. Blend if wanted */
+	if (int(params[PIXELRAIN_DBG_OPTYPE]->u.fs_d.value) == 3) {
+		ERR(suites.WorldTransformSuite1()->blend(
+			NULL,
+			tilP->input,
+			tilP->output,
+			0, // unexplained param: 1 - src1 100% ; 0 - ; 0.5 - ;;
+			output
+		));
+	}
 	return err;
 }
 

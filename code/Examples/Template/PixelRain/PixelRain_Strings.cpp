@@ -36,6 +36,7 @@ TableString		g_strs[StrID_NUMTYPES] = {
 	StrID_Diff_Param_Name,			"Color difference",
 	StrID_Color_Param_Name,			"Color",
 	StrID_AdvAlpha_Param_Name,			"Advanced alpha blending",
+	StrID_DBG_OPTYPE_Param_Name,			"1 - pixelMask; 2 - trails; 3 - blended",
 };
 
 
