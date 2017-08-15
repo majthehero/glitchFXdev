@@ -72,8 +72,11 @@ typedef short int			int16;
 /* Function macros */
 #define SQ( X ) ( X * X )
 #define EUC_VAR_ALT( R, G, B) ( 2 * SQ( R ) + 4 * SQ( G ) + 3 * SQ( B ) )
-/* Parameter defaults */
 
+/* Constants */
+#define EPSILON 0.001
+
+/* Parameter defaults */
 #define	PIXELRAIN_LENGTH_MIN		0
 #define	PIXELRAIN_LENGTH_MAX		1000
 #define	PIXELRAIN_LENGTH_DFLT		30
@@ -85,22 +88,38 @@ typedef short int			int16;
 enum {
 	PIXELRAIN_INPUT = 0,
 	PIXELRAIN_LENGTH,
-	PIXELRAIN_DIFF,
+	
+	PIXELRAIN_HUE_CB,
+	PIXELRAIN_HUE_TOLERANCE,
+
+	PIXELRAIN_LUMA_CB,
+	PIXELRAIN_LUMA_TOLERANCE,
+
+	PIXELRAIN_SAT_CB,
+	PIXELRAIN_SAT_TOLERANCE,
+
 	PIXELRAIN_COLOR,
-	PIXELRAIN_ADVALPHA,
-	PIXELRAIN_DBG_OPTYPE,
+	PIXELRAIN_SHOW_MASK,
 	PIXELRAIN_NUM_PARAMS
 };
 
 enum {
 	LENGTH_DISK_ID = 1,
-	DIFF_DISK_ID,
+
+	HUECB_DISK_ID,
+	HUETOL_DISK_ID,
+	
+	LUMACB_DISK_ID,
+	LUMATOL_DISK_ID,
+	
+	SATCB_DISK_ID,
+	SATTOL_DISK_ID,
+	
 	COLOR_DISK_ID,
-	ADVALPHA_DISK_ID,
-	OPTYPE_DISK_ID
+	MASKCB_DISK_ID
 };
 
-typedef struct TrailInfo{
+typedef struct TrailInfo {
 	PF_FpLong	lengthF;
 	PF_LayerDef *input; // read-only, unless same as output, see below
 	PF_LayerDef *output; // each thread should only modify/write to one column
@@ -108,11 +127,24 @@ typedef struct TrailInfo{
 	PF_InData *in_data; // needed for accessor macros
 } TrailInfo;
 
+/*
+Luma, hue and sat are double between 0.0 and 1.0
+*/
+typedef struct ColorHSL {
+	double luma;
+	double hue;
+	double saturation;
+} ColorHSL;
+
 // info required to generate pix mask - select pixels to affect
 typedef struct PixSelInfo {
 	PF_Pixel tgtColor;
-	PF_FpLong diff;
-	PF_Boolean advAlpha; // use advanced alpha blending
+	PF_Boolean hueCheck;
+	PF_FpLong hueTolerance;
+	PF_Boolean lumaCheck;
+	PF_FpLong lumaTolerance;
+	PF_Boolean satCheck;
+	PF_FpLong satTolerance;
 } PixSelInfo;
 
 #ifdef __cplusplus

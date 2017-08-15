@@ -88,17 +88,61 @@ ParamsSetup (
 							0,
 							LENGTH_DISK_ID);
 	AEFX_CLR_STRUCT(def);
-	// color diff slider
-	PF_ADD_FLOAT_SLIDERX(STR(StrID_Diff_Param_Name),
-		PIXELRAIN_DIFF_MIN,
-		PIXELRAIN_DIFF_MAX,
-		PIXELRAIN_DIFF_MIN,
-		PIXELRAIN_DIFF_MAX,
-		PIXELRAIN_DIFF_DFLT,
-		PF_Precision_HUNDREDTHS,
-		0,
-		0,
-		DIFF_DISK_ID);
+	// hue cb
+	PF_ADD_CHECKBOX(	STR(StrID_HueCB_Param_Name),
+						STR(StrID_HueCB_Param_Name),
+						true,
+						NULL,
+						HUECB_DISK_ID);
+	AEFX_CLR_STRUCT(def);
+	// hue slider
+	PF_ADD_FLOAT_SLIDERX(	STR(StrID_HueSlider_Param_Name),
+							0,
+							1,
+							0,
+							1,
+							0.3,
+							PF_Precision_THOUSANDTHS,
+							0,
+							0,
+							HUETOL_DISK_ID);
+	// luma cb
+	PF_ADD_CHECKBOX(	STR(StrID_LumaCB_Param_Name),
+						STR(StrID_LumaCB_Param_Name),
+						false,
+						NULL,
+						LUMACB_DISK_ID);
+	AEFX_CLR_STRUCT(def);
+	// luma slider
+	PF_ADD_FLOAT_SLIDERX(	STR(StrID_LumaSlider_Param_Name),
+							0,
+							1,
+							0,
+							1,
+							0.3,
+							PF_Precision_THOUSANDTHS,
+							0,
+							0,
+							LUMATOL_DISK_ID);
+	AEFX_CLR_STRUCT(def);
+	// sat cb
+	PF_ADD_CHECKBOX(	STR(StrID_SatCB_Param_Name),
+						STR(StrID_SatCB_Param_Name),
+						false,
+						NULL,
+						SATCB_DISK_ID);
+	AEFX_CLR_STRUCT(def);
+	// sat slider
+	PF_ADD_FLOAT_SLIDERX(	STR(StrID_SatSlider_Param_Name),
+							0,
+							1,
+							0,
+							1,
+							0.3,
+							PF_Precision_THOUSANDTHS,
+							0,
+							0,
+							SATTOL_DISK_ID);
 	AEFX_CLR_STRUCT(def);
 	// color picker
 	PF_ADD_COLOR(	STR(StrID_Color_Param_Name), 
@@ -107,17 +151,12 @@ ParamsSetup (
 					PF_MAX_CHAN8,
 					COLOR_DISK_ID);
 	AEFX_CLR_STRUCT(def);
-	// advanced alpha blending checkbox - TODO not implemented
-	PF_ADD_CHECKBOX(STR(StrID_AdvAlpha_Param_Name),
-		"",
-		false,
-		0,
-		ADVALPHA_DISK_ID);
-	AEFX_CLR_STRUCT(def);
-
-	//debug slider to see relevant output
-	PF_ADD_FLOAT_SLIDERX(STR(StrID_DBG_OPTYPE_Param_Name),
-		1, 3, 1, 3, 1, PF_Precision_INTEGER, 0, 0, OPTYPE_DISK_ID);
+	// mask only cb
+	PF_ADD_CHECKBOX(	STR(StrID_MaskCB_Param_Name),
+						STR(StrID_MaskCB_Param_Name),
+						false,
+						NULL,
+						MASKCB_DISK_ID);
 	AEFX_CLR_STRUCT(def);
 
 	out_data->num_params = PIXELRAIN_NUM_PARAMS;
@@ -125,8 +164,63 @@ ParamsSetup (
 	return err;
 }
 
+/* tested & done
+HSL FROM COLOR - source "http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/" 14. aug 2017 12:59
+param inP: pixel in rgb format
+returns ColorHSL
+*/
+static ColorHSL*
+hslFromColor(
+	PF_Pixel8 *inP) {
+	/* 1. char to float */
+	double rF = inP->red / 255.0;
+	double gF = inP->green / 255.0;
+	double bF = inP->blue / 255.0;
+	/* 2. find max and min */
+	double minF = (rF < gF ? rF : gF) < bF ? (rF < gF ? rF : gF) : bF;
+	double maxF = (rF > gF ? rF : gF) > bF ? (rF > gF ? rF : gF) : bF;
+	/* 3. luminance */
+	double lumF = (minF + maxF) / 2.0;
+	/* 4. saturation */
+	double satF = 0.0;
+	double hueF = 0.0;
+	if (abs(minF - maxF) > EPSILON) { // saturation is not 0
+		if (lumF < 0.5) { // dark
+			satF = (maxF - minF) / (maxF + minF);
+		}
+		else { // light
+			satF = (maxF - minF) / (2.0 - maxF - minF);
+		}
+	}
+	/* 5. hue */
+	if (maxF == rF) {
+		hueF = (gF - bF) / (maxF - minF);
+	}		  
+	else if (maxF == gF) {
+		hueF = 2.0 + (bF - rF) / (maxF - minF);
+	}		  
+	else if (maxF == bF) {
+		hueF = 4.0 + (rF - gF) / (maxF - minF);
+	}
+	// hue must be positive
+	if (hueF < 0.0) hueF += 6;
+	hueF /= 6.0; // from sixths to percentage
+
+	/* 6. return ColorHSL */
+	ColorHSL *hslP = new ColorHSL();
+	hslP->hue = hueF;
+	hslP->luma = lumF;
+	hslP->saturation = satF;
+	return hslP;
+}
+
+/* tested & done
+!TODO add luma and sat masking -- best refactor rewrite nicely
+GENERATE HUE MASK
+pixel function, checks whether a pixel's hue is similiar enough to target color
+*/
 static PF_Err
-CheckColorPixFunc (
+GenerateMaskPixFunc (
 	void		*refcon, 
 	A_long		xL, 
 	A_long		yL, 
@@ -135,40 +229,54 @@ CheckColorPixFunc (
 {
 	PF_Err		err = PF_Err_NONE;
 	PixSelInfo *psiP = (PixSelInfo*)refcon;
-	PF_Pixel8 tgtColor = psiP->tgtColor;
+	PF_Pixel8 *tgtColorP = &(psiP->tgtColor);
 	
+	double maxHueDiff = psiP->hueTolerance / 2.0;
+
+	/* USING DISTANCE IN ALTERED RGB SPACE NOT GOOD *
 	// using euclidean variance, altered for human perception
-	float deltaR, deltaG, deltaB;
+	/*float deltaR, deltaG, deltaB;
 	deltaR = (float)(inP->red - tgtColor.red);
 	deltaG = (float)(inP->green - tgtColor.green);
 	deltaB = (float)(inP->blue - tgtColor.blue);
 	float eucVarAlt = EUC_VAR_ALT(deltaR, deltaG, deltaB);
-	float maxVar = EUC_VAR_ALT(255, 255, 255);
-	// advanced alpha blending	
-	char visibility = 255 - (A_u_char)(eucVarAlt / maxVar * 255);
-	outP->alpha = visibility;
-	outP->red = visibility;
-	outP->green = visibility;
-	outP->blue = visibility;
-	// advanced blending
-	if (psiP->advAlpha) {
-		double ratio = psiP->diff;
-		outP->alpha = (char)(outP->alpha * ratio);
-		if (outP->alpha > 254.0) outP->alpha = 255;
-		if (outP->alpha < 1.0) outP->alpha = 0;
+	float maxVar = EUC_VAR_ALT(255, 255, 255);*/
+	
+	/* mask based on hue similiarity */
+	ColorHSL *tgtHSL = hslFromColor(tgtColorP);
+	ColorHSL *inHSL = hslFromColor(inP);
+	double hueTgt = tgtHSL->hue;
+	double hueIn = inHSL->hue;
+	//double hueDiff = hueTgt - hueIn;
+	double hueDiff = 0.5 - abs(abs(hueTgt - hueIn) - 0.5);
+	/* 1bit mask */
+	if (hueDiff > maxHueDiff) {
+		outP->alpha = 0;
+		outP->red = 255;
+		outP->green = 0;
+		outP->blue = 255;
 	}
-	// basic boolean blending
 	else {
-		if ((float)outP->alpha / 255.0 > (psiP->diff)) {
-			outP->alpha = 255;
-		}
-		else {
-			outP->alpha = 0;
-		}
+		outP->alpha = 255;
+		outP->red = inP->red;
+		outP->green = inP->green;
+		outP->blue = inP->blue;
 	}
+	//// basic boolean blending
+	//if ((float)outP->alpha / 255.0 > (psiP->diff)) {
+	//	outP->alpha = 255;
+	//}
+	//else {
+	//	outP->alpha = 0;
+	//}
+
 	return err;
 }
 
+/* tested & done
+GENERATE TRAILS COLUMN FUNCTION
+called for each column to drop trail
+*/
 static PF_Err
 GenerateTrailColFunc8(
 	void *refcon, // trailInfoP
@@ -192,16 +300,15 @@ GenerateTrailColFunc8(
 	PF_GET_PIXEL_DATA8(reinterpret_cast<PF_EffectWorld*>(tilP->input), NULL, &inP); 
 	PF_GET_PIXEL_DATA8(reinterpret_cast<PF_EffectWorld*>(tilP->pixelMask), NULL, &maskP);
 	PF_GET_PIXEL_DATA8(reinterpret_cast<PF_EffectWorld*>(tilP->output), NULL, &outP);
-	PF_Pixel8 *sampledColorP = new PF_Pixel8();
-	//sampledColorP->alpha	= 0;
-	//sampledColorP->red	= 0;
-	//sampledColorP->blue	= 0;
-	//sampledColorP->green	= 0;
+	PF_Pixel8 sampledColor;// = new PF_Pixel8();
+	AEFX_CLR_STRUCT(sampledColor); // mostly same as new ???
+	bool mustSample = true;
+
 	// jump to chosen column
 	inP += columnI;
 	maskP += columnI;
 	outP += columnI;
-	//PF_Pixel8 sampledColorP;
+
 	int lastRowNum = 0;
 
 	// iterate through column
@@ -227,24 +334,32 @@ GenerateTrailColFunc8(
 			outP->blue = 255;
 		}*/
 		// sample
-		if (maskP->alpha > 0) {
-			sampledColorP->alpha = inP->alpha;
-			sampledColorP->red = inP->red;
-			sampledColorP->green = inP->green;
-			sampledColorP->blue = inP->blue;
+		if (maskP->alpha > 128) {
+			mustSample = false;
+			sampledColor.red = inP->red;
+			sampledColor.green = inP->green;
+			sampledColor.blue = inP->blue;
 			lastRowNum = j;
 		}
 		// drip
 		else if (j - lastRowNum < tilP->lengthF) {
-			outP->alpha = 255 - maskP->alpha;
-			outP->red	= sampledColorP->red;
-			outP->green = sampledColorP->green;
-			outP->blue	= sampledColorP->blue;
+			if (!mustSample) { // don't drip when there's nothing to drip
+				outP->alpha = 255;
+				outP->red = sampledColor.red;
+				outP->green = sampledColor.green;
+				outP->blue = sampledColor.blue;
+			}
+			else { // rather drip nothing just in case
+				outP->alpha = 0;
+				outP->red = 255;
+				outP->green = 255;
+				outP->blue = 255;
+			}
 		}
 		// next row
-		inP += rowbytes / sizeof(PF_Pixel8);
-		outP += rowbytes / sizeof(PF_Pixel8);
-		maskP += rowbytes / sizeof(PF_Pixel8);
+		inP += tilP->input->rowbytes / sizeof(PF_Pixel8);
+		outP += tilP->output->rowbytes / sizeof(PF_Pixel8);
+		maskP += tilP->pixelMask->rowbytes / sizeof(PF_Pixel8);
 	}
 	return err;
 }
@@ -261,10 +376,15 @@ Render (
 	AEGP_SuiteHandler suites(in_data->pica_basicP);
 
 	A_long linesL = output->extent_hint.bottom - output->extent_hint.top;
+	
 	PixSelInfo psi;
 	AEFX_CLR_STRUCT(psi);
-	psi.advAlpha = params[PIXELRAIN_ADVALPHA]->u.bd.value;
-	psi.diff = params[PIXELRAIN_DIFF]->u.fs_d.value;
+	psi.hueCheck = params[PIXELRAIN_HUE_CB]->u.bd.value;
+	psi.hueTolerance = params[PIXELRAIN_HUE_TOLERANCE]->u.fs_d.value;
+	psi.lumaCheck = params[PIXELRAIN_LUMA_CB]->u.bd.value;
+	psi.lumaTolerance = params[PIXELRAIN_LUMA_TOLERANCE]->u.fs_d.value;
+	psi.satCheck = params[PIXELRAIN_SAT_CB]->u.bd.value;
+	psi.satTolerance = params[PIXELRAIN_SAT_TOLERANCE]->u.fs_d.value;
 	psi.tgtColor = params[PIXELRAIN_COLOR]->u.cd.value;
 
 	/* 1. Generate pixel mask */
@@ -275,8 +395,8 @@ Render (
 		NULL,
 		colorMaskP));
 	if (err != PF_Err_NONE) return err;
-
-	if (PF_WORLD_IS_DEEP(output)) { // for 16bpp colors TODO not implemented
+	// !TODO not implemented - deep color dont suapport this buljshieet
+	if (PF_WORLD_IS_DEEP(output)) { // for 16bpp colors 
 		//ERR(suites.Iterate16Suite1()->iterate(in_data,
 		//	0,								// progress base
 		//	linesL,							// progress final
@@ -293,12 +413,12 @@ Render (
 			&params[PIXELRAIN_INPUT]->u.ld,	// src 
 			NULL,							// area - null for all pixels
 			(void*)&psi,					// refcon - your custom data pointer
-			CheckColorPixFunc,				// pixel function pointer
+			GenerateMaskPixFunc,				// pixel function pointer
 			colorMaskP));
 	}
 	if (err != PF_Err_NONE) return err;
 	// debug show pixelmask
-	if (int(params[PIXELRAIN_DBG_OPTYPE]->u.fs_d.value) == 1) {
+	if (params[PIXELRAIN_SHOW_MASK]->u.bd.value) {
 		suites.WorldTransformSuite1()->copy(NULL,
 			colorMaskP,
 			output,
@@ -335,29 +455,14 @@ Render (
 	));
 	if (err != PF_Err_NONE) return err;
 	
-
-	// debug show trails output
-	if (int(params[PIXELRAIN_DBG_OPTYPE]->u.fs_d.value) == 2) {
-		ERR(suites.WorldTransformSuite1()->copy(
-			NULL,
-			tilP->output,
-			output,
-			NULL,
-			NULL
-		));
-		return err;
-	}
-
-	/* 3. Blend if wanted */
-	if (int(params[PIXELRAIN_DBG_OPTYPE]->u.fs_d.value) == 3) {
-		ERR(suites.WorldTransformSuite1()->blend(
-			NULL,
-			tilP->input,
-			tilP->output,
-			0, // unexplained param: 1 - src1 100% ; 0 - ; 0.5 - ;;
-			output
-		));
-	}
+	// show trails
+	ERR(suites.WorldTransformSuite1()->copy(
+		NULL,
+		tilP->output,
+		output,
+		NULL,
+		NULL
+	));
 	return err;
 }
 

@@ -33,10 +33,18 @@ TableString		g_strs[StrID_NUMTYPES] = {
 	StrID_Name,						"PixelRain",
 	StrID_Description,				"An empty (skeletal, if you will) effect sample,\r for your modifying pleasure.\rCopyright 2007 Adobe Systems Incorporated.",
 	StrID_Length_Param_Name,			"Length",
-	StrID_Diff_Param_Name,			"Color difference",
+
+	StrID_HueCB_Param_Name, "Mask by hue",
+	StrID_HueSlider_Param_Name, "Hue tolerance",
+
+	StrID_LumaCB_Param_Name, "Mask by luma",
+	StrID_LumaSlider_Param_Name, "Luma tolerance",
+
+	StrID_SatCB_Param_Name, "Mask by saturation",
+	StrID_SatSlider_Param_Name, "Saturation tolerance",
+
 	StrID_Color_Param_Name,			"Color",
-	StrID_AdvAlpha_Param_Name,			"Advanced alpha blending",
-	StrID_DBG_OPTYPE_Param_Name,			"1 - pixelMask; 2 - trails; 3 - blended",
+	StrID_MaskCB_Param_Name,			"Show mask",
 };
 
 
