@@ -23,8 +23,9 @@
 
 	Revision history:
 
-	1.0 Started from Skeleton template.			maj		3/7/2017
-	1.1 Correctly generates pixel mask.			maj		7/7/2017
+	1.0 Started from Skeleton template.			maj		03/07/2017
+	1.1 Correctly generates pixel mask.			maj		07/07/2017
+	2.0 Works. Possible mem leaks.				maj		16/08/2017
 */
 
 #include "PixelRain.h"
@@ -65,6 +66,10 @@ GlobalSetup (
 	return PF_Err_NONE;
 }
 
+/*
+UI SET UP
+AE callback
+*/
 static PF_Err 
 ParamsSetup (	
 	PF_InData		*in_data,
@@ -164,6 +169,7 @@ ParamsSetup (
 	return err;
 }
 
+
 /* tested & done
 HSL FROM COLOR - source "http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/" 14. aug 2017 12:59
 param inP: pixel in rgb format
@@ -214,64 +220,73 @@ hslFromColor(
 	return hslP;
 }
 
+
 /* tested & done
-!TODO add luma and sat masking -- best refactor rewrite nicely
-GENERATE HUE MASK
-pixel function, checks whether a pixel's hue is similiar enough to target color
+GENERATE MASK
+pixel function, checks whether a pixel's hue, luma and  saturation are similiar enough to target color
 */
 static PF_Err
-GenerateMaskPixFunc (
-	void		*refcon, 
-	A_long		xL, 
-	A_long		yL, 
-	PF_Pixel8	*inP, 
+GenerateMaskPixFunc(
+	void		*refcon,
+	A_long		xL,
+	A_long		yL,
+	PF_Pixel8	*inP,
 	PF_Pixel8	*outP)
 {
 	PF_Err		err = PF_Err_NONE;
 	PixSelInfo *psiP = (PixSelInfo*)refcon;
 	PF_Pixel8 *tgtColorP = &(psiP->tgtColor);
-	
-	double maxHueDiff = psiP->hueTolerance / 2.0;
 
-	/* USING DISTANCE IN ALTERED RGB SPACE NOT GOOD *
-	// using euclidean variance, altered for human perception
-	/*float deltaR, deltaG, deltaB;
-	deltaR = (float)(inP->red - tgtColor.red);
-	deltaG = (float)(inP->green - tgtColor.green);
-	deltaB = (float)(inP->blue - tgtColor.blue);
-	float eucVarAlt = EUC_VAR_ALT(deltaR, deltaG, deltaB);
-	float maxVar = EUC_VAR_ALT(255, 255, 255);*/
-	
-	/* mask based on hue similiarity */
+	outP->alpha = inP->alpha;
+	outP->red = inP->red;
+	outP->green = inP->green;
+	outP->blue = inP->blue;
+
 	ColorHSL *tgtHSL = hslFromColor(tgtColorP);
 	ColorHSL *inHSL = hslFromColor(inP);
-	double hueTgt = tgtHSL->hue;
-	double hueIn = inHSL->hue;
-	//double hueDiff = hueTgt - hueIn;
-	double hueDiff = 0.5 - abs(abs(hueTgt - hueIn) - 0.5);
-	/* 1bit mask */
-	if (hueDiff > maxHueDiff) {
-		outP->alpha = 0;
-		outP->red = 255;
-		outP->green = 0;
-		outP->blue = 255;
+
+	A_u_char maskAlpha = psiP->showMask ? 255 : 0;
+
+	/* 1. Hue mask */
+	if (psiP->hueCheck) {
+		double maxHueDiff = psiP->hueTolerance / 2.0; // in UI diff of 1.0 covers all, in code 0.5
+		double hueTgt = tgtHSL->hue;
+		double hueIn = inHSL->hue;
+		double hueDiff = 0.5 - abs(abs(hueTgt - hueIn) - 0.5); // hue wraps around
+		if (hueDiff > maxHueDiff) {
+			// alpha is mask, color tells which property masked
+			outP->alpha = maskAlpha;
+			outP->red = 255; // red for hue mask
+		}
 	}
-	else {
-		outP->alpha = 255;
-		outP->red = inP->red;
-		outP->green = inP->green;
-		outP->blue = inP->blue;
+
+	/* 2. Luma mask */
+	if (psiP->lumaCheck) {
+		double maxLumaDiff = psiP->lumaTolerance; // in UI diff of 1.0 covers all
+		double lumaTgt = tgtHSL->luma;
+		double lumaIn = inHSL->luma;
+		double lumaDiff = abs(lumaTgt - lumaIn); // luma and sat don't wrap
+		if (lumaDiff > maxLumaDiff) {
+			outP->alpha = maskAlpha;
+			outP->green = 255; // green for luma mask
+		}
 	}
-	//// basic boolean blending
-	//if ((float)outP->alpha / 255.0 > (psiP->diff)) {
-	//	outP->alpha = 255;
-	//}
-	//else {
-	//	outP->alpha = 0;
-	//}
+
+	/* 3. Sat mask */
+	if (psiP->satCheck) {
+		double maxSatDiff = psiP->satTolerance; // in UI diff of 1.0 covers all
+		double satTgt = tgtHSL->saturation;
+		double satIn = inHSL->saturation;
+		double satDiff = abs(satTgt - satIn); // luma and sat don't wrap
+		if (satDiff > maxSatDiff) {
+			outP->alpha = maskAlpha;
+			outP->blue = 255; // blue for sat mask
+		}
+	}
 
 	return err;
 }
+
 
 /* tested & done
 GENERATE TRAILS COLUMN FUNCTION
@@ -364,6 +379,11 @@ GenerateTrailColFunc8(
 	return err;
 }
 
+
+/* tested & done
+RENDERS A FRAME
+AE callback
+*/
 static PF_Err 
 Render (
 	PF_InData		*in_data,
@@ -395,16 +415,12 @@ Render (
 		NULL,
 		colorMaskP));
 	if (err != PF_Err_NONE) return err;
-	// !TODO not implemented - deep color dont suapport this buljshieet
+	
+	// deep world not supported - NYI
 	if (PF_WORLD_IS_DEEP(output)) { // for 16bpp colors 
-		//ERR(suites.Iterate16Suite1()->iterate(in_data,
-		//	0,								// progress base
-		//	linesL,							// progress final
-		//	&params[PIXELRAIN_INPUT]->u.ld,	// src 
-		//	NULL,							// area - null for all pixels
-		//	(void*)&psi,					// refcon - your custom data pointer
-		//	CheckColorPixFunc16,			// pixel function pointer
-		//	colorMaskP));
+		err = PF_Err_INTERNAL_STRUCT_DAMAGED;
+		// not supported
+		return err;
 	}
 	else {
 		ERR(suites.Iterate8Suite1()->iterate(in_data,
@@ -413,12 +429,13 @@ Render (
 			&params[PIXELRAIN_INPUT]->u.ld,	// src 
 			NULL,							// area - null for all pixels
 			(void*)&psi,					// refcon - your custom data pointer
-			GenerateMaskPixFunc,				// pixel function pointer
+			GenerateMaskPixFunc,			// pixel function pointer
 			colorMaskP));
 	}
 	if (err != PF_Err_NONE) return err;
-	// debug show pixelmask
-	if (params[PIXELRAIN_SHOW_MASK]->u.bd.value) {
+
+	// show mask
+	if ((PF_Boolean)params[PIXELRAIN_SHOW_MASK]->u.bd.value) {
 		suites.WorldTransformSuite1()->copy(NULL,
 			colorMaskP,
 			output,

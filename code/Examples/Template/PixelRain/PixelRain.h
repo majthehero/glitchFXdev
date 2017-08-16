@@ -145,6 +145,7 @@ typedef struct PixSelInfo {
 	PF_FpLong lumaTolerance;
 	PF_Boolean satCheck;
 	PF_FpLong satTolerance;
+	PF_Boolean showMask;
 } PixSelInfo;
 
 #ifdef __cplusplus
