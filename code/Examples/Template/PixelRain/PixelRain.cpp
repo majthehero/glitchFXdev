@@ -213,6 +213,9 @@ hslFromColor(
 	hueF /= 6.0; // from sixths to percentage
 
 	/* 6. return ColorHSL */
+	//ColorHSL hsl;
+	//AEFX_CLR_STRUCT(hsl);
+	//ColorHSL *hslP = &hsl;
 	ColorHSL *hslP = new ColorHSL();
 	hslP->hue = hueF;
 	hslP->luma = lumF;
@@ -284,6 +287,10 @@ GenerateMaskPixFunc(
 		}
 	}
 
+	/* 4. free memmory */ // !TODO na vse aizhodne toèke daj delete!!!
+	delete tgtHSL;
+	delete inHSL;
+
 	return err;
 }
 
@@ -315,8 +322,8 @@ GenerateTrailColFunc8(
 	PF_GET_PIXEL_DATA8(reinterpret_cast<PF_EffectWorld*>(tilP->input), NULL, &inP); 
 	PF_GET_PIXEL_DATA8(reinterpret_cast<PF_EffectWorld*>(tilP->pixelMask), NULL, &maskP);
 	PF_GET_PIXEL_DATA8(reinterpret_cast<PF_EffectWorld*>(tilP->output), NULL, &outP);
-	PF_Pixel8 sampledColor;// = new PF_Pixel8();
-	AEFX_CLR_STRUCT(sampledColor); // mostly same as new ???
+	PF_Pixel8 sampledColor;
+	AEFX_CLR_STRUCT(sampledColor);
 	bool mustSample = true;
 
 	// jump to chosen column
@@ -408,7 +415,9 @@ Render (
 	psi.tgtColor = params[PIXELRAIN_COLOR]->u.cd.value;
 
 	/* 1. Generate pixel mask */
-	PF_EffectWorld * colorMaskP = new PF_EffectWorld();
+	PF_Handle colorMaskH = suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
+	PF_EffectWorld * colorMaskP = (PF_EffectWorld*)*colorMaskH;
+	//PF_EffectWorld * colorMaskP = new PF_EffectWorld(); 
 	ERR(suites.WorldSuite1()->new_world(NULL,
 		output->width,
 		output->height,
@@ -453,17 +462,18 @@ Render (
 	tilP->input = &params[PIXELRAIN_INPUT]->u.ld;
 	tilP->pixelMask = reinterpret_cast<PF_LayerDef*>(colorMaskP);
 
-	PF_EffectWorld * trailsWorld = new PF_EffectWorld();
+	PF_Handle trailsWorldH = suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
+	PF_EffectWorld * trailsWorldP = (PF_EffectWorld*)*trailsWorldH;
 	ERR(suites.WorldSuite1()->new_world(
 		NULL,
 		output->width,
 		output->height,
 		NULL,
-		trailsWorld
+		trailsWorldP
 	));
 	if (err != PF_Err_NONE) return err;
 
-	tilP->output = reinterpret_cast<PF_LayerDef*>(trailsWorld);
+	tilP->output = reinterpret_cast<PF_LayerDef*>(trailsWorldP);
 
 	ERR(suites.Iterate8Suite1()->iterate_generic(
 		output->width,
@@ -480,6 +490,11 @@ Render (
 		NULL,
 		NULL
 	));
+
+	/* Free memory */
+	suites.HandleSuite1()->host_dispose_handle(colorMaskH);
+	suites.HandleSuite1()->host_dispose_handle(trailsWorldH);
+	
 	return err;
 }
 
