@@ -1,6 +1,6 @@
 Uvod
 
-Cilj diplomske naloge je raziskati metode razvoja vtiènikov za programsko orodje Adobe After Effects. Adobe After Effects je programski paket, namenjen montaži videa in izdelavi vizualnih efektov. Ena izmed njegovih dobrih lastnosti je razširljivost s pomoèjo vtiènikov, ki omogoèajo dodajanje poljubnih funckionalnosti programskemu paketu. Razširjanje je omogoèeno prek programskega vmesnika in prosto dostopne razvojne dokumentacije za uporabo le tega. 
+Cilj diplomske naloge je raziskati metode razvoja vtiènikov za programsko orodje Adobe After Effects. sAdobe After Effects je programski paket, namenjen montaži videa in izdelavi vizualnih efektov. Ena izmed njegovih dobrih lastnosti je razširljivost s pomoèjo vtiènikov, ki omogoèajo dodajanje poljubnih funckionalnosti programskemu paketu. Razširjanje je omogoèeno prek programskega vmesnika in prosto dostopne razvojne dokumentacije za uporabo le tega. 
 
 Vtiènike za AE lahko delimo v 4 kategorije: splošno namenske vtiènike (AEGP), vizualne uèinke (effect), vhodno izhodne vtiènike (IO) in takoimenovane artie vtiènike, ki podpirajo napredne tehnologije, kot so 3d grafika in podobno. Ker sem se odloèil za razvoj vizualnih uèinkov, je izbira med tipi vtiènikov jasna. Vtièniki za vizualne uèinke implementirajo VFX kot operacijo nad posameznimi slièicami v videu. Programski vmesnik AE ponuja nemalo operacij, ki pospešijo izvajanje operacij nad piksli in skrajšajo èas razvoja, saj ponujajo visokonivojski dostop do vgrajenih funkcij AE. 
 

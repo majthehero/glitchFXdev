@@ -1,0 +1,13 @@
+1. Kaj so visualni efekti (VFX?)
+2. Omeni razliko s posebnimi efekti?
+3. Post produkcija
+
+Wikipedia viri:
+The VES Handbook of Visual Effects: Industry Standard VFX Practices and Procedures, Jeffrey A. Okun & Susan Zwerman, Publisher: Focal Press 2010
+T. Porter and T. Duff, "Compositing Digital Images", Proceedings of SIGGRAPH '84, 18 (1984).
+The Art and Science of Digital Compositing (ISBN 0-12-133960-2)
+McClean, Shilo T. (2007). Digital Storytelling: The Narrative Power of Visual Effects in Film. The MIT Press. ISBN 0-262-13465-9.
+Mark Cotta Vaz; Craig Barron: The Invisible Art: The Legends of Movie Matte Painting. San Francisco, Cal.: Chronicle Books, 2002; ISBN 0-8118-3136-1
+Peter Ellenshaw; Ellenshaw Under Glass - Going to the Matte for Disney
+Richard Rickitt: Special Effects: The History and Technique. Billboard Books; 2nd edition, 2007; ISBN 0-8230-8408-6.
+Patel, Mayur (2009). The Digital Visual Effects Studio: The Artists and Their Work Revealed. ISBN 1-4486-6547-7.

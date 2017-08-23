@@ -1,0 +1,32 @@
+--the standard handbook of video and television engineering; whitaker, benson
+section4: digital filters
+section18: picture quality measurments and analysis
+
+--principles of digital audio and video; luther
+chapter2: human vision; scaning, color representation, composite and component dig video
+chapter3: audio, human hearing
+chapter4: digram post prod system
+chapter6: digital camera signal processing
+chapter12: postproduction systems - nonlinear, effects, graphics
+
+--video display engineering; whitaker
+chapter1: aural component of visual realism
+!chapter6: electrostatic lens aberration (ideja ane, zveni kewl)
+
+--the art of digital video; watkinson
+chapter1: why digital
+chapter3: fourier transform, DCT, noise and porbability, wavelet transform
+chapter4: sampling and aliasing, reconstruction(!), vse
+chapter5: digital video processing (starting point :) )
+chapter13: digital video editing
+
+--the handbook of image and video processing; bovik
+section3: image and video processing
+section8: image and video rendering and assessment - halftoning, quatization, guality evaluation
+
+--dtv handbook the revolition in digital video; whitaker
+chapter1: zgodovina (poglavje)
+chapter4: digital coding of video signals: nyquist, aliasing, space and time
+!chapter9: DTV transmission issues (glitch idea)
+chapter12: video measurement techniques: image quality itd
+
