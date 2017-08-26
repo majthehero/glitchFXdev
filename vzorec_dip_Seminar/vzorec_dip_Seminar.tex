@@ -49,13 +49,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %	DIPLOMA INFO
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\ttitle}{Vzourec diplomskega dela}
-\newcommand{\ttitleEn}{Diploma thesis sample}
+\newcommand{\ttitle}{Naslov pride tukaj}
+\newcommand{\ttitleEn}{Title goes here}
 \newcommand{\tsubject}{\ttitle}
 \newcommand{\tsubjectEn}{\ttitleEn}
-\newcommand{\tauthor}{Matjaž Kralj}
-\newcommand{\tkeywords}{računalnik, računalnik, računalnik}
-\newcommand{\tkeywordsEn}{computer, computer, computer}
+\newcommand{\tauthor}{Maj Smerkol}
+\newcommand{\tkeywords}{video, After Effects, vizualni učinki, posebni učinki}
+\newcommand{\tkeywordsEn}{video, After Effects, visual effects, special effects}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -63,7 +63,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypersetup{pdftitle={\ttitle}}
 \hypersetup{pdfsubject=\ttitleEn}
-\hypersetup{pdfauthor={\tauthor, matjaz.kralj@fri.uni-lj.si}}
+\hypersetup{pdfauthor={\tauthor, ms5013@student.uni-lj.si}}
 \hypersetup{pdfkeywords=\tkeywordsEn}
 
 
@@ -199,9 +199,9 @@
 %    INTERDISCIPLINARNI UNIVERZITETNI\\ ŠTUDIJSKI PROGRAM PRVE STOPNJE\\ UPRAVNA INFORMATIKA}\par}%
 %    INTERDISCIPLINARNI UNIVERZITETNI\\ ŠTUDIJSKI PROGRAM PRVE STOPNJE\\ MULTIMEDIJA}\par}%
     \vfill\null%
-    {\large \textsc{Mentor}: doc.\ dr.  Peter Klepec\par}%
-   {\large \textsc{Somentor}:  izr.\ prof.\ dr. Martin Krpan \par}%
-    {\vskip 2em \large Ljubljana, 2016 \par}%
+    {\large \textsc{Mentor}: doc.\ dr.  Narvika Bovcon\par}%
+%   {\large \textsc{Somentor}:  izr.\ prof.\ dr. Martin Krpan \par}%
+    {\vskip 2em \large Ljubljana, 2017 \par}%
 \end{center}
 % prazna stran
 %\clearemptydoublepage      % dodal Solina (izjava o licencah itd. se izpiše na hrbtni strani naslovnice)
@@ -358,6 +358,69 @@ A proper abstract should contain around 100 words which makes this one way too s
 \pagestyle{fancy}
 
 \chapter{Uvod}
+
+Cilj diplomske naloge je raziskati metode razvoja vtičnikov za programsko orodje Adobe After Effects. sAdobe After Effects je programski paket, namenjen montaži videa in izdelavi vizualnih efektov. Ena izmed njegovih dobrih lastnosti je razširljivost s pomočjo vtičnikov, ki omogočajo dodajanje poljubnih funckionalnosti programskemu paketu. Razširjanje je omogočeno prek programskega vmesnika in prosto dostopne razvojne dokumentacije za uporabo le tega. 
+
+Vtičnike za AE lahko delimo v 4 kategorije: splošno namenske vtičnike (AEGP), vizualne učinke (effect), vhodno izhodne vtičnike (IO) in takoimenovane artie vtičnike, ki podpirajo napredne tehnologije, kot so 3d grafika in podobno. Ker sem se odločil za razvoj vizualnih učinkov, je izbira med tipi vtičnikov jasna. Vtičniki za vizualne učinke implementirajo VFX kot operacijo nad posameznimi sličicami v videu. Programski vmesnik AE ponuja nemalo operacij, ki pospešijo izvajanje operacij nad piksli in skrajšajo čas razvoja, saj ponujajo visokonivojski dostop do vgrajenih funkcij AE. 
+
+Splošno namenski vtičniki zahtevajo več resursov od sistema, na katerem tečejo, omogočajo pa programerju več možnosti itegracije z AE, spreminjanje uporabniškega vmesnika in odzivanje na interno stanje celotnega programskega paketa. Omogočajo mnogo več, kot potrebujemo za implementacijo tipičnih vizualnih učinkov. Vhodno izhodni vtičniki so namenjeni dodajanju podpore za branje in pisanje novih datotečnih formatov, implementaciji kodekov in podobno. !TODO opiši artie efekte ker si pozabil kaj je njihov pojnt.
+
+
+Pri razvoju VFX je seveda prvi korak ugotavljanje namena vizualnega učinka oziroma definiranje umetniške vizije. Pred tem sem pregledal obstoječe vtičnike. Po namenu sem jih ločil v tri kategorije. Prva kategorija so vtičniki za popravljanje izvornih posnetkov, kot so odstranjevanje šuma, popravljanje raznih vizualnih artefaktov in podobno. Namen teh vtičnikov je reševanje slabih posnetkov, kadar ponovni zajem videa oziroma ponovno snemanje ni mogoče, zaradi cene, pomanjkanja časa ali drugih razlogov. Le redko lahko s pomočjo teh vtičnikov dosežemo rezultate enake kvalitete, kot če bi bili posnetki dobri. 
+
+V drugo kategorijo štejem efekte, ki so namenjeni dodajanju vrednosti posnetki v post produkciji. Večino vizualnih učinkov pravzaprav lahko štejemo v to kategorijo. Sem spadajo tudi vsi tisti efekti, ki vizualno pomagajo pripovedništvu, pomagajo ustvariti fiktiven svet, like in podobno. 
+
+V tretjo kategorijo uvrščam destruktivne efekte - to so tisti, ki ne dodajajo informacij sliki, ampak nasprotno zmanjšajo kvaliteto slike za dosego nekega vizualnega sloga ali pa pomagajo ustvarjati vzdušje in v gledalcu, če so uspešno uporabljeni, lahko vzbudijo določena čustva. 
+
+V zadnjih letih se je pojavila smer digitalne vizualne umetnosti imenovana glitch art (umetnost napak) % !TODO prevod. !TODO zgodovina glitch art
+
+
+
+\chapter{Razvoj vtičnikov za After Effects}
+
+Za razvoj vtičnikov potrebujemo razvojno okolje za C++, SDK, ki ga ponuja Adobe na svoji spletni strani, in seveda programski paket After Effects. SDK vsebuje navodila za razvoj, opis delovanja vtičnikov v okolju programa After Effects in seveda opis funkcij, podatkovnih struktur in tipov, ki se uporabljajo v tem okolju. Polet tega je v SDK vključenih tudi veliko primerov vtičnikov. Vidimo lahko njihovo programsko kodo, jo spreminjamo ali uporabimo kot izhodišče za lastne vtičnike.
+
+Adobe močno priporoča razvojno okolje Microsoft Visual Studio, če uporabljamo operacijski sistem Windows in Apple Xcode na operacijskem sistemu Max OS X. Poskrbeti moramo tudi, da imamo nameščene primerne verzije vseh orodij. Ker pri programiranju vtičnikov izhajamo iz primerov ali predlog, lahko hitro naletimo na težave, če imamo napačno verzijo razvojnega okolja ali SDK, ki ni namenjen razvoju za tisto verzijo AE, ki jo imamo nameščeno za testiranje.
+
+Sam sem se odločil za delo na operacijskem sistemu MS Windows 10 Enterprise z okoljem MS Visual Studio 2015 update 3 za Adobe After Effects CC 2017.1 in Adobe After Effects CC 2017.1 Win SDK. 
+
+\section{Delovanje vtičnikov}
+Vtičniki so knjižnjice DLL, ki jih After Effects med zagonom naloži. Nato poteka komunikacija med vtičnikom in programom gostiteljem tako, da se vtičnik odziva na klice gostitelja s primerno funckijo. Vtičnik ima vedno le eno vhodno točko, funckijo s podpisom:
+\begin{verbatim}
+PF_Err plugin_name (
+    PF_Cmd	cmd,
+    PF_InData *in_data,
+    PF_OutData *out_data,
+    PF_LayerDef *output,
+    void *extra)
+\end{verbatim}
+
+Ko je vhodna funkcija poklicana, se mora na podlagi ukaznega selektorja \texttt{cmd} pravilno odzvati. 
+
+
+\section{Metoda razvoja}
+
+Pred razvojem željenega vtičnika se je dobro spoznati z uporabo SDK. V navodilih priporočajo, da si programer med primeri prebere in analizira tiste, ki so po načinu delovanja podobni ciljnemu. Tega lahko nato začnemo postopoma spreminjati in testirati, da spoznamo, kako vtičnik komuniciira in sodeluje z aplikacijo AE. Marsikateri podatki v navodilih manjkajo ali pa so zastareli, zato je potrebno kar veliko preizkušanja in raziskovanja.  Skozi proces spoznavanja interakcije med programom in vtičnikom lahko oblikujemo strukturo vtičnika. Odločiti se moramo, kako razporediti operacije med funkcije in kako  strukturirati podatke, da bodo dostopni ob pravem času in ne bodo ostajali v spominu. 
+
+Vsa komunikacija med vtičnikom in programom se začne s tem, da program gostitelj kliče vhodno točko v vtičniku. Ta ima vedno enak podpis:
+
+in vsebuje logiko, ki na podlagi prejetega ukaznega selektorja \texttt{cmd} pokliče funkcijo, ki bo opravila, kar gostitelj trenutno potrebuje od vtičnika. Glede na tip vtičnika mora programer podpreti različne ukaze, ki jih bo gostitelj klical. Vhodna točka je tako funkcija, ki skrbi le za to, da se bo prava funkcija odzvala na klic programa in pravilno reagira v primeru napak - vrne številko napake in poskusi brez neželjenih stranskih učinkov zalkjučiti izvajanje vtičnika.
+
+
+
+% !TODO dokončaj metode razvoja vtičnikov
+
+
+
+\section{Vtičnik PixelRain}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{od tu naprej je vzorec}
+
 Prvi koristen nasvet v zvezi uporabo \LaTeX{a} je, da ta dokument preberete v celoti!
 
 Datoteka {\tt vzorec\_dip\_Seminar.tex} na kratko opisuje, kako se pisanja diplomskega dela lotimo z uporabo programskega okolja \LaTeX~\cite{lamport,nenajkrajsi}. 

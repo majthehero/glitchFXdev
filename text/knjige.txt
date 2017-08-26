@@ -13,16 +13,14 @@ chapter12: postproduction systems - nonlinear, effects, graphics
 chapter1: aural component of visual realism
 !chapter6: electrostatic lens aberration (ideja ane, zveni kewl)
 
---the art of digital video; watkinson
-chapter1: why digital
+--the art of digital video; watkinson -- zgleda prestaro
 chapter3: fourier transform, DCT, noise and porbability, wavelet transform
 chapter4: sampling and aliasing, reconstruction(!), vse
-chapter5: digital video processing (starting point :) )
 chapter13: digital video editing
 
 --the handbook of image and video processing; bovik
 section3: image and video processing
-section8: image and video rendering and assessment - halftoning, quatization, guality evaluation
+section8: image and video rendering and assessment - halftoning, quatization, quality evaluation
 
 --dtv handbook the revolition in digital video; whitaker
 chapter1: zgodovina (poglavje)

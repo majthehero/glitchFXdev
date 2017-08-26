@@ -1,9 +1,0 @@
-references:
---newman, sproull; principles of interactive computer graphics; McGraw-Hill (1979)
-computer graphics: one 2D problem can be transformed into 2 1D problems(?) preberi
-
-
-
-
-
-The art of digital video: figure 5.34: font rom and generator of text. FPGA impl done :P
