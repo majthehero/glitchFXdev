@@ -49,8 +49,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %	DIPLOMA INFO
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\ttitle}{Naslov pride tukaj}
-\newcommand{\ttitleEn}{Title goes here}
+\newcommand{\ttitle}{Digitalni video efekti za After Effects}
+\newcommand{\ttitleEn}{Digital video effects for After Effects}
 \newcommand{\tsubject}{\ttitle}
 \newcommand{\tsubjectEn}{\ttitleEn}
 \newcommand{\tauthor}{Maj Smerkol}
@@ -235,14 +235,10 @@ Fakulteta za računalništvo in informatiko izdaja naslednjo nalogo:
 \hspace{32mm}\= \hspace{6cm} \= \kill
 
 
-
-
 Tematika naloge:
 \end{tabbing}
 Besedilo teme diplomskega dela študent prepiše iz študijskega informacijskega sistema, kamor ga je vnesel mentor. V nekaj stavkih bo opisal, kaj pričakuje od kandidatovega diplomskega dela. Kaj so cilji, kakšne metode uporabiti, morda bo zapisal tudi ključno literaturo.
 \vspace{15mm}
-
-
 
 
 
@@ -286,23 +282,15 @@ Svoji dragi Alenčici.
 
 \chapter*{Seznam uporabljenih kratic}  % spremenil Solina, da predolge vrstice ne gredo preko desnega roba
 
-\begin{comment}
-\begin{tabular}{l|l|l}
-  {\bf kratica} & {\bf angleško} & {\bf slovensko} \\ \hline
-  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-  {\bf CA} & classification accuracy & klasifikacijska točnost \\
-  {\bf DBMS} & database management system & sistem za upravljanje podatkovnih baz \\
-  {\bf SVM} & support vector machine & metoda podpornih vektorjev \\
-  \dots & \dots & \dots \\
-\end{tabular}
-\end{comment}
-
 \noindent\begin{tabular}{p{0.1\textwidth}|p{.4\textwidth}|p{.4\textwidth}}    % po potrebi razširi prvo kolono tabele na račun drugih dveh!
-  {\bf kratica} & {\bf angleško}                             & {\bf slovensko} \\ \hline
-  {\bf CA}      & classification accuracy               & klasifikacijska točnost \\
-  {\bf DBMS} & database management system & sistem za upravljanje podatkovnih baz \\
-  {\bf SVM}   & support vector machine              & metoda podpornih vektorjev \\
-  \dots & \dots & \dots \\
+  {\bf kratica} & {\bf angleško}              				& {\bf slovensko} \\ \hline
+  {\bf VFX}      & visual effects               				& vizualni učinki \\
+  {\bf SFX}      & special effects              				& posebni učinki \\
+  {\bf AEGP}   & After Effects general purpose plug-in 	& splošno namenski vtičnik za After Effects \\
+  {\bf AE}       & Adobe After Effects 				&  Adobe After Effects \\
+  {\bf SDK}     & software development kit 			&  paket za razvoj programske opreme \\
+  {\bf CGI}	& computer generated imagery			& računalniško generirana grafika \\
+
 \end{tabular}
 
 
@@ -359,33 +347,130 @@ A proper abstract should contain around 100 words which makes this one way too s
 
 \chapter{Uvod}
 
-Cilj diplomske naloge je raziskati metode razvoja vtičnikov za programsko orodje Adobe After Effects. sAdobe After Effects je programski paket, namenjen montaži videa in izdelavi vizualnih efektov. Ena izmed njegovih dobrih lastnosti je razširljivost s pomočjo vtičnikov, ki omogočajo dodajanje poljubnih funckionalnosti programskemu paketu. Razširjanje je omogočeno prek programskega vmesnika in prosto dostopne razvojne dokumentacije za uporabo le tega. 
+Cilj diplomske naloge je raziskati metode razvoja vtičnikov za programsko orodje Adobe After Effects (v nadaljevanju AE). 
+AE je programski paket, namenjen montaži videa in izdelavi vizualnih efektov. 
+Ena izmed njegovih dobrih lastnosti je razširljivost s pomočjo vtičnikov, ki omogočajo dodajanje poljubnih funckionalnosti programskemu paketu. 
+Razširjanje je omogočeno prek programskega vmesnika in prosto dostopne razvojne dokumentacije za uporabo le tega. 
 
-Vtičnike za AE lahko delimo v 4 kategorije: splošno namenske vtičnike (AEGP), vizualne učinke (effect), vhodno izhodne vtičnike (IO) in takoimenovane artie vtičnike, ki podpirajo napredne tehnologije, kot so 3d grafika in podobno. Ker sem se odločil za razvoj vizualnih učinkov, je izbira med tipi vtičnikov jasna. Vtičniki za vizualne učinke implementirajo VFX kot operacijo nad posameznimi sličicami v videu. Programski vmesnik AE ponuja nemalo operacij, ki pospešijo izvajanje operacij nad piksli in skrajšajo čas razvoja, saj ponujajo visokonivojski dostop do vgrajenih funkcij AE. 
+Vtičnike za AE lahko delimo v 4 kategorije: 
+splošno namenske vtičnike (AEGP), 
+vizualne učinke (effect), 
+vhodno izhodne vtičnike (IO) in 
+vtičnike Artisan, ki prevzamejo upodabljanje 3D slojev oziroma nadomestijo privzeti algoritem za upodabljanje v AE. 
+Gostitelj še vedno sam skrbi za upodabljanje 2D slojev. 
+Ker sem se odločil za razvoj vizualnih učinkov, je izbira med tipi vtičnikov jasna. 
+Vtičniki za vizualne učinke implementirajo VFX kot operacijo nad posameznimi sličicami v videu. 
+Programski vmesnik AE ponuja nemalo operacij, ki pospešijo izvajanje operacij nad piksli in skrajšajo čas razvoja, saj ponujajo visokonivojski dostop do vgrajenih funkcij AE. 
 
-Splošno namenski vtičniki zahtevajo več resursov od sistema, na katerem tečejo, omogočajo pa programerju več možnosti itegracije z AE, spreminjanje uporabniškega vmesnika in odzivanje na interno stanje celotnega programskega paketa. Omogočajo mnogo več, kot potrebujemo za implementacijo tipičnih vizualnih učinkov. Vhodno izhodni vtičniki so namenjeni dodajanju podpore za branje in pisanje novih datotečnih formatov, implementaciji kodekov in podobno. !TODO opiši artie efekte ker si pozabil kaj je njihov pojnt.
+Splošno namenski vtičniki zahtevajo več resursov od sistema, na katerem tečejo, omogočajo pa programerju več možnosti itegracije z AE, spreminjanje uporabniškega vmesnika in odzivanje na interno stanje celotnega programskega paketa. 
+Omogočajo mnogo več, kot potrebujemo za implementacijo tipičnih vizualnih učinkov. 
+Vhodno izhodni vtičniki so namenjeni dodajanju podpore za branje in pisanje novih datotečnih formatov, implementaciji kodekov in podobno.
+
+Pri razvoju VFX je seveda prvi korak ugotavljanje namena vizualnega učinka oziroma definiranje umetniške vizije. 
+Pred tem sem pregledal obstoječe vtičnike. 
+Po namenu sem jih ločil v tri kategorije. 
+Prva kategorija so vtičniki za popravljanje izvornih posnetkov, kot so odstranjevanje šuma, popravljanje raznih vizualnih artefaktov in podobno. 
+Namen teh vtičnikov je reševanje slabih posnetkov, kadar ponovni zajem videa oziroma ponovno snemanje ni mogoče, zaradi cene, pomanjkanja časa ali drugih razlogov. 
+Le redko lahko s pomočjo teh vtičnikov dosežemo rezultate enake kvalitete, kot če bi bili posnetki dobri. 
+
+V drugo kategorijo štejem efekte, ki so namenjeni dodajanju vrednosti posnetki v post produkciji. 
+Večino vizualnih učinkov pravzaprav lahko štejemo v to kategorijo. 
+Sem spadajo tudi vsi tisti efekti, ki vizualno pomagajo pripovedništvu, pomagajo ustvariti fiktiven svet, like in podobno. 
+
+V tretjo kategorijo uvrščam destruktivne efekte - to so tisti, ki ne dodajajo informacij sliki, ampak nasprotno zmanjšajo kvaliteto slike za dosego nekega vizualnega sloga ali pa pomagajo ustvarjati vzdušje in gledalcu, če so uspešno uporabljeni, lahko vzbudijo določena čustva. 
+Primere takšnih efektov lahko najdemo marsikje, v popularni kulturi (Mr Robot, 2015), %!TODO preveri podatke + slika
+računalniških igrah (SOMA, 2016) % !TODO poglej podateke in slika
+ in filmih (The Matrix, 1999), % !TODO opklepaj izpolni.
+na različne načine proizvedene vizualne artefakte pa celo v galerijah in knjižnih zbirkah umetniških del (ang. {\it ASCII Graphic Glitch Art}, Rozita Fogelman).
+
+ % !TODO zgodovina glitch art IZ KNJIG NOVIH don't translate glitch art
+% !TODO medijski jezik, video jezik, kaj pomenijo glitchi danes in mogoče kaj so včasih.
 
 
-Pri razvoju VFX je seveda prvi korak ugotavljanje namena vizualnega učinka oziroma definiranje umetniške vizije. Pred tem sem pregledal obstoječe vtičnike. Po namenu sem jih ločil v tri kategorije. Prva kategorija so vtičniki za popravljanje izvornih posnetkov, kot so odstranjevanje šuma, popravljanje raznih vizualnih artefaktov in podobno. Namen teh vtičnikov je reševanje slabih posnetkov, kadar ponovni zajem videa oziroma ponovno snemanje ni mogoče, zaradi cene, pomanjkanja časa ali drugih razlogov. Le redko lahko s pomočjo teh vtičnikov dosežemo rezultate enake kvalitete, kot če bi bili posnetki dobri. 
+\chapter{Vizualni učinki v filmu in videu}
 
-V drugo kategorijo štejem efekte, ki so namenjeni dodajanju vrednosti posnetki v post produkciji. Večino vizualnih učinkov pravzaprav lahko štejemo v to kategorijo. Sem spadajo tudi vsi tisti efekti, ki vizualno pomagajo pripovedništvu, pomagajo ustvariti fiktiven svet, like in podobno. 
+% !TODO  namen montaže, montaža kot korak postprodukcije, linearna in nelinearna montaža (linearna je lajk sto let zadi)
+% razlika med filmsko in video montažo beyond tech? mogoče ne obstaja
+\section{Pregled zgodovine vizualnih učinkov}
 
-V tretjo kategorijo uvrščam destruktivne efekte - to so tisti, ki ne dodajajo informacij sliki, ampak nasprotno zmanjšajo kvaliteto slike za dosego nekega vizualnega sloga ali pa pomagajo ustvarjati vzdušje in v gledalcu, če so uspešno uporabljeni, lahko vzbudijo določena čustva. 
+Filmska montaža je postopek, pri katerem iz posnetkov sestavimo zgodbo. 
+Je ključna dejavnost v postprodukciji. 
 
-V zadnjih letih se je pojavila smer digitalne vizualne umetnosti imenovana glitch art (umetnost napak) % !TODO prevod. !TODO zgodovina glitch art
+Zgodovinsko se je tehnologija filmske in video montaže začela razvijati že konec 19. stoletja. 
+Leta 1895 je v kratkem filmu Usmrtitev Marije I. Škotske (ang. {\it The Execution of Mary, queen of Scots}, 1895) režiser Alfred Clark prikazal, kako kraljici odsekajo glavo. 
+Navidezno usmrtitev kraljice je dosegel tako, da je tik pred rabljevim zamahom s sekiro kamero ustavil in v tem času zamenjal igralko z lutko, nato pa nadaljeval snemanje. 
+To je prvi dokumentiran vizualni učinek. 
+Viri navajajo, da je marsikateri gledalec verjel, da so igralko med snemanjem zares usmrtili. % !TODO navedi kateri viri to navajajo iz wikipedije
+Ta film je pokazal, da montaža in vizualni učinki lahko pripomorejo k pripovedni moči filma.
 
+Razvoj vizualnih učinkov gre z roko v roki z novimi montažerskimi prijemi, novo filmsko tehnologijo in razcvetom filma v 20. stoletju. 
+Že nekaj let kasneje je za film Veliki rop vlaka (ang. {\it The Great Train Robbery}, 1903) studio Thomasa Edisona razvil tehnologijo maskiranja filma (ang. {\it black matte}) in ponovne ekspozicije maskiranega predela, da je v studiju lahko prikazal pogled skozi okno, v katerega je vstavil razgled. 
+V 1930. letih so začeli z uporabo projekcije ozadij ali drugih elementov na platno, pred katerega so nato postavili scenografijo in igralce. 
+Istočasno se je razvila tudi uporaba pomanjšanih setov in figur oziroma miniatur, ki so jih lahko animirali na način stop motion in kasneje z uporabo projekcije ali maskiranja kombinirali s posnetki igrane akcije.% !TODO prevod ali nekaj podobnega stop motion je ustavljeno gibanje se mi zdi
+V tem času se je uporabljala tudi tehnika slikanja na steklo, ki se je postavilo pred lečo kamere za dodajanje vizualnih elementov. 
+Zanimivo je, da so v 30. letih, v času črnobelih filmov, že začeli uporabljati tehniko odstranjevanja ozadja s pomočjo modrega zaslona. 
+Moder zaslon namreč lahko z uporabo modrega filtra na črnobelem posnetku popolnoma izgine in pusti za seboj neizpostavljen film, kamor lahko vstavimo druge slike. 
+
+V 50. letih prejšnjega stoletja so v Disneyevih studijih odkrili tehniko, kako hkrati posneti sliko in potujočo masko (ang. {\it traveling matte} - način maskiranja, pri katerem se masko posname na trak in se le ta zato popolnoma ujema s sliko) s pomočjo modrega zaslona. 
+S to tehniko so posneli film Marry Poppins (195x), v katerem naslovna junakinja leti s pomočjo dežnika, oziroma s pomočjo modrega zaslona in potujoče maske. % !TODO letnica --- vir je VES handbook za vse to
+Tehniko so v 80. letih izpopolnili s pomočjo na UV svetlobo občutljivega filmskega traku in barvanjem elementov maskiranja z UV odbojno barvo za film Vojna Zvezd (ang. {\it Star Wars}). 
+% !TODO kateri film a se prov spomnm star wars
+
+V naslednjih desetletjih se je razvoj filmskih posebnih učinkov razvijal predvsem v smeri izpopolnjevanja že poznanih tehnik. 
+Tako so v 60. letih razvili novo tehniko projeciranja na zaslon v studiju od spredaj, kar je poskrbelo za bolj jasno sliko ozadij, večji kontrast in bolj pravilne barve. 
+V 70. letih se je začela uporabljati tehnika maskiranja z modrim zaslonom tudi za barvne filme, v 80. letih pa so uspeli doseči maskiranje brez uhajanja modre svetlobe na objekte
+\footnote{ang. {\it blue-spill} je odsev modre svetlobe s platna na druge objekte. 
+Izoognemo se mu lahko s pomočjo natančne osvetlitve platna, neodvisne od drugih virov svetlobe ali s pomočjo filtrov v post produkciji.}.
+
+Prvi računalniško ustvarjeni vizualni efekti so se pojavili že v 50. letih 20. stoletja. 
+John Whitney je uporabil odslužen analogni računalnik za vodenje protiletalskih izstrelkov kot pripomoček za animacijo. 
+Na podlagi njegovega dela so kasneje razvili tudi tehniko, s katero so v filmu Odiseja 2001 posneli sekvenco potovanja skozi črvino.
+
+Prvi pravi digitalni posebni učinki pa so bili uporabljeni v filmu Westworld (ang. {\it Westworld}, 1973). % !TODO studio, slika, digitalni efekti pred tem v umetniškem videu
+V tem filmu so prikazali človeku podobne robote in v nekaterih prizorih dele igralcev nadomestili s 3D računalniško generirano grafiko. 
+Podjetje Triple-I je kasneje tehniko razvijalo dalje.
+Nekaj let kasneje so podobne vizualne učinke uporabili v filmu Futureworld (ang. {\it Futureworld}).
+Leta 1982 pa so za film Tron (ang. {\it Tron}, 1982) s pomočjo računalniške 3D CGI upodobili celoten fikcijski svet in objekte v njem.
+V filmu Tron efekti niso bili prepričljivi, kar pa ustvarjalcev ni oviralo, saj film prikazuje digitalen svet oziroma navidezno resničnost.
+Leta 1985 je studio Pixar ustvaril prvi 3D CGI animiran lik.
+To je bil stekleni vitez v filmu Mladi Sherlock Holmes (ang. {\it Young Sherlock Holmes}).
+V 90. letih so digitalni vizualni učinki hitro napredovali zaradi razvoja računalniške tehnologije, ki je postala dostopnejša in končno dovolj zmogljiva za resno delo.
+Leta 1992 so v filmu prvič prikazali prepričljive 3D CGI živali, pingvine in netopirje v filmu Batman se vrača (ang. {\it Batman Returns}, 1992). % !TODO preveri naslov in to
+Leto kasneje pa je film Jurski Park (ang. {\it Jurassic Park}, 1993) zelo uspešno kombiniral 3D CGI, lutke, živo igro in posnetke miniatur. 
+
+Danes velika večina filmov in videa uporablja digitalne video efekte. 
+Ti efekti so pogosto popolnoma neopazni, kot naprimer dodan sneg v filmu Tat knjig (nem. {\it Die Buch Dieb}). %!TODO naslov filma oba jezika in letnica
+
+
+\section{Zgodovina videa}
+
+Eletronski video 
+
+
+
+
+% !TODO after effects kot orodje za montažo, kot orodje za splošno postprodukcijo in kot glavni namen kompozicija slike in posebni učinki
+% !TODO pregled AE z vidika uporabnika - orodja, pogoste operacije, zmogljivost (?)
 
 
 \chapter{Razvoj vtičnikov za After Effects}
 
-Za razvoj vtičnikov potrebujemo razvojno okolje za C++, SDK, ki ga ponuja Adobe na svoji spletni strani, in seveda programski paket After Effects. SDK vsebuje navodila za razvoj, opis delovanja vtičnikov v okolju programa After Effects in seveda opis funkcij, podatkovnih struktur in tipov, ki se uporabljajo v tem okolju. Polet tega je v SDK vključenih tudi veliko primerov vtičnikov. Vidimo lahko njihovo programsko kodo, jo spreminjamo ali uporabimo kot izhodišče za lastne vtičnike.
+Za razvoj vtičnikov potrebujemo razvojno okolje za C++, SDK, ki ga ponuja Adobe na svoji spletni strani, in seveda programski paket After Effects. 
+SDK vsebuje navodila za razvoj, opis delovanja vtičnikov v okolju programa After Effects in seveda opis funkcij, podatkovnih struktur in tipov, ki se uporabljajo v tem okolju. 
+Polet tega je v SDK vključenih tudi veliko primerov vtičnikov. 
+Vidimo lahko njihovo programsko kodo, jo spreminjamo ali uporabimo kot izhodišče za lastne vtičnike.
 
-Adobe močno priporoča razvojno okolje Microsoft Visual Studio, če uporabljamo operacijski sistem Windows in Apple Xcode na operacijskem sistemu Max OS X. Poskrbeti moramo tudi, da imamo nameščene primerne verzije vseh orodij. Ker pri programiranju vtičnikov izhajamo iz primerov ali predlog, lahko hitro naletimo na težave, če imamo napačno verzijo razvojnega okolja ali SDK, ki ni namenjen razvoju za tisto verzijo AE, ki jo imamo nameščeno za testiranje.
+Adobe močno priporoča razvojno okolje Microsoft Visual Studio, če uporabljamo operacijski sistem Windows in Apple Xcode na operacijskem sistemu Max OS X. 
+Poskrbeti moramo tudi, da imamo nameščene primerne verzije vseh orodij. 
+Ker pri programiranju vtičnikov izhajamo iz primerov ali predlog, lahko hitro naletimo na težave, če imamo napačno verzijo razvojnega okolja ali SDK, ki ni namenjen razvoju za tisto verzijo AE, ki jo imamo nameščeno za testiranje.
 
 Sam sem se odločil za delo na operacijskem sistemu MS Windows 10 Enterprise z okoljem MS Visual Studio 2015 update 3 za Adobe After Effects CC 2017.1 in Adobe After Effects CC 2017.1 Win SDK. 
 
+
 \section{Delovanje vtičnikov}
-Vtičniki so knjižnjice DLL, ki jih After Effects med zagonom naloži. Nato poteka komunikacija med vtičnikom in programom gostiteljem tako, da se vtičnik odziva na klice gostitelja s primerno funckijo. Vtičnik ima vedno le eno vhodno točko, funckijo s podpisom:
+Vtičniki so knjižnjice DLL, ki jih After Effects med zagonom naloži. 
+Nato poteka komunikacija med vtičnikom in programom gostiteljem tako, da se vtičnik odziva na klice gostitelja s primerno funckijo. 
+Vtičnik ima vedno le eno vhodno točko, funckijo s podpisom:
 \begin{verbatim}
 PF_Err plugin_name (
     PF_Cmd	cmd,
@@ -395,17 +480,71 @@ PF_Err plugin_name (
     void *extra)
 \end{verbatim}
 
-Ko je vhodna funkcija poklicana, se mora na podlagi ukaznega selektorja \texttt{cmd} pravilno odzvati. 
+After Effects ugotovi, kje se nahaja vhodna točka vtičnika s pomočjo resusra PiPL (ang. {\it plug-in property list} - seznam lastnosti vtičnika).
+To je dokument, ki ga napiše programer in katerega vsebina se mora ujemati z implementacijo vtičnika. 
+Moderne verzije AE sicer večino lastnosti pridobijo direktno iz programske kode vtičnike in ne iz datoteke PiPL. 
+Kljub temu se morajo podatki ujemati iz zgodovinkih razlogov in združljivosti s starejšimi verzijami datotek in vtičnikov. 
+
+Ko je vhodna funkcija poklicana, se mora na podlagi ukaznega izbirnika \texttt{cmd} pravilno odzvati. 
+Vtičnik mora nekatere klice nujno podpreti, nekateri pa so opcijski. 
+Vhodna točka je tako funkcija, ki skrbi le za to, da se bo prava funkcija odzvala na klic programa in pravilno reagira v primeru napak. 
+Vrne številko napake in poskusi brez neželjenih stranskih učinkov zalkjučiti izvajanje vtičnika.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{p{0.35\textwidth}|p{0.55\textwidth}}
+\hline
+
+{\bf ukazni izbirnik} & {\bf odziv } \\ \hline
+\multicolumn{2}{ l } { Ukazni izbirniki, na katere se je potrebno odzvati ne glede na tip vtičnika } \\ \hline
+\texttt{PF\_Cmd\_ABOUT} & Prikaži podatke o vtičniku - gostitelj bo pripravil dialog,  vtičnik pa mora pripraviti vsebino. \\
+\texttt{PF\_Cmd\_GLOBAL\_SETUP}   & Pripravi globalne podatke o vtičniku in rezerviraj pomnilnik za podatke, ki morajo biti dostopni ves čas delovanja vtičnika. \\
+\texttt{PF\_Cmd\_GLOBAL\_SETDOWN}   & Če je v {\tt PF\_Cmd\_GLOBAL\_SETUP} bil rezerviran pomnilnik, ga sprosti. Sicer se ni potrebno odzvati. \\
+\texttt{PF\_Cmd\_PARAM\_SETUP}   & Pripravi uporabniški vmesnik za podajanje parametrov vtičniku.  \\ \hline
+
+\multicolumn{2}{ l } { Za upravljanje s podatki sekvence \footnotemark } \\ \hline
+\texttt{PF\_Cmd\_SEQUENCE\_SETUP} & Rezervija pomnilnik za podatke, ki niso odvisni od sličice, ki se obdeluje, ampak morajo biti dostopni tekom cele sekvence. \\
+\texttt{PF\_Cmd\_SEQUENCE\_SETDOWN}   & Sprosti ves spomin, ki je bil rezerviran v {\tt PF\_Cmd\_SEQUENCE\_SETUP} \\ \hline
+
+\multicolumn{2}{ l } { Ukazni izbirniki, ki se pošljejo za vsako sličico videa } \\ \hline
+\texttt{PF\_Cmd\_RENDER} & Upodobi sličico. Klic zahteva, da vtičnik pripravi in v dodeljeni spomin zapiše vrednosti vseh pikslov. klic se uporablja samo za prikazovanje slojev z barvno globino 8 ali 16 bitov na kanal. \\
+\texttt{PF\_Cmd\_SMART\_PRE\_RENDER} & Se uporablja pri efektih tipa SmartFX. Vtičnik mora glede na željene pogoje prepoznati dele slike, ki jih bo upodobil. \\
+\texttt{PF\_Cmd\_SMART\_PRE\_RENDER} & Klic SmartFX za upodobitev slike. V vnaprej prepoznane ciljne dele slike vpiši nove piksle. \\ \hline
+
+\end{tabular}
+\end{center}
+\caption{Nekateri izmed pogosteje podprtih ukaznih selektorjev.}
+\label{tbl:PF_Cmd}
+\end{table}
+
+\footnotetext{Sekvenca v AE predstavlja samostojen projekt z enim ali več sloji videa in zvoka, nad katerimi izvajamo operacije.}
+
+Adobe priporoča, da kadar je le možno, uporabimo vgrajene funkcije in programske konstrukte, ki jih implementira AE in lahko do njih dostopamo prek SDK. 
+S tem ne le skrajšamo čas, potreben za razvoj vtičnikov, ampak tudi zmanjšamo verjetnost za vpeljevanje hroščev in napak. 
+Vgrajene funkcije seveda ne bodo delovale, če jih kličemo nepravilno in imajo vgrajene mehanizme za preprečevanje puščanja pomnilnika in sesuvanja. 
+Pomembno je, da tudi, če vtičnik ne deluje pravilno, ne sesuje gostitelja. 
+Če se sesuje gostitelj, lahko namreč končni uporabnik izgubi podatke in s tem svoje delo. 
+
+Zato nam naprimer SDK ponudi funkcije za rezervacijo pomnilnika, s katerimi ne tekmujemo z gostiteljem in operacijskim sistemom za delovni pomnilnik, saj rezervacijo za nas opravi gostitelj.
+S tem se izognemo situaciji, ko bi vtičnik porabil toliko spomina, da bi ga zmanjkalo za AE. 
+S tem bi se sesul AE in z njim seveda tudi vtičnik, ki je odvisen od izvajanja programa gostitelja.
+
+
+\subsection{SmartFX} % !TODO to ni vse kar je razlike seveda, opozori na to
+
+Posebna kategorija so vtičniki SmartFX. 
+Od navadnih efektov se razlikujejo po tem, da omogočajo dvosmerno komunikacijo z AE in podpirajo video z barvno globino 32bitov na kanal. 
+Dvosmerno komunikacijo se doseže z  implementacijo dodetnega ukaznega izbirnika {\tt PF\_Cmd\_SMART\_PRE\_RENDER}, ki AE sporoči, katere dele slike bo upodobil. 
 
 
 \section{Metoda razvoja}
 
-Pred razvojem željenega vtičnika se je dobro spoznati z uporabo SDK. V navodilih priporočajo, da si programer med primeri prebere in analizira tiste, ki so po načinu delovanja podobni ciljnemu. Tega lahko nato začnemo postopoma spreminjati in testirati, da spoznamo, kako vtičnik komuniciira in sodeluje z aplikacijo AE. Marsikateri podatki v navodilih manjkajo ali pa so zastareli, zato je potrebno kar veliko preizkušanja in raziskovanja.  Skozi proces spoznavanja interakcije med programom in vtičnikom lahko oblikujemo strukturo vtičnika. Odločiti se moramo, kako razporediti operacije med funkcije in kako  strukturirati podatke, da bodo dostopni ob pravem času in ne bodo ostajali v spominu. 
-
-Vsa komunikacija med vtičnikom in programom se začne s tem, da program gostitelj kliče vhodno točko v vtičniku. Ta ima vedno enak podpis:
-
-in vsebuje logiko, ki na podlagi prejetega ukaznega selektorja \texttt{cmd} pokliče funkcijo, ki bo opravila, kar gostitelj trenutno potrebuje od vtičnika. Glede na tip vtičnika mora programer podpreti različne ukaze, ki jih bo gostitelj klical. Vhodna točka je tako funkcija, ki skrbi le za to, da se bo prava funkcija odzvala na klic programa in pravilno reagira v primeru napak - vrne številko napake in poskusi brez neželjenih stranskih učinkov zalkjučiti izvajanje vtičnika.
-
+Pred razvojem željenega vtičnika se je dobro spoznati z uporabo SDK. 
+V navodilih priporočajo, da si programer med primeri prebere in analizira tiste, ki so po načinu delovanja podobni ciljnemu. 
+Tega lahko nato začnemo postopoma spreminjati in testirati, da spoznamo, kako vtičnik komuniciira in sodeluje z aplikacijo AE.
+Marsikateri podatki v navodilih manjkajo ali pa so zastareli, zato je potrebno kar veliko preizkušanja in raziskovanja.  
+Skozi proces spoznavanja interakcije med programom in vtičnikom lahko oblikujemo strukturo vtičnika. 
+Odločiti se moramo, kako razporediti operacije med funkcije in kako  strukturirati podatke, da bodo dostopni ob pravem času in ne bodo ostajali v spominu. 
 
 
 % !TODO dokončaj metode razvoja vtičnikov
