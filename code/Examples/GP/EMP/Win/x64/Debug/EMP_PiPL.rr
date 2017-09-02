@@ -1,0 +1,121 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+resource 'PiPL' (16000) {
+	{	
+		
+		Kind {
+			AEGeneral
+		},
+		
+		Name {
+			"EMP"
+		},
+		
+		Category {
+			"General Plugin"
+		},
+		
+		Version {
+			0x00030000
+		},
+		
+
+	
+		CodeWin64X86 {"EntryPointFunc"},
+	
+
+
+
+
+
+
+
+
+
+	}
+};
+

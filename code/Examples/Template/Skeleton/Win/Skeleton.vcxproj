@@ -21,6 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2C8DED3E-111D-4272-A54A-F1865F02A90E}</ProjectGuid>
     <RootNamespace>Skeleton</RootNamespace>
+    <ProjectName>ElStAberr</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -313,7 +314,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="..\SkeletonPiPL.r">
+    <CustomBuild Include="..\ElStAberrPiPL.r">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling the PiPL</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling the PiPL</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cl /I "$(ProjectDir)..\..\..\Headers" /EP ".."\\"%(Filename).r" &gt; "$(IntDir)"\\"%(Filename).rr"
@@ -344,8 +345,8 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
     <ResourceCompile Include="SkeletonPiPL.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Skeleton.h" />
-    <ClInclude Include="..\Skeleton_Strings.h" />
+    <ClInclude Include="..\ElStAberr.h" />
+    <ClInclude Include="..\ElStAberr_Strings.h" />
     <ClInclude Include="..\..\..\Headers\A.h" />
     <ClInclude Include="..\..\..\Headers\AE_Effect.h" />
     <ClInclude Include="..\..\..\Headers\AE_EffectCB.h" />
@@ -368,8 +369,8 @@ cl /D "MSWindows" /EP $(IntDir)%(Filename).rrc &gt;               "$(ProjectDir)
   <ItemGroup>
     <ClCompile Include="..\..\..\Util\AEGP_SuiteHandler.cpp" />
     <ClCompile Include="..\..\..\Util\MissingSuiteError.cpp" />
-    <ClCompile Include="..\Skeleton.cpp" />
-    <ClCompile Include="..\Skeleton_Strings.cpp" />
+    <ClCompile Include="..\ElStAberr.cpp" />
+    <ClCompile Include="..\ElStAberr_Strings.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

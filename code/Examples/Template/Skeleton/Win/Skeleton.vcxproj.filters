@@ -21,12 +21,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Skeleton.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Skeleton_Strings.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Headers\A.h">
       <Filter>Headers\AE</Filter>
     </ClInclude>
@@ -81,6 +75,12 @@
     <ClInclude Include="..\..\..\Util\String_Utils.h">
       <Filter>Headers\AE</Filter>
     </ClInclude>
+    <ClInclude Include="..\ElStAberr.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ElStAberr_Strings.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Util\AEGP_SuiteHandler.cpp">
@@ -89,11 +89,11 @@
     <ClCompile Include="..\..\..\Util\MissingSuiteError.cpp">
       <Filter>Supporting code</Filter>
     </ClCompile>
-    <ClCompile Include="..\Skeleton.cpp" />
-    <ClCompile Include="..\Skeleton_Strings.cpp" />
+    <ClCompile Include="..\ElStAberr.cpp" />
+    <ClCompile Include="..\ElStAberr_Strings.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\SkeletonPiPL.r">
+    <CustomBuild Include="..\ElStAberrPiPL.r">
       <Filter>Resources</Filter>
     </CustomBuild>
   </ItemGroup>
