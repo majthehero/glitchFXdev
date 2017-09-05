@@ -83,7 +83,7 @@ enum {
 
 enum {
 	GAIN_DISK_ID = 1,
-	COLOR_DISK_ID,
+	FILLIN_CB_ID,
 };
 
 typedef struct GainInfo{
@@ -95,6 +95,12 @@ typedef struct GainInfo{
 	// out data
 	PF_LayerDef *outLayerP;
 } GainInfo, *GainInfoP, **GainInfoH;
+
+typedef struct AfterAberInfo{
+	A_long worldHeight, worldWidth;
+	PF_EffectWorld *worldP;
+	PF_InData *inData;
+} AfterAberInfo;
 
 #ifdef __cplusplus
 	extern "C" {

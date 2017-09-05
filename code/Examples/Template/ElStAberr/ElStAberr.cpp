@@ -98,15 +98,20 @@ ParamsSetup (
 							0,
 							GAIN_DISK_ID);
 
-	AEFX_CLR_STRUCT(def);
+	// !TODO dodaj checkbox za fill-in
+	PF_ADD_CHECKBOX("FILL IN",
+		"Fill In",
+		true,
+		NULL,
+		FILLIN_CB_ID);
+	// !TODO modes of function???? :)
+	// èe je na lum, je lahko tudi na HUE in SAT in R in G in B in Y in I in Q
+	// ... lol tu maè
 
-	PF_ADD_COLOR(	STR(StrID_Color_Param_Name), 
-					PF_HALF_CHAN8,
-					PF_MAX_CHAN8,
-					PF_MAX_CHAN8,
-					COLOR_DISK_ID);
-	
+
 	out_data->num_params = ElStAberr_NUM_PARAMS;
+
+
 
 	return err;
 }
@@ -133,21 +138,93 @@ lumaFromColor(
 	return lumF;
 }
 
+/* tested & done
+color pixels RGBA(xFF,x00,xFF,x00)
+for easily recognisable blank state
+*/
+static PF_Err
+ColorBlankPreAberGapsPixFunc8(
+	void		*refcon, // null
+	A_long		xL,
+	A_long		yL,
+	PF_Pixel8	*inP, // null
+	PF_Pixel8	*outP)
+{
+	outP->alpha = 0;
+	outP->red = 255;
+	outP->green = 0;
+	outP->blue = 255;
+	return PF_Err_NONE;
+}
+
 
 static PF_Err
-MySimpleGainFunc8 (
+FillAfterAberGapsPixFunc8 (
+	void		*refcon,
+	A_long		xL,
+	A_long		yL,
+	PF_Pixel8	*inP,
+	PF_Pixel8	*outP)
+{
+	PF_Err err = PF_Err_NONE;
+	AfterAberInfo *aaiP = (AfterAberInfo *)refcon;
+	PF_InData *in_data = aaiP->inData;
+	// check for easily recognisable blank state
+	A_long nearY = yL;
+	A_long nearX = xL;
+	if (inP->alpha == 0) {
+		bool notDone = true;
+		int count = 0;
+		while (notDone) {
+			// !TODO rewrite for better direction to center
+			PF_Pixel8 *nearPixP = NULL;
+			// find nearest written coords
+			// !TODO if magnitute is negative, should change direction
+			if (nearY < aaiP->worldHeight / 2) {
+				nearY += 1;
+			}
+			else {
+				nearY -= 1;
+			}
+			if (nearX < aaiP->worldWidth / 2) {
+				nearX += 1;
+			}
+			else {
+				nearX -= 1;
+			}
+			PF_GET_PIXEL_DATA8(aaiP->worldP, NULL, &nearPixP);
+			nearPixP += nearY * aaiP->worldP->rowbytes / sizeof(PF_Pixel8) + nearX;
+			if (nearPixP->alpha > 0) {
+				notDone = false;
+				outP->alpha = nearPixP->alpha;
+				outP->red = nearPixP->red;
+				outP->green = nearPixP->green;
+				outP->blue = nearPixP->blue;
+			}
+			count++;
+			if (count > aaiP->worldWidth) {
+				notDone = false;
+			}
+		}
+	}
+	return err;
+}
+
+
+static PF_Err
+LumaAberatePixFunc8 (
 	void		*refcon, 
 	A_long		xL, 
 	A_long		yL, 
 	PF_Pixel8	*inP, 
-	PF_Pixel8	*outP)
+	PF_Pixel8	*outP) // output unused
 {
 	PF_Err		err = PF_Err_NONE;
 
 	GainInfo *giP = reinterpret_cast<GainInfo*>(refcon);
 	PF_InData *in_data = giP->inData;
 	AEGP_SuiteHandler *suitesP = giP->suitesP;
-	PF_Handle outworldH = giP->outworldH;
+	//PF_Handle outworldH = giP->outworldH;
 	double luma = lumaFromColor(inP); // luma [0.0, 1.0]
 	// remember state
 	int oldX, oldY;
@@ -169,9 +246,9 @@ MySimpleGainFunc8 (
 	// recenter image
 	newX += centerX;
 	newY += centerY;
-	// debug - to compare
-	oldX += centerX;
-	oldY += centerY;
+	//// debug - to compare
+	//oldX += centerX;
+	//oldY += centerY;
 
 	// check for out of bounds pixels
 	A_long outWidth = giP->outLayerP->width;
@@ -190,8 +267,18 @@ MySimpleGainFunc8 (
 	outPixP->red = inP->red;
 	outPixP->green = inP->green;
 	outPixP->blue = inP->blue;
-	
 
+	//test
+	/*PF_Pixel8 *outPixP = NULL;
+	PF_GET_PIXEL_DATA8(reinterpret_cast<PF_EffectWorld*>(giP->outLayerP), NULL, &outPixP);
+	outPixP += (giP->outLayerP->rowbytes / sizeof(PF_Pixel8) * yL) + xL;*/
+	/*outPixP->alpha = 255;
+	outPixP->red = 100;
+	outPixP->green = 120;
+	outPixP->blue = 80;*/
+
+
+	
 	return err;
 }
 
@@ -200,16 +287,22 @@ Render (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
-	PF_LayerDef		*output )
+	PF_LayerDef		*output ) // !TODO PREMAKNI FAKIN ALOKACIJE VEN IZ PIX FUNC !!!!!
 {
 	PF_Err				err		= PF_Err_NONE;
 	AEGP_SuiteHandler	suites(in_data->pica_basicP);
-	/* Set up per frame memory */
+	
+	// refcon -> LumaAberate
 	GainInfo			gi;
 	AEFX_CLR_STRUCT(gi);
+
+	// input data
 	A_long				linesL	= 0;
 	linesL 		= output->extent_hint.bottom - output->extent_hint.top;
+
 	gi.magnitudeF 	= params[ElStAberr_GAIN]->u.fs_d.value;
+	
+	// new output world
 	PF_Handle outworldH = suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
 	PF_EffectWorld *outworldP = (PF_EffectWorld*)*outworldH;
 	A_long outWidth = output->width;
@@ -220,35 +313,90 @@ Render (
 		outHeight, 
 		NULL, 
 		outworldP);
-	gi.outLayerP = reinterpret_cast<PF_LayerDef*>(outworldP);
+
+	// refcon -> LumaAberatePixFunc8
+
+	gi.outLayerP = output;//reinterpret_cast<PF_LayerDef*>(outworldP);
 	gi.inData = in_data;
 	gi.suitesP = &suites;
 	gi.outworldH = outworldH;
 
 	/* Do render */
-	if (PF_WORLD_IS_DEEP(output)){
-		return PF_Err_INTERNAL_STRUCT_DAMAGED; // not supported - should drop deep color awarness.
-	} else {
-		ERR(suites.Iterate8Suite1()->iterate(	in_data,
-												0,								// progress base
-												linesL,							// progress final
-												&params[ElStAberr_INPUT]->u.ld,	// src 
-												NULL,							// area - null for all pixels
-												(void*)&gi,					// refcon - your custom data pointer
-												MySimpleGainFunc8,				// pixel function pointer
-												output));	
-	}
-	/* Copy out data out */
-	suites.WorldTransformSuite1()->copy(NULL,
-		gi.outLayerP,
-		output,
+	// 1. Color world easily recognisible blank state
+	ERR(suites.Iterate8Suite1()->iterate(
+		in_data,
+		0,								// progress base
+		linesL,							// progress final
+		NULL,						// src 
+		NULL,							// area - null for all pixels
+		NULL,							// refcon - your custom data pointer
+		ColorBlankPreAberGapsPixFunc8,	// pixel function pointer
+		output));
+	// 2. Luma (Electro statically) aberate
+	ERR(suites.Iterate8Suite1()->iterate(	
+		in_data,
+		0,								
+		linesL,							
+		&params[ElStAberr_INPUT]->u.ld,	
+		NULL,				
+		(void*)&gi,			
+		LumaAberatePixFunc8,
+		output));	// !output is here unused
+	// 3. Fill emptynesses
+	// new world
+	PF_Handle fillinWorldH = suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
+	PF_EffectWorld *fillInWorldP = (PF_EffectWorld*)*outworldH;
+	A_long fiwWidth = fillInWorldP->width;
+	A_long fiwHeight = fillInWorldP->height;
+	suites.WorldSuite1()->new_world(
 		NULL,
-		NULL);
+		fiwWidth,
+		fiwHeight,
+		NULL,
+		outworldP);
+	// refcon setup
+	AfterAberInfo aai;
+	AEFX_CLR_STRUCT(aai);
+	aai.worldHeight = output->height;
+	aai.worldWidth = output->width;
+	aai.worldP = output;
+	aai.inData = in_data;
+	ERR(suites.Iterate8Suite1()->iterate(
+		in_data,
+		0,								// progress base
+		linesL,							// progress final
+		output,	
+		NULL,							// area - null for all pixels
+		(void*)&aai,					// refcon - your custom data pointer
+		FillAfterAberGapsPixFunc8,		// pixel function pointer
+		fillInWorldP));
+	// transfer mode for fill in
+	PF_Handle simpleBehindH = (PF_Handle)suites.HandleSuite1()->host_new_handle(sizeof(PF_CompositeMode));
+	PF_CompositeMode *simpleBehind = (PF_CompositeMode*)*simpleBehindH;
+	simpleBehind->opacity = 100;
+	simpleBehind->xfer = PF_Xfer_BEHIND;
+	// blend fillIn under output
+	suites.WorldTransformSuite1()->transform_world(
+		NULL,
+		PF_Quality_LO,
+		NULL,
+		NULL,
+		fillInWorldP,
+		simpleBehind,
+		NULL,
+		NULL,
+		0,
+		NULL,
+		NULL,
+		output
+	);
 
 	/* Free memory */
 	suites.WorldSuite1()->dispose_world(NULL, outworldP);
 	suites.HandleSuite1()->host_dispose_handle(outworldH);
-
+	suites.WorldSuite1()->dispose_world(NULL, fillInWorldP);
+	suites.HandleSuite1()->host_dispose_handle(fillinWorldH);
+	suites.HandleSuite1()->host_dispose_handle(simpleBehindH);
 	return err;
 }
 
