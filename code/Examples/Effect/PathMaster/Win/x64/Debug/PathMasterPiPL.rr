@@ -1,0 +1,168 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+resource 'PiPL' (16000) {
+	{	
+		
+		Kind {
+			AEEffect
+		},
+		
+		Name {
+			"PathMaster"
+		},
+		
+		Category {
+			"Sample Plug-ins"
+		},
+
+	
+		CodeWin64X86 {"EntryPointFunc"},
+	
+
+
+
+
+
+
+
+
+
+		
+		AE_PiPL_Version {
+			2,
+			0
+		},
+		
+		AE_Effect_Spec_Version {
+			13,
+			15
+		},
+		
+		AE_Effect_Version {
+			1572865	
+		},
+		
+		AE_Effect_Info_Flags {
+			0
+		},
+		
+		AE_Effect_Global_OutFlags {
+			0x2000010
+		},
+		
+		AE_Effect_Global_OutFlags_2 {
+			0xC00000
+		},
+		
+		AE_Effect_Match_Name {
+			"ADBE PathMaster"
+		},
+		
+		AE_Reserved_Info {
+			0
+		}
+	}
+};
+

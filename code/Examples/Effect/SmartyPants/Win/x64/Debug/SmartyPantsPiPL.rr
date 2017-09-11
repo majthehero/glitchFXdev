@@ -1,0 +1,170 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+resource 'PiPL' (16000) {
+	{	
+		
+		Kind {
+			AEEffect
+		},
+		
+		Name {
+			"SmartyPants"
+		},
+		
+		Category {
+			"Sample Plug-ins"
+		},
+
+	
+		CodeWin64X86 {"EntryPointFunc"},
+	
+
+
+
+
+
+
+
+
+
+		
+		AE_PiPL_Version {
+			2,
+			0
+		},
+		
+		AE_Effect_Spec_Version {
+			13,
+			15
+		},
+		
+		AE_Effect_Version {
+			524289
+		},
+		
+		AE_Effect_Info_Flags {
+			0
+		},
+		
+		AE_Effect_Global_OutFlags {
+			0x440
+		},
+		
+		AE_Effect_Global_OutFlags_2 {
+			0x201409
+		},
+		
+		AE_Effect_Match_Name {
+			"ADBE SmartyPants"
+		},
+		
+		AE_Reserved_Info {
+			8
+		}
+	}
+};
+
+

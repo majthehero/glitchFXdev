@@ -1,0 +1,118 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+resource 'PiPL' (16000) {
+	{	
+		
+		Kind {
+			AEGP
+		},
+		
+		Name {
+			"Mangler"
+		},
+		
+		Category {
+			"General Plugin"
+		},
+		
+		Version {
+			196608
+		},
+
+	
+		CodeWin64X86 {"EntryPointFunc"},
+	
+
+
+
+
+
+
+
+
+
+	}
+};

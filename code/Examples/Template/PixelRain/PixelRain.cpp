@@ -362,6 +362,8 @@ GenerateTrailColFunc8(
 			sampledColor.green = inP->green;
 			sampledColor.blue = inP->blue;
 			lastRowNum = j;
+			// empty out pix - AE doesn't always give us empty frames
+			outP->alpha = 0;
 		}
 		// drip
 		else if (j - lastRowNum < tilP->lengthF) {
@@ -377,6 +379,10 @@ GenerateTrailColFunc8(
 				outP->green = 255;
 				outP->blue = 255;
 			}
+		}
+		// yes this is the last branch - empty pixels under trails
+		else {
+			outP->alpha = 0;
 		}
 		// next row
 		inP += tilP->input->rowbytes / sizeof(PF_Pixel8);

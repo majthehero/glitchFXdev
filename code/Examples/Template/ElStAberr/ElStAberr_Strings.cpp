@@ -32,8 +32,9 @@ TableString		g_strs[StrID_NUMTYPES] = {
 	StrID_NONE,						"",
 	StrID_Name,						"ElStAberr",
 	StrID_Description,				"Simulates electrostaic aberration as it happens in bad CRT displays.",
-	StrID_Gain_Param_Name,			"Magnitute of aberration",
-	StrID_Color_Param_Name,			"Color",
+	StrID_Gain_Param_Name,			"Magnitute",
+	StrID_Center_Param_Name,		"Center",
+	StrID_Fillin_Param_Name,		"Fill in empty displaced pixels"
 };
 
 

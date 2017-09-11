@@ -1,10 +1,4 @@
-﻿  Compiling the PiPL
-  Microsoft (R) C/C++ Optimizing Compiler Version 19.00.24215.1 for x64
-  Copyright (C) Microsoft Corporation.  All rights reserved.
-  
-  Gamma_TablePiPL.r
-  Microsoft (R) C/C++ Optimizing Compiler Version 19.00.24215.1 for x64
-  Copyright (C) Microsoft Corporation.  All rights reserved.
-  
-  Gamma_TablePiPL.rrc
-  Gamma_Table.cpp
+﻿  Gamma_Table.cpp
+     Creating library x64\Debug\/Gamma_Table.lib and object x64\Debug\/Gamma_Table.exp
+  Gamma_Table.vcxproj -> C:\Program Files\Adobe\Common\Plug-ins\7.0\MediaCore\\Gamma_Table.aex
+  Gamma_Table.vcxproj -> x64\Debug\Gamma_Table.pdb (Full PDB)

@@ -1,10 +1,2 @@
-﻿  Compiling the PiPL
-  Microsoft (R) C/C++ Optimizing Compiler Version 19.00.24215.1 for x64
-  Copyright (C) Microsoft Corporation.  All rights reserved.
-  
-  Custom_ECW_UIPiPL.r
-  Microsoft (R) C/C++ Optimizing Compiler Version 19.00.24215.1 for x64
-  Copyright (C) Microsoft Corporation.  All rights reserved.
-  
-  Custom_ECW_UIPiPL.rrc
-  AEFX_SuiteHelper.c
+﻿  Custom_ECW_UI.vcxproj -> C:\Program Files\Adobe\Common\Plug-ins\7.0\MediaCore\\Custom_ECW_UI.aex
+  Custom_ECW_UI.vcxproj -> x64\Debug\Custom_ECW_UI.pdb (Full PDB)

@@ -70,14 +70,17 @@ typedef short int			int16;
 
 /* Parameter defaults */
 
-#define	ElStAberr_GAIN_MIN		0
-#define	ElStAberr_GAIN_MAX		100
-#define	ElStAberr_GAIN_DFLT		10
+#define	ElStAberr_MAGNITUDE_MIN		-1.0
+#define	ElStAberr_MAGNITUDE_MAX		1.0
+#define	ElStAberr_MAGNITUDE_DFLT	0.02
+
+
+
 
 enum {
 	ElStAberr_INPUT = 0,
 	ElStAberr_GAIN,
-	ElStAberr_COLOR,
+	ElStAberr_FILLIN,
 	ElStAberr_NUM_PARAMS
 };
 

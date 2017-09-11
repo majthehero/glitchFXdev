@@ -87,31 +87,29 @@ ParamsSetup (
 
 	AEFX_CLR_STRUCT(def);
 
-	PF_ADD_FLOAT_SLIDERX(	STR(StrID_Gain_Param_Name), 
-							-1.0, 
-							1.0, 
-							-1.0, 
-							1.0, 
-							0.002,
-							PF_Precision_TEN_THOUSANDTHS,
-							0,
-							0,
-							GAIN_DISK_ID);
+	PF_ADD_FLOAT_SLIDERX(	
+		STR(StrID_Gain_Param_Name), 
+		ElStAberr_MAGNITUDE_MIN,
+		ElStAberr_MAGNITUDE_MAX, 
+		ElStAberr_MAGNITUDE_MIN, 
+		ElStAberr_MAGNITUDE_MAX, 
+		ElStAberr_MAGNITUDE_DFLT,
+		PF_Precision_TEN_THOUSANDTHS,
+		0,
+		0,
+		GAIN_DISK_ID);
 
-	// !TODO dodaj checkbox za fill-in
+	AEFX_CLR_STRUCT(def);
+
 	PF_ADD_CHECKBOX("FILL IN",
 		"Fill In",
 		true,
 		NULL,
 		FILLIN_CB_ID);
-	// !TODO modes of function???? :)
-	// èe je na lum, je lahko tudi na HUE in SAT in R in G in B in Y in I in Q
-	// ... lol tu maè
 
+	AEFX_CLR_STRUCT(def);
 
 	out_data->num_params = ElStAberr_NUM_PARAMS;
-
-
 
 	return err;
 }
@@ -224,7 +222,6 @@ LumaAberatePixFunc8 (
 	GainInfo *giP = reinterpret_cast<GainInfo*>(refcon);
 	PF_InData *in_data = giP->inData;
 	AEGP_SuiteHandler *suitesP = giP->suitesP;
-	//PF_Handle outworldH = giP->outworldH;
 	double luma = lumaFromColor(inP); // luma [0.0, 1.0]
 	// remember state
 	int oldX, oldY;
@@ -246,9 +243,6 @@ LumaAberatePixFunc8 (
 	// recenter image
 	newX += centerX;
 	newY += centerY;
-	//// debug - to compare
-	//oldX += centerX;
-	//oldY += centerY;
 
 	// check for out of bounds pixels
 	A_long outWidth = giP->outLayerP->width;
@@ -267,18 +261,7 @@ LumaAberatePixFunc8 (
 	outPixP->red = inP->red;
 	outPixP->green = inP->green;
 	outPixP->blue = inP->blue;
-
-	//test
-	/*PF_Pixel8 *outPixP = NULL;
-	PF_GET_PIXEL_DATA8(reinterpret_cast<PF_EffectWorld*>(giP->outLayerP), NULL, &outPixP);
-	outPixP += (giP->outLayerP->rowbytes / sizeof(PF_Pixel8) * yL) + xL;*/
-	/*outPixP->alpha = 255;
-	outPixP->red = 100;
-	outPixP->green = 120;
-	outPixP->blue = 80;*/
-
-
-	
+		
 	return err;
 }
 
@@ -287,7 +270,7 @@ Render (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
-	PF_LayerDef		*output ) // !TODO PREMAKNI FAKIN ALOKACIJE VEN IZ PIX FUNC !!!!!
+	PF_LayerDef		*output )
 {
 	PF_Err				err		= PF_Err_NONE;
 	AEGP_SuiteHandler	suites(in_data->pica_basicP);
@@ -327,7 +310,7 @@ Render (
 		in_data,
 		0,								// progress base
 		linesL,							// progress final
-		NULL,						// src 
+		NULL,							// src 
 		NULL,							// area - null for all pixels
 		NULL,							// refcon - your custom data pointer
 		ColorBlankPreAberGapsPixFunc8,	// pixel function pointer
@@ -361,6 +344,7 @@ Render (
 	aai.worldWidth = output->width;
 	aai.worldP = output;
 	aai.inData = in_data;
+	// 
 	ERR(suites.Iterate8Suite1()->iterate(
 		in_data,
 		0,								// progress base
@@ -375,7 +359,7 @@ Render (
 	PF_CompositeMode *simpleBehind = (PF_CompositeMode*)*simpleBehindH;
 	simpleBehind->opacity = 100;
 	simpleBehind->xfer = PF_Xfer_BEHIND;
-	// blend fillIn under output
+	// blend fill in under output
 	suites.WorldTransformSuite1()->transform_world(
 		NULL,
 		PF_Quality_LO,
