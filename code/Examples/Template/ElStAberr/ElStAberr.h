@@ -81,12 +81,14 @@ enum {
 	ElStAberr_INPUT = 0,
 	ElStAberr_GAIN,
 	ElStAberr_FILLIN,
+	ElStAberr_CENTER,
 	ElStAberr_NUM_PARAMS
 };
 
 enum {
 	GAIN_DISK_ID = 1,
 	FILLIN_CB_ID,
+	CENTER_DISK_ID
 };
 
 typedef struct GainInfo{
@@ -95,6 +97,9 @@ typedef struct GainInfo{
 	PF_InData *inData;
 	AEGP_SuiteHandler *suitesP;
 	PF_Handle outworldH;
+
+	PF_FpLong center_x;
+	PF_FpLong center_y;
 	// out data
 	PF_LayerDef *outLayerP;
 } GainInfo, *GainInfoP, **GainInfoH;
@@ -103,6 +108,8 @@ typedef struct AfterAberInfo{
 	A_long worldHeight, worldWidth;
 	PF_EffectWorld *worldP;
 	PF_InData *inData;
+	PF_FpLong center_x;
+	PF_FpLong center_y;
 } AfterAberInfo;
 
 #ifdef __cplusplus

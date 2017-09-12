@@ -59,6 +59,10 @@ TableString		g_strs[StrID_NUMTYPES] = {
 	StrID_V_Y_Param_Name,			"V-chroma channel vertical shift",
 	//
 	StrID_Mode_Param_Name,			"Colorspace mode",
+	// mode names
+	StrID_Mode_Names,				"RGB| "
+									"HSL| "
+									"YUV| ",
 	
 };
 

@@ -40,7 +40,7 @@
 #include "ChannelShift.h"
 
 
-char * MODE_NAMES = "RGB|HSL|YUV";
+//char * MODE_NAMES = "RGB|HSL|YUV";
 char * TOPIC_NAMES[3][3] = {
 	{ "Red", "Green", "Blue" },
 	{ "Hue", "Saturation", "Luma" },
@@ -95,23 +95,26 @@ ParamsSetup (
 	PF_Err		err		= PF_Err_NONE;
 	PF_ParamDef	def;	
 	
+	AEGP_SuiteHandler suites(in_data->pica_basicP);
+
 	AEFX_CLR_STRUCT(def);
 	
 	// mode dropdown
+	def.flags = PF_ParamFlag_SUPERVISE; // set flags before adding params - unnecessary 
 	PF_ADD_POPUPX(	
 		STR(StrID_Mode_Param_Name), 
 		CHANNELSHIFT_MODE_NUM_MODES,
-		CHANNELSHIFT_MODE_RGB, // default is first
-		MODE_NAMES,
+		CHANNELSHIFT_MODE_RGB, 
+		STR(StrID_Mode_Names),
 		PF_ParamFlag_SUPERVISE,
 		MODE_DISK_ID
 	);
 	AEFX_CLR_STRUCT(def);
 	// sliders shift
 	for (int i = 0; i < 3; i++) {
-		PF_ADD_TOPICX(TOPIC_NAMES[CHANNELSHIFT_MODE_RGB][i], PF_Param_GROUP_START, TOPIC_END_1_ID + i);
+		PF_ADD_TOPICX(TOPIC_NAMES[CHANNELSHIFT_MODE_RGB][i], PF_Param_GROUP_START, TOPIC_START_1_ID + i);
 		AEFX_CLR_STRUCT(def);
-
+		suites.UtilitySuite6();
 		PF_ADD_FLOAT_SLIDERX(
 			STR(StrID_R_X_Param_Name),
 			CHANNELSHIFT_X_MIN,
@@ -122,7 +125,7 @@ ParamsSetup (
 			PF_Precision_INTEGER,
 			NULL,
 			NULL,
-			CHANNELSHIFT_A_X + 2 * i
+			A_X_DISK_ID + 2 * i
 		);
 		AEFX_CLR_STRUCT(def);
 
@@ -136,7 +139,7 @@ ParamsSetup (
 			PF_Precision_INTEGER,
 			NULL,
 			NULL,
-			CHANNELSHIFT_A_X + 2 * i + 1
+			A_Y_DISK_ID + 2 * i
 		);
 		AEFX_CLR_STRUCT(def);
 
@@ -173,8 +176,8 @@ MakeParamCopy(
 	copy[CHANNELSHIFT_TOPIC_1] = *actual[CHANNELSHIFT_TOPIC_1];
 	copy[CHANNELSHIFT_TOPIC_2] = *actual[CHANNELSHIFT_TOPIC_2];
 	copy[CHANNELSHIFT_TOPIC_3] = *actual[CHANNELSHIFT_TOPIC_3];
+	
 	return PF_Err_NONE;
-
 }
 
 /* TODO
@@ -182,11 +185,13 @@ Called when ECP (UI) needs to be updated
 change param UI here - update sliders based on mode selection 
 */
 static PF_Err
-UpdateParamUI(
+//UpdateParamUI(
+UserChangedParam(
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
-	PF_LayerDef		*output)
+	PF_LayerDef		*output,
+	const PF_UserChangedParamExtra	*which_hitP)
 {
 	PF_Err err = PF_Err_NONE;
 	AEGP_SuiteHandler suites(in_data->pica_basicP);
@@ -194,8 +199,7 @@ UpdateParamUI(
 	ERR(MakeParamCopy(params, param_copy));
 	
 	// mode changed - change names of sliders
-	A_long chosenMode = (A_long)params[CHANNELSHIFT_MODE]->u.pd.value;
-	if (chosenMode == CHANNELSHIFT_MODE_RGB) {
+	if (CHANNELSHIFT_MODE_RGB == params[CHANNELSHIFT_MODE]->u.pd.value) {
 		// change sliders
 		strcpy_s(param_copy[CHANNELSHIFT_A_X].name, STR(StrID_R_X_Param_Name));
 		strcpy_s(param_copy[CHANNELSHIFT_A_Y].name, STR(StrID_R_Y_Param_Name));
@@ -204,7 +208,7 @@ UpdateParamUI(
 		strcpy_s(param_copy[CHANNELSHIFT_C_X].name, STR(StrID_B_X_Param_Name));
 		strcpy_s(param_copy[CHANNELSHIFT_C_Y].name, STR(StrID_B_Y_Param_Name));
 	}
-	else if (chosenMode == CHANNELSHIFT_MODE_HSL) {
+	else if (CHANNELSHIFT_MODE_HSL == params[CHANNELSHIFT_MODE]->u.pd.value) {
 		// change sliders
 		strcpy_s(param_copy[CHANNELSHIFT_A_X].name, STR(StrID_H_X_Param_Name));
 		strcpy_s(param_copy[CHANNELSHIFT_A_Y].name, STR(StrID_H_Y_Param_Name));
@@ -213,7 +217,7 @@ UpdateParamUI(
 		strcpy_s(param_copy[CHANNELSHIFT_C_X].name, STR(StrID_L_X_Param_Name));
 		strcpy_s(param_copy[CHANNELSHIFT_C_Y].name, STR(StrID_L_Y_Param_Name));
 	}
-	else if (chosenMode == CHANNELSHIFT_MODE_YUV) {
+	else if (CHANNELSHIFT_MODE_YUV == params[CHANNELSHIFT_MODE]->u.pd.value) {
 		// change sliders
 		strcpy_s(param_copy[CHANNELSHIFT_A_X].name, STR(StrID_Y_X_Param_Name));
 		strcpy_s(param_copy[CHANNELSHIFT_A_Y].name, STR(StrID_Y_Y_Param_Name));
@@ -222,20 +226,52 @@ UpdateParamUI(
 		strcpy_s(param_copy[CHANNELSHIFT_C_X].name, STR(StrID_V_X_Param_Name));
 		strcpy_s(param_copy[CHANNELSHIFT_C_Y].name, STR(StrID_V_Y_Param_Name));
 	}
+	// change topics
+	strcpy_s(param_copy[CHANNELSHIFT_TOPIC_1].name, TOPIC_NAMES[params[CHANNELSHIFT_MODE]->u.pd.value][1]);
+	strcpy_s(param_copy[CHANNELSHIFT_TOPIC_2].name, TOPIC_NAMES[params[CHANNELSHIFT_MODE]->u.pd.value][2]);
+	strcpy_s(param_copy[CHANNELSHIFT_TOPIC_3].name, TOPIC_NAMES[params[CHANNELSHIFT_MODE]->u.pd.value][3]);
 	
 	// call to actually update UI
+	PF_ProgPtr effect_ref = in_data->effect_ref;
+	// x sliders
 	ERR(suites.ParamUtilsSuite3()->PF_UpdateParamUI(
-		NULL,
+		effect_ref,
 		CHANNELSHIFT_A_X,
 		&param_copy[CHANNELSHIFT_A_X]));
 	ERR(suites.ParamUtilsSuite3()->PF_UpdateParamUI(
-		NULL,
+		effect_ref,
 		CHANNELSHIFT_B_X,
 		&param_copy[CHANNELSHIFT_B_X]));
 	ERR(suites.ParamUtilsSuite3()->PF_UpdateParamUI(
-		NULL,
-		CHANNELSHIFT_B_X,
-		&param_copy[CHANNELSHIFT_B_X]));
+		effect_ref,
+		CHANNELSHIFT_C_X,
+		&param_copy[CHANNELSHIFT_C_X]));
+	// y sliders
+	ERR(suites.ParamUtilsSuite3()->PF_UpdateParamUI(
+		effect_ref,
+		CHANNELSHIFT_A_Y,
+		&param_copy[CHANNELSHIFT_A_Y]));
+	ERR(suites.ParamUtilsSuite3()->PF_UpdateParamUI(
+		effect_ref,
+		CHANNELSHIFT_B_Y,
+		&param_copy[CHANNELSHIFT_B_Y]));
+	ERR(suites.ParamUtilsSuite3()->PF_UpdateParamUI(
+		effect_ref,
+		CHANNELSHIFT_C_Y,
+		&param_copy[CHANNELSHIFT_C_Y]));
+	// topics
+	ERR(suites.ParamUtilsSuite3()->PF_UpdateParamUI(
+		effect_ref,
+		CHANNELSHIFT_TOPIC_1,
+		&param_copy[CHANNELSHIFT_TOPIC_1]));
+	ERR(suites.ParamUtilsSuite3()->PF_UpdateParamUI(
+		effect_ref,
+		CHANNELSHIFT_TOPIC_2,
+		&param_copy[CHANNELSHIFT_TOPIC_2]));
+	ERR(suites.ParamUtilsSuite3()->PF_UpdateParamUI(
+		effect_ref,
+		CHANNELSHIFT_TOPIC_3,
+		&param_copy[CHANNELSHIFT_TOPIC_3]));
 
 	return err;
 }
@@ -245,7 +281,7 @@ UpdateParamUI(
 Called when parameter values change
 Other param values can be changed
 which_hitP is changed param - source of call
-*/
+*
 static PF_Err
 UserChangedParam(
 	PF_InData		*in_data,
@@ -256,10 +292,18 @@ UserChangedParam(
 {
 	PF_Err		err = PF_Err_NONE;
 	
+	if (which_hitP->param_index == CHANNELSHIFT_MODE) {
+		params[CHANNELSHIFT_A_X]->u.fs_d.value = 0;
+		params[CHANNELSHIFT_B_X]->u.fs_d.value = 0;
+		params[CHANNELSHIFT_C_X]->u.fs_d.value = 0;
+		params[CHANNELSHIFT_A_Y]->u.fs_d.value = 0;
+		params[CHANNELSHIFT_B_Y]->u.fs_d.value = 0;
+		params[CHANNELSHIFT_C_Y]->u.fs_d.value = 0;
+	}
 
 	return err;
 }
-
+/**/
 
 static PF_Err
 MySimpleGainFunc16 (
@@ -411,14 +455,14 @@ EntryPointFunc (
 				);
 				break;
 
-			case PF_Cmd_UPDATE_PARAMS_UI:
+			/*case PF_Cmd_UPDATE_PARAMS_UI:
 				err = UpdateParamUI(
 					in_data,
 					out_data,
 					params,
 					output
 				);
-				break;
+				break;*/
 
 			case PF_Cmd_USER_CHANGED_PARAM:
 				err = UserChangedParam( 

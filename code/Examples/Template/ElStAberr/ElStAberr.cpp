@@ -98,7 +98,6 @@ ParamsSetup (
 		0,
 		0,
 		GAIN_DISK_ID);
-
 	AEFX_CLR_STRUCT(def);
 
 	PF_ADD_CHECKBOX("FILL IN",
@@ -106,7 +105,15 @@ ParamsSetup (
 		true,
 		NULL,
 		FILLIN_CB_ID);
+	AEFX_CLR_STRUCT(def);
 
+	def.flags = PF_ParamFlag_SUPERVISE;
+	PF_ADD_POINT(
+		STR(StrID_Center_Param_Name),
+		0,
+		0,
+		NULL,
+		CENTER_DISK_ID);
 	AEFX_CLR_STRUCT(def);
 
 	out_data->num_params = ElStAberr_NUM_PARAMS;
@@ -170,6 +177,9 @@ FillAfterAberGapsPixFunc8 (
 	// check for easily recognisable blank state
 	A_long nearY = yL;
 	A_long nearX = xL;
+	// center is where center is
+	int centerX = (int)aaiP->center_x;
+	int centerY = (int)aaiP->center_y;
 	if (inP->alpha == 0) {
 		bool notDone = true;
 		int count = 0;
@@ -178,13 +188,13 @@ FillAfterAberGapsPixFunc8 (
 			PF_Pixel8 *nearPixP = NULL;
 			// find nearest written coords
 			// !TODO if magnitute is negative, should change direction
-			if (nearY < aaiP->worldHeight / 2) {
+			if (nearY < centerY) {
 				nearY += 1;
 			}
 			else {
 				nearY -= 1;
 			}
-			if (nearX < aaiP->worldWidth / 2) {
+			if (nearX < centerX) {
 				nearX += 1;
 			}
 			else {
@@ -226,9 +236,10 @@ LumaAberatePixFunc8 (
 	// remember state
 	int oldX, oldY;
 	// recenter image
-	int centerX, centerY; // !TODO parameter and that
-	centerX = giP->outLayerP->width/2;
-	centerY = giP->outLayerP->height/2;
+	int centerX, centerY;
+	centerX = (int)giP->center_x;
+	centerY = (int)giP->center_y;
+
 	oldX = xL - centerX;
 	oldY = yL - centerY;
 	// calculate scaling factor
@@ -298,11 +309,12 @@ Render (
 		outworldP);
 
 	// refcon -> LumaAberatePixFunc8
-
 	gi.outLayerP = output;//reinterpret_cast<PF_LayerDef*>(outworldP);
 	gi.inData = in_data;
 	gi.suitesP = &suites;
 	gi.outworldH = outworldH;
+	gi.center_x = (PF_FpLong)params[ElStAberr_CENTER]->u.td.x_value;
+	gi.center_y = (PF_FpLong)params[ElStAberr_CENTER]->u.td.y_value;
 
 	/* Do render */
 	// 1. Color world easily recognisible blank state
@@ -344,6 +356,8 @@ Render (
 	aai.worldWidth = output->width;
 	aai.worldP = output;
 	aai.inData = in_data;
+	aai.center_x = gi.center_x;
+	aai.center_y = gi.center_y;
 	// 
 	ERR(suites.Iterate8Suite1()->iterate(
 		in_data,
@@ -385,6 +399,48 @@ Render (
 }
 
 
+//static PF_Err
+//UserChangedParam(
+//	PF_InData						*in_data,
+//	PF_OutData						*out_data,
+//	PF_ParamDef						*params[],
+//	PF_LayerDef						*outputP,
+//	const PF_UserChangedParamExtra	*which_hitP)
+//{
+//	PF_Err				err = PF_Err_NONE;
+//
+//
+//	return err;
+//}
+
+static PF_Err
+UpdateParameterUI(
+	PF_InData			*in_data,
+	PF_OutData			*out_data,
+	PF_ParamDef			*params[],
+	PF_LayerDef			*outputP)
+{
+	PF_Err err = PF_Err_NONE;
+	AEGP_SuiteHandler suites(in_data->pica_basicP);
+
+	PF_ParamDef def;
+	AEFX_CLR_STRUCT(def);
+
+	if (outputP) { // !TODO only do this when needed - now done all the time
+		def = *params[ElStAberr_CENTER];
+		def.u.td.x_dephault = outputP->width / 2;
+		def.u.td.y_dephault = outputP->height / 2;
+		def.u.td.x_value = outputP->width / 2;
+		def.u.td.y_value = outputP->height / 2;
+		suites.ParamUtilsSuite3()->PF_UpdateParamUI(
+			in_data->effect_ref,
+			ElStAberr_CENTER,
+			&def);
+	}
+
+	return err;
+}
+
 DllExport	
 PF_Err 
 EntryPointFunc (
@@ -400,36 +456,52 @@ EntryPointFunc (
 	try {
 		switch (cmd) {
 			case PF_Cmd_ABOUT:
-
-				err = About(in_data,
-							out_data,
-							params,
-							output);
+				err = About(
+					in_data,
+					out_data,
+					params,
+					output);
 				break;
 				
 			case PF_Cmd_GLOBAL_SETUP:
-
-				err = GlobalSetup(	in_data,
-									out_data,
-									params,
-									output);
+				err = GlobalSetup(	
+					in_data,
+					out_data,
+					params,
+					output);
 				break;
 				
 			case PF_Cmd_PARAMS_SETUP:
-
-				err = ParamsSetup(	in_data,
-									out_data,
-									params,
-									output);
+				err = ParamsSetup(	
+					in_data,
+					out_data,
+					params,
+					output);
 				break;
 				
 			case PF_Cmd_RENDER:
-
-				err = Render(	in_data,
-								out_data,
-								params,
-								output);
+				err = Render(
+					in_data,
+					out_data,
+					params,
+					output);
 				break;
+
+				// user changed param not really needed after initial correct  of center coords
+			/*case PF_Cmd_USER_CHANGED_PARAM:
+				err = UserChangedParam(
+					in_data,
+					out_data,
+					params,
+					output,
+					reinterpret_cast<const PF_UserChangedParamExtra *>(extra));*/
+
+				case PF_Cmd_UPDATE_PARAMS_UI:
+				err = UpdateParameterUI(	
+					in_data,
+					out_data,
+					params,
+					output);
 		}
 	}
 	catch(PF_Err &thrown_err){

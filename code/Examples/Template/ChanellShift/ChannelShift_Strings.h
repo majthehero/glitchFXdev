@@ -51,5 +51,7 @@ typedef enum {
 	StrID_V_Y_Param_Name,
 	//
 	StrID_Mode_Param_Name,
+	StrID_Mode_Names,
+
 	StrID_NUMTYPES
 } StrIDType;
