@@ -82,12 +82,12 @@ typedef short int			int16;
 #define CHANNELSHIFT_X_MAX 2000
 #define CHANNELSHIFT_Y_MAX 4000					 
 // mode
-enum {
+typedef enum {
 	CHANNELSHIFT_MODE_RGB = 1,
 	CHANNELSHIFT_MODE_HSL,
 	CHANNELSHIFT_MODE_YUV,
 	CHANNELSHIFT_MODE_NUM_MODES = CHANNELSHIFT_MODE_YUV
-};
+} modes;
 
 // parameter names
 enum {

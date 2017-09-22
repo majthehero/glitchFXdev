@@ -26,6 +26,7 @@
 	1.0 Started from Skeleton template.			maj		03/07/2017
 	1.1 Correctly generates pixel mask.			maj		07/07/2017
 	2.0 Works. Possible mem leaks.				maj		16/08/2017
+	2.1 Mem leaks fixed.						maj		18/08/2017
 */
 
 #include "PixelRain.h"

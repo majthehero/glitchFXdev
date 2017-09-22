@@ -444,9 +444,12 @@ To je bil majhen prenosen sistem za urejanje videa.
 Sestavljen je bil iz majhne črno-bele kamere in sistema za zapis, predvajanje in presnemavanje magnetih trakov.
 Zaradi možnosti takojšnjega pregleda video in relativno nizke cene je postal zelo popularen med protivojnimi pprotestniki in umetniki v ZDA, ki so bile takrat v vijni z Vietnamom \cite{videosfera1}.
 Tako se je video utemeljil kot medij alternativne kulture.
-Seveda se je hkrati uporabljal tudi za televizijske produkcije.
-
-
+Seveda se je hkrati uporabljal tudi za televizijske produkcije, kar je prineslo razvoj v drugi smeri.
+Za namene televizijskih prenosov so bile razvite tehnike za vstavljanje slike v video, različni prehodi in podobno.
+Tudi takšne tehnike so bile pogosto uporabljene v umetniških produkcijah.
+V Sloveniji so konec 1970. let in kasneje alternativni umetniki pogosto sodelovali z RTV Ljubljana \cite{tugoslavija}.
+Od njih so si tudi izposojali opremo in razvili nove tehnike uporabe le te.
+Tehnika imenovana feedback loop (vstaljanje zakasnjenega  videa samega vase) je bila razvita v alternativni sceni, kasneje pa se je uporabljala tudi v komercialnih programih.
 
 
 
@@ -497,15 +500,19 @@ V filmu Tron efekti niso bili prepričljivi, kar pa ustvarjalcev ni oviralo, saj
 Leta 1985 je studio Pixar ustvaril prvi 3D CGI animiran lik.
 To je bil stekleni vitez v filmu Mladi Sherlock Holmes (ang. {\it Young Sherlock Holmes}).
 V 90. letih so digitalni vizualni učinki hitro napredovali zaradi razvoja računalniške tehnologije, ki je postala dostopnejša in končno dovolj zmogljiva za resno delo.
-Leta 1992 so v filmu prvič prikazali prepričljive 3D CGI živali, pingvine in netopirje v filmu Batman se vrača (ang. {\it Batman Returns}, 1992). % !TODO preveri naslov in to
+Leta 1992 so v filmu prvič prikazali prepričljive 3D CGI živali, pingvine in netopirje v filmu Batman se vrača (ang. {\it Batman Returns}, 1992).
 Leto kasneje pa je film Jurski Park (ang. {\it Jurassic Park}, 1993) zelo uspešno kombiniral 3D CGI, lutke, živo igro in posnetke miniatur. 
 
-Danes velika večina filmov in videa uporablja digitalne video efekte. 
-Ti efekti so pogosto popolnoma neopazni, kot naprimer dodan sneg v filmu Tat knjig (nem. {\it Die Buch Dieb}). %!TODO naslov filma oba jezika in letnica
-
+Danes velika večina filmov in videa uporablja digitalne video učinke. 
+Ti efekti so pogosto popolnoma neopazni, kot naprimer dodan sneg v filmu Kradljivka knjig (ang. {\it The Book Thief}, 2013). %!TODO dopolni
+V filmski industriji se vizualni efekti večinoma uporabljajo čimbolj neopazno in ne opozarjajo gledalca nase \cite{vesHandbook}.
+Izjema so namerni umetniški učinki, ki na primer v filmu Doktor Strange (ang. {\it Doctor Strange}, 2016) prikazujejo drug svet. 
+Tam jih ne moremo zgrešiti, pa jih kljub temu gledalci lahko ignorirajo, saj so uspešno uporabljeni kot pripovedno orodje.
 
 
 \chapter{Uporaba After Effects za vizualne učinke}
+
+ghdfgh
 
 \section{Hiter pregled After Effects}
 
@@ -548,7 +555,7 @@ Sicer je izhod enak linearni kombinaciji $\alpha A  $  \\
 \end{table}
 
 
-\footnotetext{2.5D je izraz, ki pomeni 2 dimenzionalen prostor, v katerem pa lahko posamezne 2D objekte razporedimo enega nad drugega v tretje smeri osi Z.}
+\footnotetext{2.5D je izraz, ki pomeni 2 dimenzionalen prostor, v katerem pa lahko posamezne 2D objekte razporedimo enega nad drugega v smeri tretje osi Z.}
 
 
 \section{Kompozicija videa v After Effects}
@@ -560,13 +567,64 @@ V časovnico ali pa na platno lahko dodajamo video, slike in druge elemente.
 Na platnu lahko elemente postavimo v prostoru ekrana,
 časovnico pa uporabljamo za postavitev v časovnem prostoru in jih razporedimo v smeri Z osi.
 
+V AE se video komponira na podlagi kompozicijske algebre, ki poudarja uporabnost kanala alpha.
+Poleg tega pa lahko dele videa tudi ločeno maskiramo oziroma izberemo predele slike, ki bodo vidna.
+Pri tem imamo na izbiro več orodij, kot so:
+\begin{itemize}
+\item{pravokotne maske, ponavadi uporabljane za hitro odstranjevanje elementov iz sicer drugače maskiranega videa, na primer odstranjevanje luči iz videa, posnetega pred zelenim zaslonom,}
+\item{elipsoidne maske, ki se ponavadi uporabljajo v procesu popravljanja barv\footnotemark za enostavno ločevanje obrazov od ozadja,}
+\item{rotoskopirane maske - animirane maske, ki jih uporabnik naredi s preprostim risanjem maske, AE pa mu pomaga pri ekstrapolaciji animacije na naslednje sličice,}
+\item{rotoskopirane maske s pomočjo orodja Mocca for After Effects, komercialnega produkta za rotoskopiranje mask, ki pa je v minimalni verziji že vgrajen tudi v AE,}
+\item{efektov, ki ustvarijo masko na podlagi različnih parametrov in slike, in drugih.}
+\end{itemize}
+
+Tipično se orodja za hitro maskiranje uporabljajo v kombinaciji z drugimi metodami kompozicije, na primer odstranjevanjem zelenih zaslonov in podobno.
+Pri vseh orodjih lahko pozicijo, velikost in obliko animiramo. 
+To storimo tako, da na določenih sličicah masko oblikujemo, med temi ključnimi sličicami pa bo AE za nas animacijo interpoliral. 
+Ker je interpolacija lahko nenatančna, imamo na voljo tudi urejevalnik krivulj, s pomočjo katerega lahko natančneje določamo način interpolacije.
+
+Maskam lahko tudi nastavljamo ostrost robov.
+Ta parameter se v AE imenuje {\it feather} (slo. {\it pero}).
+Nastavimo lahko, koliko pikslov daleč od začrtane maske se bo kanal alpha interpoliral med polnim maskiranjem in odsotnosjo maske.
+Pri tem parametru je interpolacija linearna, saj se uporablja le kot način, s katerim masko skrijemo pred gledalcem.
+Ostri robovi pravilnih oblik pritegnejo pozornost, zato jih skoraj vedno vsaj malo zameglimo.
+
+\footnotetext{Popravljenje barv (ang. {\it color correction} ali {\it color grading}) je dvodelen proces spreminjanja barv videa. 
+V prvem koraku se popravi morebitne napake snemalca, kot so nepravilno izpostavljena slika, napačno izbrana nevtralna belina in podobno.
+Drugi korak je umetniški proces, pri katerem barvni tehnik s pomočjo režiserja prilagodi barve, da z njimi čustveno vpliva na gledalce.
+Primer močno in stilizirano popravljenih barv je film Matrica (ang. {\it The Matrix}, 1999). 
+V filmu je s pomočjo močne zelene obarvanosti loči virtualno resničnost matrice od bolj nevtralno obarvanih prozor, ki se dogajajo v resničnem svetu.}
 
 
+\section{Uporaba digitalnih vizualnih učinkov v AE}
 
+Programski paket Adobe After Effects vsebuje veliko izbiro digitalnih vizualnih učinkov.
+Vgrajene, lastne ali druge efektne vtičnike lahko uporabimo na več načinov.
+Najpreprosteje je izbrati plast, ki predstavlja vhodni video, nato pa izbrati željeni učinek z menija \sn{Effects} (slo. {\it Učinki}).
+S tem dodamo efekt na video.
+V oknu \sn{Effect controls} se s tem prikaže uporabniški vmesnik vtičnika.
+Vsak vtičnik ima lasten uporabniški vmesnik.
+Večinoma so sestavljeni iz vgrajenih klasičnih komponent, kot so drsniki, pojavna okna, gumbi in podobno,
+zato so enostavni za razumevanje uporabnikom AE, ki takšne kontrolnike že poznajo iz programa gostitelja.
 
+Na posamezno plast lahko dodamo več učinkov, pri čimer je izhod iz enega uporabljen kot vhod naslednjega.
+Na ta način je omogočeno sestavljanje kompleksnih novih učinkov.
+Pri oblikovanju slike je dobro orodje za minimizacijo kompleksnosti predkompozicija (ang. {\it Precomposing}).
+S tem orodjem lahko eno ali več plasti izvozimo v novo kompozicijo.
+Predkomponirane plasti lahko uporabljamo enako kot enostavne plasti, nanje dodajamo nove učinke in jih naprej komponiramo po želji.
+Prekompozicije lahko urejamo neodvisno od celotne kompozicije.
+Če se predkompozicija spremeni, je seveda potrebno ponovno upodobiti del kompozicije, na katerega ta sprememba vpliva.
 
-% !TODO after effects kot orodje za montažo, kot orodje za splošno postprodukcijo in kot glavni namen kompozicija slike in posebni učinki
-% !TODO pregled AE z vidika uporabnika - orodja, pogoste operacije, zmogljivost (?)
+Omogočena je tudi uporaba učinkov nad več plastmi hkrati s pomočjo posebnih prilagoditvenih plasti (ang. {\it Adjustment layer}).
+Če na prilagoditveno plast dodamo učinek, bo deloval nad vsemi učinki, ki so v skladu plasti pod njo.
+To omogoča enostavno in nedestruktivno urejanje celotne slike, kar je zelo priročno v določenih procesih post produkcije, naprimer pri popravljanju barv.
+
+After Effects se pogosto uporablja v kombinaciji s Adobe Premiere Pro\footnote{Adobe Premiere Pro je programski paket, namenjen predvsem video montaži. 
+Sicer se zmogljivosti AE in Premiere Pro močno prekrivajo, vendar je vseeno mnogo lažje uporabljati vsak paket za lasten namen.}.
+Med programskima paketoma je omogočena enostavna komunikacija.
+Montažer lahko iz Premiere Pro izvozi sceno ali kader naravnost v AE in jo nadomesti s kompozicijo. 
+Ko v AE shranimo, se kompozicija v Premiere Pro posodobi in montažer lahko uporablja celoten kader z vizualnimi učinki.
+
 
 
 \chapter{Razvoj vtičnikov za After Effects}
@@ -670,11 +728,37 @@ Med implementacijo si seveda lahko veliko pomagamo s razhroščevalnikom razvojn
 % !TODO dokončaj metode razvoja vtičnikov
 
 
-%
-%\section{Vtičnik PixelRain}
-%
-%
-%
+
+\section{Vtičnik PixelRain}
+
+\subsection{Razvoj ideje}
+Prvi vtičnik, za katerega sem dobil idejo, sem poimenoval PixelRain. 
+Ideja je je zelo preprosta: nekatere piksle bo vtičnik prekopiral navzdol, s čimer se bodo na sliki pojavile črte.
+Kateri piksli se bodo kopirali in kateri ne, določi uporabnik na podlagi izbire barve, kateri podobne piksle bo vtičnik prekopiral.
+Poleg izbire barve bo uporabnik lahko določil tudi maksimalno dolžino sledi - kolikokrat se lahko piksel prekopira navzdol,
+in maksimalno razdaljo med percepcijo izbrane barve in barve piksla, da bo še štel kot podoben.
+
+V originalni ideji smo podobnost barve definirali kot razdaljo med dvema barvama v prilagojenem prostoru RGB.
+Ker je cilj poiskati podobne barve, smo prostor RGB transformirali oziroma raztegnili, da bi razdalja bila bližja človeški percepciji razlike v barvah.
+Transformacija RGB prostora izhaja iz tega, da človeško oko naprimer zazna več različnih odtenkov zelene barve kot ostalih - bolj natančno ločimo zelene odtenke kot ostale.
+To upoštevamo v izračunu vizualne podobnosti barv tako, da razdaljo izračunamo po formuli $$ \sqrt{ 2 R^2 + 4 G^2 + 3 B^2 } \cite{colordiff2}. $$
+Testiranje je to metodo pokazalo kot nerazumljivo in navidez nelogično.
+Pogosto so bili rezultati drugačni, kot bi jih pričakovali, kar z vidika uporabnika pomeni ni zaželjeno\cite{upoprogopr}.
+
+Po premisleku smo se odločili za implementacijo izbire barve s pomočjo treh parametrov v barvnem prostoru HSL\cite{colordiff1}.
+Tako lahko uporabnik ločeno izbira barvni odtenek, nasičenost in svetllost.
+Ta način izbire barve sicer ne izbere barv, ki so enako oddaljene od ciljne v nobenem barvnem prostoru, je pa razumljiv in producira rezultate, kakršne uporabnik pričakuje.
+Zaradi ločenja na tri izbirnike smo s tem dosegli tudi večjo fleksibilnost vtičnika.
+
+
+\subsection{Implementacija vtičnika}
+
+Vtičnik implementira odzive na ukazne izbirnike \texttt{PF\_Cmd\_ABOUT}, \texttt{PF\_Cmd\_GLOBAL\_SETUP}, \texttt{PF\_Cmd\_PARAMS\_SETUP} in \texttt{PF\_Cmd\_RENDER}.
+To je minimalen set odzivov za efektni vtičnik.
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
