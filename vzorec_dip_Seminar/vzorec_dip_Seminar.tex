@@ -707,8 +707,11 @@ S tem bi se sesul AE in z njim seveda tudi vtičnik, ki je odvisen od izvajanja 
 \subsection{SmartFX} % !TODO to ni vse kar je razlike seveda, opozori na to
 
 Posebna kategorija so vtičniki SmartFX. 
-Od navadnih efektov se razlikujejo po tem, da omogočajo dvosmerno komunikacijo z AE in podpirajo video z barvno globino 32bitov na kanal. 
+Od navadnih efektov se razlikujejo po tem, da omogočajo dvosmerno komunikacijo z AE in podpirajo video z barvno globino 32bitov na kanal\cite{aesdk}. 
 Dvosmerno komunikacijo se doseže z  implementacijo dodetnega ukaznega izbirnika {\tt PF\_Cmd\_SMART\_PRE\_RENDER}, ki AE sporoči, katere dele slike bo upodobil. 
+Ker vtičnik lahko ugotovi, katere dele slike mora upodobiti, je lahko upodabljanje veliko hitrejše.
+Upodabljanje slike z barvno globino 32 bitov na kanal je sicer lahko zelo počasno, saj uporablja operacije s plavajočo vejico in težje izkorišča vektorske enote modernih procesorjev.
+Za gladko uporabo AE in SmartFX potrebujemo podprto in zmogljivo grafično kartico, da se izognemo artefaktom in počasnemu delovanju\cite{preproccclassroom}.
 
 
 \section{Metoda razvoja}
@@ -722,10 +725,30 @@ Odločiti se moramo, kako razporediti operacije med funkcije in kako  strukturir
 Glavno pri razvoju vtičnikov je pravzaprav, da se program pravilne odzove na vse klice gostitelja posamezno, hkrati pa ostane vtičnik logična enota.
 Seveda je prav tako pomembno, da je vtičnik uporaben in prijeten za uporabo z vidika končnega uporabnika.
 Na to moramo paziti pri oblikovanju uporabniškega vmesnika in tudi pri implementaciji učinka, da ostane odziven v različnih primerih uporabe.
-Med implementacijo si seveda lahko veliko pomagamo s razhroščevalnikom razvojnega okolja, navodili in Adobejevim forumom za razvijalce (http://forums.adobe.com/community/aftereffects\_general\_discussion/aftereffects\_sdk). % !TODO link za pdf
+Med implementacijo si seveda lahko veliko pomagamo s razhroščevalnikom razvojnega okolja, navodili in Adobejevim forumom za razvijalce\footnote{http://forums.adobe.com/community/aftereffects\_general\_discussion/aftereffects\_sdk}.
 
+Implementacijo začnemo z ravojem prototipa, ki bo pravilno deloval na preprostih primerih.
+Na tej točki ni potrebno podpreti videa z večjo barvno globino, prav tako se ni potrebno ukvarjati s formati, katerih piksli niso kvadratni.
+Prototip razvijamo, dokler nismo zadovoljni z izgledom vizualnega učinka na preprostih primerih.
 
-% !TODO dokončaj metode razvoja vtičnikov
+Nasldenji korak je odpravljanje hroščev.
+Največ težav se je pojavilo z uporabo pomnilnika.
+Adobe priporoča uporabo funkcij za dostop do pomnilnika, ki jih ponuja SDK.
+Po mojih lastnih izkušnjah se je tega nasveta zelo pametno držati.
+V nasprotnem primeru imamo hitro lahko veliko puščanja pomnilnika.
+Vsaka sličica videa vzame relativno veliko pomnilnika, saj mora biti med izvajanjem vtičnika shranjena nestisnjeno.
+Če nam ostane v pomnilniku, ki ga nismo pravilno sprostili in smo uporabljali sistemske klice za rezervacijo pomnilnika, se bo program AE sesul že po nekaj obdelanih sličicah.
+Do tega pride, ker AE poskusi alocirati pomnilnik, pa mu ga operacijski sistem ne more dodeliti. 
+Če uporabljamo funkcije, ki jih ponuja SDK, se to ne more zgoditi, saj bo AE raje sesul vtičnik.
+S tem se izognemo izgubi podatkov - uporabnik lahko datoteko shrani in problematične vtičnike izklopi.
+Z vidika končnega uporabnika je veliko bolje, da se sesuje samo vtičnik, kot celoten program.
+
+Stabilne vtičnike, ki delujejo kot željeno, nato testiramo na robnih primerih.
+Ti vključujejo formate s širšimi piksli, večjo barvno globino (čo to želimo podpreti), zelo velikim ali majhnim številom sličic na sekundo in podobno.
+Odpravljanje težav na tej stopnji je lahko zamudno in zapleteno, sploh če pred tem nismo odpravili bolj pogostih težav.
+Vprašati se je potrebno tudi, kakšne formate videa sploh želimo podpreti.
+Marsikateri vizualni učinek namreč ne bo pridobil ničesar, če ga izvajamo z barvno globino 32 bitov na kanal namesto 16 biti ali celo 8 biti.
+Če razvijamo učinek za enkratno uporabo in ga ne nameravamo ponuditi javnosti, je dovolj dobro, da pravilno deluje na tipu videa, ki ga projekt uporablja.
 
 
 
@@ -741,7 +764,8 @@ in maksimalno razdaljo med percepcijo izbrane barve in barve piksla, da bo še �
 V originalni ideji smo podobnost barve definirali kot razdaljo med dvema barvama v prilagojenem prostoru RGB.
 Ker je cilj poiskati podobne barve, smo prostor RGB transformirali oziroma raztegnili, da bi razdalja bila bližja človeški percepciji razlike v barvah.
 Transformacija RGB prostora izhaja iz tega, da človeško oko naprimer zazna več različnih odtenkov zelene barve kot ostalih - bolj natančno ločimo zelene odtenke kot ostale.
-To upoštevamo v izračunu vizualne podobnosti barv tako, da razdaljo izračunamo po formuli $$ \sqrt{ 2 R^2 + 4 G^2 + 3 B^2 } \cite{colordiff2}. $$
+To upoštevamo v izračunu vizualne podobnosti barv tako, da razdaljo izračunamo po formuli\cite{colordiff2} $$ \sqrt{ 2 R^2 + 4 G^2 + 3 B^2 } . $$ 
+Formula je hiter približek, ki pa deluje dovolj natančno, da človek ne opazi razlike od bolj pravilno deformiranega barvnega prostora.
 Testiranje je to metodo pokazalo kot nerazumljivo in navidez nelogično.
 Pogosto so bili rezultati drugačni, kot bi jih pričakovali, kar z vidika uporabnika pomeni ni zaželjeno\cite{upoprogopr}.
 
@@ -755,6 +779,406 @@ Zaradi ločenja na tri izbirnike smo s tem dosegli tudi večjo fleksibilnost vti
 
 Vtičnik implementira odzive na ukazne izbirnike \texttt{PF\_Cmd\_ABOUT}, \texttt{PF\_Cmd\_GLOBAL\_SETUP}, \texttt{PF\_Cmd\_PARAMS\_SETUP} in \texttt{PF\_Cmd\_RENDER}.
 To je minimalen set odzivov za efektni vtičnik.
+
+
+\subsubsection{Odziv na klic \texttt{PF\_Cmd\_ABOUT}}
+Funkcija \texttt{About()} je klicana, kadar uporabnik pritisne na gumb \sn{About} v oknu za kontrolo učinka.
+\begin{verbatim}
+static PF_Err 
+About (	
+    PF_InData *in_data,
+    PF_OutData *out_data,
+    PF_ParamDef *params[],
+    PF_LayerDef *output )
+{
+    AEGP_SuiteHandler suites(in_data->pica_basicP);
+	
+    suites.ANSICallbacksSuite1()->sprintf(
+    out_data->return_msg,
+        "%s v%d.%d\r%s",
+        STR(StrID_Name), 
+        MAJOR_VERSION, 
+        MINOR_VERSION, 
+        STR(StrID_Description));
+
+    return PF_Err_NONE;
+}
+\end{verbatim}
+
+Vse funkcije, ki implementirajo odziv na ukazni izbirnik, so statične.
+Funkcija potrebuje le dva parametra, vednar so ostali tam zaradi večje berljivosti\cite{aesdk}.
+Ti štirje parametri so namreč prisotni v večini odzivnih funkcij, ki sestavljajo skelet vtičnika in tako lahko prepoznavne. % !TODO nekam napiši kaj so odzivne funkcije
+Podporne funkcije, ki jih kličemo iz odzivnih fukncij, teh parametrov ponavadi nimajo.
+Paramteri so:
+\begin{itemize}
+\item{\texttt{PF\_InData *in\_data} je kazalec na strukturo, ki vsebuje podatke o stanju gostitelja in podatke, nad katerimi se vtičnik izvaja. 
+	Vsebina je odvisna tudi od tega, kateri ukazni izbirnik je poklican, saj je od tega odvisno, katere podatke bo vtičnik potreboval. 
+	Poleg tega lahko prek nje dostopamo kazalce na funkcije, ki jih ponuja SDK. 
+	V tej funckiji uporabljamo le ta kazelec (\texttt{in\_data->pica\_basicP}). }
+\item{\texttt{PF\_OutData *out\_data} je struktura, ki vsebuje polja za vračanje podatkov iz vtičnika v AE. 
+	Ker se ista struktura uporablja za različne odzive vtičnika, so različna polja veljavna ob različnih časih in klicih. 
+	Tukaj uporabljamo polje \texttt{return\_msg}, v katerega zapišemo tekst, ki se bo pojavil v pogovornem oknu. 
+	Za enostovnejšo lokalizacijo so nizi zapisani v drugi datoteki in se jih dostopa prek globalne strukture s pomočjo makra \texttt{STR( ime\_niza )}.  }
+\item{\texttt{PF\_ParamDef *params[]} je kazalec na seznam parametrov. V tej funkciji ni veljaven in se ne uporablja.  }
+\item{\texttt{PF\_LayerDef *output} je kazalec na izhod učinka. 
+	\texttt{PF\_LayerDef} je struktura, ki vsebuje sliko kot seznam pikslov in metapodatke. 
+	Vanjo zapisušemo izhod upodobitve učinka. Tukaj kazalec ni veljaven in se ne uporablja.  }
+\end{itemize}
+
+Funkcija \texttt{About} v vseh vtičnikih izgleda približno enako, saj je njem nnamen le to, da napolni dialog o vtičniku z vsebino.
+Vrne številko napake.
+V tej funkciji do napake tekom izvajanja ne more priti, razen če so težave prisotne v gostitelju, zato vedno vrne \texttt{PF\_Err\_NONE}.
+
+
+\subsubsection{Odziv na klic \texttt{PF\_Cmd\_GLOBAL\_SETUP}}
+Funkcija \texttt{GlobalSetup} pripravi globalne podatke o vtičniku. 
+To so različne zastavice, ki gostitelju povejo, kako vtičnik deluje in kaj zahteva od gostitelja.
+Funkcija tudi po potrebi rezervira spomin, ki bo vtičniku na voljo ves čas od njegove prve uporabe naprej.
+Ta funkcionalnost tukaj ni potrebna.
+
+\begin{verbatim}
+static PF_Err 
+GlobalSetup (   
+    PF_InData *in_data,
+    PF_OutData *out_data,
+    PF_ParamDef *params[],
+    PF_LayerDef *output )
+{
+    out_data->my_version = PF_VERSION(  
+        MAJOR_VERSION, 
+        MINOR_VERSION,
+        BUG_VERSION, 
+        STAGE_VERSION, 
+        BUILD_VERSION);
+    out_data->out_flags = PF_OutFlag_NONE;
+    
+    return PF_Err_NONE;
+}
+\end{verbatim}
+
+Funkcija nastavi vrednosti verzije vtičnika in izhodne zastavice nastavi na \texttt{PF\_OutFlag\_NONE}, kar pomeni, da je vtičnik enostaven in podpira le 8 bitov na kanal barvne globine.
+Parametri so enaki kot pri funkciji \texttt{About}.
+V tej funkciji sicer ne potrebujemo niti kazalca na vgrajeno funkcionalnost SDK.
+
+\subsubsection{Odziv na klic \texttt{PF\_Cmd\_PARAMS\_SETUP}}
+
+Funkcija \texttt{ParamsSetup} pripravi uporabniški vmesnik.
+Pripravljenih je kup makrov, ki poenostavijo dodajanje elementov uporabniškega vmesnika.
+Ko so vsi parametri dodani in pravilno nastavljeni, moramo gostitelju še sporočiti, koliko jih je, da ne pride do kakšne napake.
+Adobe priporoča, da se parametre dodaja tako, da ustvarimo en objekt tipa \texttt{PF\_ParamDef} in ga za vsak parameter nastavimo, dodamo in spraznimo.
+Ker tip \texttt{PF\_ParamDef} vsebuje unije, ki lahko vsebujejo podatke različnih tipov glede na tip parametra, je zelo pomembno, da so parametri izpraznjeni.
+V ta namen je na voljo makro \texttt{AEFX\_CLR\_STRUCT}.
+Makro prepiše ves pomnilnik, ki ga struktura zasede, z ničlami.
+
+\begin{verbatim}
+static PF_Err 
+ParamsSetup (   
+    PF_InData       *in_data,
+    PF_OutData      *out_data,
+    PF_ParamDef     *params[],
+    PF_LayerDef     *output )
+{
+    PF_Err      err     = PF_Err_NONE;
+    PF_ParamDef def;    
+
+    AEFX_CLR_STRUCT(def);
+    // length slider
+    PF_ADD_FLOAT_SLIDERX(   
+        STR(StrID_Length_Param_Name), 
+        PIXELRAIN_LENGTH_MIN, 
+        PIXELRAIN_LENGTH_MAX, 
+        PIXELRAIN_LENGTH_MIN, 
+        PIXELRAIN_LENGTH_MAX, 
+        PIXELRAIN_LENGTH_DFLT,
+        PF_Precision_INTEGER,
+        0, 0,
+        LENGTH_DISK_ID);
+    AEFX_CLR_STRUCT(def);
+    // hue cb
+    PF_ADD_CHECKBOX(    
+        STR(StrID_HueCB_Param_Name),
+        STR(StrID_HueCB_Param_Name),
+        true,
+        NULL,
+        HUECB_DISK_ID);
+    AEFX_CLR_STRUCT(def);
+    // hue slider
+    PF_ADD_FLOAT_SLIDERX(   
+        STR(StrID_HueSlider_Param_Name),
+        0, 1, 0, 1, 0.3,
+        PF_Precision_THOUSANDTHS,
+        0, 0,
+        HUETOL_DISK_ID);
+    // luma cb
+    PF_ADD_CHECKBOX(    
+        STR(StrID_LumaCB_Param_Name),
+        STR(StrID_LumaCB_Param_Name),
+        false,
+        NULL,
+        LUMACB_DISK_ID);
+    AEFX_CLR_STRUCT(def);
+    // luma slider
+    PF_ADD_FLOAT_SLIDERX(   
+        STR(StrID_LumaSlider_Param_Name),
+        0, 1, 0, 1, 0.3,
+        PF_Precision_THOUSANDTHS,
+        0, 0,
+        LUMATOL_DISK_ID);
+    AEFX_CLR_STRUCT(def);
+    // sat cb
+    PF_ADD_CHECKBOX(    
+        STR(StrID_SatCB_Param_Name),
+        STR(StrID_SatCB_Param_Name),
+        false,
+        NULL,
+        SATCB_DISK_ID);
+    AEFX_CLR_STRUCT(def);
+    // sat slider
+    PF_ADD_FLOAT_SLIDERX(   
+        STR(StrID_SatSlider_Param_Name),
+        0, 1, 0, 1, 0.3,
+        PF_Precision_THOUSANDTHS,
+        0, 0,
+        SATTOL_DISK_ID);
+    AEFX_CLR_STRUCT(def);
+    // color picker
+    PF_ADD_COLOR(   
+        STR(StrID_Color_Param_Name), 
+        PF_HALF_CHAN8,
+        PF_MAX_CHAN8,
+        PF_MAX_CHAN8,
+        COLOR_DISK_ID);
+    AEFX_CLR_STRUCT(def);
+    // mask only cb
+    PF_ADD_CHECKBOX(    
+        STR(StrID_MaskCB_Param_Name),
+        STR(StrID_MaskCB_Param_Name),
+        false,
+        NULL,
+        MASKCB_DISK_ID);
+    AEFX_CLR_STRUCT(def);
+
+    out_data->num_params = PIXELRAIN_NUM_PARAMS;
+
+    return err;
+}
+\end{verbatim}
+
+Funkcija vrača številko napake, ki jo nastavi neuspešno izveden makro.
+
+
+\subsubsection{Odziv na kliv \texttt{PF\_Cmd\_RENDER}}
+
+Funkcija \texttt{Render} implementira upoodabljanje izhodne slike.
+To poteka v dveh korakih.
+Prvi korak je generiranje maske na podlagi izbrane barve.
+Drugi korak je generiranje sledov na podlagi maske in vhodne slike.
+Pred tem je seveda potrebno pridobiti vse potrebne podatke in pripraviti podatkovne strukture.
+
+\begin{verbatim}
+static PF_Err 
+Render (
+        PF_InData *in_data,
+        PF_OutData *out_data,
+        PF_ParamDef *params[],
+        PF_LayerDef *output )
+\end{verbatim}
+
+Funkcija sprejme enake parametre kot prej opisane.
+Med klicem za upodobitev pa se \texttt{params} in \texttt{output} obnašata drugače kot pri ostalih funkcijah.
+\begin{itemize}
+\item{\texttt{PF\_ParamDef *params[]} je veljavna in kaže na seznam vseh parametrov. 
+	Prvi parameter \texttt{params[0]} je kazalec na vhodno sliko tipa \texttt{PF\_LayerDef *}.
+	Ostali so tipa \texttt{PF\_ParamDef} in vsebujejo podatke o stanju kontrolerjev, ki sestavljajo uporabniški vmesnik.}
+\item{\texttt{PF\_LayerDef *output} je izhodna slika, ki je enaka vhodni, vendar prazna - stanje pikslov ni znano. 
+	Vanjo zapišemo nove vrednosti pikslov.  }
+\end{itemize}
+
+\begin{verbatim}
+{
+
+	PF_Err err = PF_Err_NONE;
+	AEGP_SuiteHandler suites(in_data->pica_basicP);
+
+	A_long linesL = output->extent_hint.bottom - output->extent_hint.top;
+	
+	PixSelInfo psi;
+	AEFX_CLR_STRUCT(psi);
+	psi.hueCheck = params[PIXELRAIN_HUE_CB]->u.bd.value;
+	psi.hueTolerance = params[PIXELRAIN_HUE_TOLERANCE]->u.fs_d.value;
+	psi.lumaCheck = params[PIXELRAIN_LUMA_CB]->u.bd.value;
+	psi.lumaTolerance = params[PIXELRAIN_LUMA_TOLERANCE]->u.fs_d.value;
+	psi.satCheck = params[PIXELRAIN_SAT_CB]->u.bd.value;
+	psi.satTolerance = params[PIXELRAIN_SAT_TOLERANCE]->u.fs_d.value;
+	psi.tgtColor = params[PIXELRAIN_COLOR]->u.cd.value;
+\end{verbatim}
+
+Začetni del kode poskrbi za dostopnost kazalca na funkcije SDK in podatke iz elementov uporabniškega vmesnika prepiše v strukturo, 
+ki bo podana funkciji za pripravo maske.
+Na primeru vidimo, kako iz parametrov preberemo podatke.
+Ker so parametri vsi istega tipa, vsebujejo pa različne podatke in predstavljajo različne elemente UI, so podatki zapisani v unijah.
+Ko dostopamo do podatkov, moramo poskrbeti, da podatek pravilno interpretiramo oziroma prepišemo pravi element unije.
+
+\begin{verbatim}
+/* 1. Generate pixel mask */
+    PF_Handle colorMaskH = suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
+    PF_EffectWorld * colorMaskP = (PF_EffectWorld*)*colorMaskH;
+    ERR(suites.WorldSuite1()->new_world(NULL,
+        output->width,
+        output->height,
+        NULL,
+        colorMaskP));
+    if (err != PF_Err_NONE) return err;
+    
+    ERR(suites.Iterate8Suite1()->iterate(in_data,
+        0,                        
+        linesL,                   
+        &params[PIXELRAIN_INPUT]->u.ld, 
+        NULL,                        
+        (void*)&psi,        
+        GenerateMaskPixFunc,  
+        colorMaskP));
+    
+    // show mask
+    if ((PF_Boolean)params[PIXELRAIN_SHOW_MASK]->u.bd.value) {
+        suites.WorldTransformSuite1()->copy(NULL,
+            colorMaskP,
+            output,
+            NULL,
+            NULL);
+        return err;
+    }
+\end{verbatim}
+
+Naslednji del funkcije pripravi masko, katere piskli imajo vrednost alpha 1.0, če so dovolj podobni izbrani barvi - v mejah uporabniško določenih toleranc.
+Najprej pripravi prazno sliko, v katero se bo maska zapisala.
+Ukaz \verb!suites.HandleSuite1()->host_new_handle( ... );! zahteva od gostitelja, naj mu varno rezervira željeno količino pomnilnika.
+Funkcija vrača ročico (kazalec na kazalec), ki jo shranimo, saj jo bomo potrebovali, da bo gostitelj lahko sprostil pomnilnik, ko ga ne bomo več potrebovali.
+Ta pomnilnik uporabimo, da ustvarimo novo sliko tipa \verb!PF_Effect_World!.
+Tipa \verb!PF_Effect_World! in \verb!PF_Layer_Def! sta enaka, vendar nekatere funkcije SDK zahtevajo parametre prvega tipa, nekatere pa drugega.
+Da se izognemo opozorilom prevajalnika lahko ta dva tipa brez težav spreminjamo iz enega v drugega.
+
+S pomočjo iteratorske funkcije ustvarimo masko.
+Iteratorska funkcija \verb!suites.Iterate8Suite1()->iterate( ... )! za nas pokliče funkcijo, podano prek funkcijskega kazalca, ki se izvede nad vsakim pikslom vhodne slike.
+Uporaba iteratorskih funkcij je priporočena, saj so optimizirane za izvajanje na  večjedrnih procesorjih.
+To nam prihrani nekaj dela za hitrjše izvajanje vtičnika.
+
+Funkcija za obdelavo piksla \texttt{GenerateMaskPixFunc} kot najpomembnejši vhod prejme piksel.
+Piksli so shranjeni v formatu RGB, zato jih je za filtriranje po kanalih HSL potrebno pretvoriti, kar sem naredil po prilagojeni metodi s spletne strani\cite{rgbhsl}.
+AE SDK vključuje funkcije za takšne pretvorbe, vendar so namenjene pretvarjanju celotne slike z veliko natančnostjo.
+Implementacija lastne hitre in dovolj natančne funkcije je pospešila izvajanje upodabljanja.
+
+Če je uporabnik izbral način prikazovanja maske (v UI ang. {\it Show mask}), z masko prepišemo izhodno sliko.
+Nadaljno delo ni potrebno, saj smo prikazali masko.
+Namen tega načina delovanja je, da uporabnik vidi, kateri deli slike bodo pustili sledi in s tem lažje oblikuje vizualni učinek.
+
+\begin{verbatim}
+/* 2. Generate trails */
+    TrailInfo til;
+    AEFX_CLR_STRUCT(til);
+    TrailInfo *tilP = &til;
+    tilP->lengthF = params[PIXELRAIN_LENGTH]->u.fs_d.value;
+    tilP->in_data = in_data;
+    tilP->input = &params[PIXELRAIN_INPUT]->u.ld;
+    tilP->pixelMask = reinterpret_cast<PF_LayerDef*>(colorMaskP);
+
+    PF_Handle trailsWorldH = 
+        suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
+    PF_EffectWorld * trailsWorldP = (PF_EffectWorld*)*trailsWorldH;
+    ERR(suites.WorldSuite1()->new_world(
+        NULL,
+        output->width,
+        output->height,
+        NULL,
+        trailsWorldP
+    ));
+    if (err != PF_Err_NONE) return err;
+
+    tilP->output = reinterpret_cast<PF_LayerDef*>(trailsWorldP);
+
+    ERR(suites.Iterate8Suite1()->iterate_generic(
+        output->width,
+        (void*)tilP,
+        GenerateTrailColFunc8
+    ));
+    if (err != PF_Err_NONE) return err;
+    
+    // show trails
+    ERR(suites.WorldTransformSuite1()->copy(
+        NULL,
+        tilP->output,
+        output,
+        NULL,
+        NULL
+    ));
+
+    /* Free memory */
+    suites.HandleSuite1()->host_dispose_handle(colorMaskH);
+    suites.HandleSuite1()->host_dispose_handle(trailsWorldH);
+    
+    return err;
+}
+\end{verbatim}
+
+Drugi del funkcije pripravi podatke, potrebne za prikaz sledi.
+Kot pri genriranju maske tudi tukaj prepišemo potrebne podatke v strukturo \texttt{til}.
+Zaradi preglednosti kode in težav z osveževanjem pomnilnika, ki jih ima AE, vtičnik generira sledi v novo sliko.
+Novo sliko je potrebno ustvariti, ker sicer AE poskuša optimizirati delovanje in se lahko zgodi, da imajo v izhodni sliki prazni piksli vrednosti prejšnjih sličic videa.
+Uporabnikom AE SDK priporočamo, da v primeru artefaktov tipa {\it ghosting} (prikazovanje delov prejšnjih sličic, pogosto deformiranih) poskusijo ročno prepisati izhodno sliko.
+To je rešilo težave tega vtičnika.
+
+Iteratorske funkcije za dostop do pikslov ne zagotavljajo nebenega definiranega zaporedja dostopov, zato jih zdaj ne moremo uporabiti.
+Algoritem za generiranje sledov je namreč enostaven in zahteva, da se vsak stolpec pikslov obdela po vrsti od zgoraj navzdol oziroma v smeri naraščajoče koordinate Y.
+Pomagamo si s splošnim iteratorjem, s katerim iteriramo po stolpcih.
+Za vsak stolpec se pokliče funkcijo \verb!GenerateTrailColFunc8!.
+V funkciji nato ročno dostopamo do posameznih pikslov, pri čemer nam pomagajo makri za dostop do pikslov \verb!PF_GET_PIXEL_DATA8!.
+Makro kazalec na piksel tipa \verb!PF_Pixel8! usmeri na prvo mesto polja pikslov, katerih tipe prilagodi željeni barvni globini.
+S temi kazalci lahko potem počnemo vse pričakovano. 
+Zaradi interne podatkovne strukture slike je potrebno paziti na dolžino posamezne vrstice.
+Ta namerč nima enake dolžine širini slike, je pa njena dolžina definirana v podatkovni strukturi \verb!PF_Effect_World!.
+V novo vrstico istega stolpca se premaknemo s
+\verb!inP += tilP->input->rowbytes / sizeof(PF_Pixel8);!
+, kjer je \texttt{inP} kazalec na piksel, \verb!tilP->input! pa kazalec na sliko.
+
+
+
+
+\section{Vtičnik ElStAberr}
+
+\subsection{Razvoj ideje}
+
+Osnovna ideja za tem vizualnim učinkom je simulacija elektro statičnega odklona (ang. {\it electro static aberration})\cite{elstaberr}.
+Gre za pojav, ki ga je potrebno aktivno negirati pri oblikovanju katodnih ekranov, naprimer televizij.
+Takšni ekrani vsebujejo elektronski top in elektromagnete, s katerimi se snop elektronov usmerja.
+Vsak piksel mora biti ob pravem času \sn{osvetljen} s primerno močnim elektronskim snopom, da florescentni premaz zažari s primerno svetlostjo.
+Eleketronski žarek z večjo energijo pa potrenuje več energije, da se ga preusmeri.
+Zato ekrani potrebujejo logiko, ki povečajo moč elektromagnetov za preusmerjanje žarka, kadar ima žarek večjo energijo.
+Vizualni učinek ElStAberr približno simulira kako bi izgledala slika, če bi bila prikazana na katodnem zaslonu brez takšne logike.
+
+Pri barvnem katodnem ekranu je vsak piksel sestavljen iz treh delov - en zažari rdeče, en zeleno, en pa modro. 
+Zato mora tudi elektronski snop zadeti te tri točke ločeno in z različno močjo.
+Zato je tudi možno, da se trije snopi različno napačno odklonijo.
+Ker pa mora snop zadeti pravo točko, je možno celo, da zadane del ekrana, ki predstavlja drugo barvo od ciljane.
+Vse to smo pri tej simulaciji zanemarili in vsak piksel premaknili glede na njegovo svetlost, ostale detajle pa zanemarili.
+Rezultat sicer ni fizikalno pravilna simulacija, je pa vizualno zanimivo orodje, s katerim lahko dosežemo različne zanimive vizualne učinke.
+
+Namesto pravilne simulacije smo se usmerili k izdelavi uporabnega vtičnika.
+Dodali smo kontrolnik za izbiro središča vizualnega učinka.
+Predstavlja točko, v kateri je odklon vedno ničeln.
+Tej točki je v dejanskem ekranu analogen navidezni izvor elektronskega snopa oziroma točka, ki jo žarek zadane brez odklona.
+Dodali smo tudi možnost zapolnitve lukenj, ki nastanejo, kadar je piksel premaknjen s svojega mesta in na to mesto ni premaknjen noben drug piksel.
+Ta opcija nima analoga v pravem ekranu s katodno cevjo, vendar poveča fleksibilnost učinka in s tem njegovo uporabnost.
+
+Uporabniški vmesnik vsebuje sledče kontrole:
+\begin{itemize}
+\item{moč odklona, ki je lahko pozitiven - svetli piksli so potisnjeni stran od sredine slike, temni pa proti sredini, ali pa negativen z obratnimi rezultati,}
+\item{zapolnitev lukenj - ker premikamo piksle, je možno, da nekateri piksli ostanejo prazni. S to opcijo izbrano se ti prazni piksli zapolnijo s najbližjim sosedom,}
+\item{izbira sredniske točko odklona - izberemo, kje na sliki je središče vizualnega učinka - navidezni izvor elektronskega žarka.}
+\end{itemize}
+
+
+\subsection{Implementacija vtičnika}
+
 
 
 

@@ -31,20 +31,23 @@ typedef struct {
 TableString		g_strs[StrID_NUMTYPES] = {
 	StrID_NONE,						"",
 	StrID_Name,						"PixelRain",
-	StrID_Description,				"An empty (skeletal, if you will) effect sample,\r for your modifying pleasure.\rCopyright 2007 Adobe Systems Incorporated.",
-	StrID_Length_Param_Name,			"Length",
+	StrID_Description,				"Generated downward trails of pixels. Select a region ba color. "
+									"Pixels of selected color will be copied over others with hight Y coordinates."
+									"Trail length can be altered."
+									"\nBy Maj Smerkol, 2017",
+	StrID_Length_Param_Name,		"Length",
 
-	StrID_HueCB_Param_Name, "Mask by hue",
-	StrID_HueSlider_Param_Name, "Hue tolerance",
+	StrID_HueCB_Param_Name,			"Mask by hue",
+	StrID_HueSlider_Param_Name,		"Hue tolerance",
 
-	StrID_LumaCB_Param_Name, "Mask by luma",
-	StrID_LumaSlider_Param_Name, "Luma tolerance",
+	StrID_LumaCB_Param_Name,		"Mask by luma",
+	StrID_LumaSlider_Param_Name,	"Luma tolerance",
 
-	StrID_SatCB_Param_Name, "Mask by saturation",
-	StrID_SatSlider_Param_Name, "Saturation tolerance",
+	StrID_SatCB_Param_Name,			"Mask by saturation",
+	StrID_SatSlider_Param_Name,		"Saturation tolerance",
 
 	StrID_Color_Param_Name,			"Color",
-	StrID_MaskCB_Param_Name,			"Show mask",
+	StrID_MaskCB_Param_Name,		"Show mask",
 };
 
 

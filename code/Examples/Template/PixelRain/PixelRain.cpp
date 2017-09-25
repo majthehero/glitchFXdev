@@ -31,6 +31,9 @@
 
 #include "PixelRain.h"
 
+/*
+Set up text in About dialog.
+*/
 static PF_Err 
 About (	
 	PF_InData		*in_data,
@@ -40,15 +43,20 @@ About (
 {
 	AEGP_SuiteHandler suites(in_data->pica_basicP);
 	
-	suites.ANSICallbacksSuite1()->sprintf(	out_data->return_msg,
-											"%s v%d.%d\r%s",
-											STR(StrID_Name), 
-											MAJOR_VERSION, 
-											MINOR_VERSION, 
-											STR(StrID_Description));
+	suites.ANSICallbacksSuite1()->sprintf(	
+		out_data->return_msg,
+		"%s v%d.%d\r%s",
+		STR(StrID_Name), 
+		MAJOR_VERSION, 
+		MINOR_VERSION, 
+		STR(StrID_Description));
+
 	return PF_Err_NONE;
 }
 
+/*
+Set up 
+*/
 static PF_Err 
 GlobalSetup (	
 	PF_InData		*in_data,
@@ -56,13 +64,13 @@ GlobalSetup (
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output )
 {
-	out_data->my_version = PF_VERSION(	MAJOR_VERSION, 
-										MINOR_VERSION,
-										BUG_VERSION, 
-										STAGE_VERSION, 
-										BUILD_VERSION);
-
-	out_data->out_flags =  PF_OutFlag_DEEP_COLOR_AWARE;	// just 16bpc, not 32bpc
+	out_data->my_version = PF_VERSION(	
+		MAJOR_VERSION, 
+		MINOR_VERSION,
+		BUG_VERSION, 
+		STAGE_VERSION, 
+		BUILD_VERSION);
+	out_data->out_flags = PF_OutFlag_NONE;
 	
 	return PF_Err_NONE;
 }
@@ -424,7 +432,6 @@ Render (
 	/* 1. Generate pixel mask */
 	PF_Handle colorMaskH = suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
 	PF_EffectWorld * colorMaskP = (PF_EffectWorld*)*colorMaskH;
-	//PF_EffectWorld * colorMaskP = new PF_EffectWorld(); 
 	ERR(suites.WorldSuite1()->new_world(NULL,
 		output->width,
 		output->height,
@@ -432,24 +439,15 @@ Render (
 		colorMaskP));
 	if (err != PF_Err_NONE) return err;
 	
-	// deep world not supported - NYI
-	if (PF_WORLD_IS_DEEP(output)) { // for 16bpp colors 
-		err = PF_Err_INTERNAL_STRUCT_DAMAGED;
-		// not supported
-		return err;
-	}
-	else {
-		ERR(suites.Iterate8Suite1()->iterate(in_data,
-			0,								// progress base
-			linesL,							// progress final
-			&params[PIXELRAIN_INPUT]->u.ld,	// src 
-			NULL,							// area - null for all pixels
-			(void*)&psi,					// refcon - your custom data pointer
-			GenerateMaskPixFunc,			// pixel function pointer
-			colorMaskP));
-	}
-	if (err != PF_Err_NONE) return err;
-
+	ERR(suites.Iterate8Suite1()->iterate(in_data,
+		0,								// progress base
+		linesL,							// progress final
+		&params[PIXELRAIN_INPUT]->u.ld,	// src 
+		NULL,							// area - null for all pixels
+		(void*)&psi,					// refcon - your custom data pointer
+		GenerateMaskPixFunc,			// pixel function pointer
+		colorMaskP));
+	
 	// show mask
 	if ((PF_Boolean)params[PIXELRAIN_SHOW_MASK]->u.bd.value) {
 		suites.WorldTransformSuite1()->copy(NULL,
@@ -521,35 +519,35 @@ EntryPointFunc (
 	try {
 		switch (cmd) {
 			case PF_Cmd_ABOUT:
-
-				err = About(in_data,
-							out_data,
-							params,
-							output);
+				err = About(
+					in_data,
+					out_data,
+					params,
+					output);
 				break;
 				
 			case PF_Cmd_GLOBAL_SETUP:
-
-				err = GlobalSetup(	in_data,
-									out_data,
-									params,
-									output);
+				err = GlobalSetup(	
+					in_data,
+					out_data,
+					params,
+					output);
 				break;
 				
 			case PF_Cmd_PARAMS_SETUP:
-
-				err = ParamsSetup(	in_data,
-									out_data,
-									params,
-									output);
+				err = ParamsSetup(	
+					in_data,
+					out_data,
+					params,
+					output);
 				break;
 				
 			case PF_Cmd_RENDER:
-
-				err = Render(	in_data,
-								out_data,
-								params,
-								output);
+				err = Render(	
+					in_data,
+					out_data,
+					params,
+					output);
 				break;
 		}
 	}

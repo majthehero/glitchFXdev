@@ -91,7 +91,7 @@ enum {
 	CENTER_DISK_ID
 };
 
-typedef struct GainInfo{
+typedef struct AberInfo{
 	// in data
 	PF_FpLong	magnitudeF;
 	PF_InData *inData;
@@ -102,7 +102,7 @@ typedef struct GainInfo{
 	PF_FpLong center_y;
 	// out data
 	PF_LayerDef *outLayerP;
-} GainInfo, *GainInfoP, **GainInfoH;
+} AberInfo, *GainInfoP, **GainInfoH;
 
 typedef struct AfterAberInfo{
 	A_long worldHeight, worldWidth;

@@ -99,19 +99,25 @@ ParamsSetup (
 		0,
 		GAIN_DISK_ID);
 	AEFX_CLR_STRUCT(def);
-
+	
 	PF_ADD_CHECKBOX("FILL IN",
 		"Fill In",
-		true,
+		false,
 		NULL,
 		FILLIN_CB_ID);
 	AEFX_CLR_STRUCT(def);
 
+	int centerX = 0;
+	int centerY = 0;
+	if (output) {
+		centerX = output->width / 2;
+		centerY = output->height / 2;
+	}
 	def.flags = PF_ParamFlag_SUPERVISE;
 	PF_ADD_POINT(
 		STR(StrID_Center_Param_Name),
-		0,
-		0,
+		centerX,
+		centerY,
 		NULL,
 		CENTER_DISK_ID);
 	AEFX_CLR_STRUCT(def);
@@ -187,14 +193,13 @@ FillAfterAberGapsPixFunc8 (
 			// !TODO rewrite for better direction to center
 			PF_Pixel8 *nearPixP = NULL;
 			// find nearest written coords
-			// !TODO if magnitute is negative, should change direction
-			if (nearY < centerY) {
+			if (nearY <= centerY) {
 				nearY += 1;
 			}
 			else {
 				nearY -= 1;
 			}
-			if (nearX < centerX) {
+			if (nearX <= centerX) {
 				nearX += 1;
 			}
 			else {
@@ -229,7 +234,7 @@ LumaAberatePixFunc8 (
 {
 	PF_Err		err = PF_Err_NONE;
 
-	GainInfo *giP = reinterpret_cast<GainInfo*>(refcon);
+	AberInfo *giP = reinterpret_cast<AberInfo*>(refcon);
 	PF_InData *in_data = giP->inData;
 	AEGP_SuiteHandler *suitesP = giP->suitesP;
 	double luma = lumaFromColor(inP); // luma [0.0, 1.0]
@@ -287,34 +292,12 @@ Render (
 	AEGP_SuiteHandler	suites(in_data->pica_basicP);
 	
 	// refcon -> LumaAberate
-	GainInfo			gi;
-	AEFX_CLR_STRUCT(gi);
+	AberInfo aberInfo;
+	AEFX_CLR_STRUCT(aberInfo);
 
 	// input data
 	A_long				linesL	= 0;
 	linesL 		= output->extent_hint.bottom - output->extent_hint.top;
-
-	gi.magnitudeF 	= params[ElStAberr_GAIN]->u.fs_d.value;
-	
-	// new output world
-	PF_Handle outworldH = suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
-	PF_EffectWorld *outworldP = (PF_EffectWorld*)*outworldH;
-	A_long outWidth = output->width;
-	A_long outHeight = output->height;
-	suites.WorldSuite1()->new_world(
-		NULL, 
-		outWidth, 
-		outHeight, 
-		NULL, 
-		outworldP);
-
-	// refcon -> LumaAberatePixFunc8
-	gi.outLayerP = output;//reinterpret_cast<PF_LayerDef*>(outworldP);
-	gi.inData = in_data;
-	gi.suitesP = &suites;
-	gi.outworldH = outworldH;
-	gi.center_x = (PF_FpLong)params[ElStAberr_CENTER]->u.td.x_value;
-	gi.center_y = (PF_FpLong)params[ElStAberr_CENTER]->u.td.y_value;
 
 	/* Do render */
 	// 1. Color world easily recognisible blank state
@@ -328,42 +311,64 @@ Render (
 		ColorBlankPreAberGapsPixFunc8,	// pixel function pointer
 		output));
 	// 2. Luma (Electro statically) aberate
+	aberInfo.magnitudeF = params[ElStAberr_GAIN]->u.fs_d.value;
+	// new output world
+	PF_Handle outworldH = suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
+	PF_EffectWorld *outworldP = (PF_EffectWorld*)*outworldH;
+	A_long outWidth = output->width;
+	A_long outHeight = output->height;
+	suites.WorldSuite1()->new_world(
+		in_data->effect_ref,
+		outWidth,
+		outHeight,
+		PF_PixelFormat_ARGB32,
+		outworldP);
+
+	// refcon -> LumaAberatePixFunc8
+	aberInfo.outLayerP = reinterpret_cast<PF_LayerDef*>(outworldP);
+	aberInfo.inData = in_data;
+	aberInfo.suitesP = &suites;
+	aberInfo.outworldH = outworldH;
+	aberInfo.center_x = (PF_FpLong)params[ElStAberr_CENTER]->u.td.x_value;
+	aberInfo.center_y = (PF_FpLong)params[ElStAberr_CENTER]->u.td.y_value;
+
 	ERR(suites.Iterate8Suite1()->iterate(	
 		in_data,
 		0,								
 		linesL,							
 		&params[ElStAberr_INPUT]->u.ld,	
 		NULL,				
-		(void*)&gi,			
+		(void*)&aberInfo,			
 		LumaAberatePixFunc8,
-		output));	// !output is here unused
+		output));	// dest EffectWorld not used in LumaAberPixFunc
+
 	// 3. Fill emptynesses
 	// new world
 	PF_Handle fillinWorldH = suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
-	PF_EffectWorld *fillInWorldP = (PF_EffectWorld*)*outworldH;
-	A_long fiwWidth = fillInWorldP->width;
-	A_long fiwHeight = fillInWorldP->height;
+	PF_EffectWorld *fillInWorldP = (PF_EffectWorld*)*fillinWorldH;
+	A_long fiwWidth = outworldP->width; // only fill in what users care about
+	A_long fiwHeight = outworldP->height;
 	suites.WorldSuite1()->new_world(
-		NULL,
+		in_data->effect_ref,
 		fiwWidth,
 		fiwHeight,
-		NULL,
-		outworldP);
+		PF_PixelFormat_ARGB32,
+		fillInWorldP);
 	// refcon setup
 	AfterAberInfo aai;
 	AEFX_CLR_STRUCT(aai);
 	aai.worldHeight = output->height;
 	aai.worldWidth = output->width;
-	aai.worldP = output;
+	aai.worldP = outworldP;
 	aai.inData = in_data;
-	aai.center_x = gi.center_x;
-	aai.center_y = gi.center_y;
-	// 
+	aai.center_x = aberInfo.center_x;
+	aai.center_y = aberInfo.center_y;
+
 	ERR(suites.Iterate8Suite1()->iterate(
 		in_data,
 		0,								// progress base
 		linesL,							// progress final
-		output,	
+		outworldP,	
 		NULL,							// area - null for all pixels
 		(void*)&aai,					// refcon - your custom data pointer
 		FillAfterAberGapsPixFunc8,		// pixel function pointer
@@ -374,8 +379,18 @@ Render (
 	simpleBehind->opacity = 100;
 	simpleBehind->xfer = PF_Xfer_BEHIND;
 	// blend fill in under output
-	suites.WorldTransformSuite1()->transform_world(
+	suites.WorldTransformSuite1()->composite_rect(
+		in_data->effect_ref,
 		NULL,
+		100, // A_long opacitity -- 0 to ??
+		fillInWorldP,
+		0, 0, 
+		PF_Field_FRAME,
+		PF_Xfer_BEHIND,
+		outworldP
+	);
+	/*suites.WorldTransformSuite1()->transform_world(
+		in_data->effect_ref,
 		PF_Quality_LO,
 		NULL,
 		NULL,
@@ -387,12 +402,19 @@ Render (
 		NULL,
 		NULL,
 		output
+	);*/
+	// put output out
+	suites.WorldTransformSuite1()->copy(
+		NULL,
+		outworldP,
+		output,
+		NULL,
+		NULL
 	);
-
 	/* Free memory */
-	suites.WorldSuite1()->dispose_world(NULL, outworldP);
+	suites.WorldSuite1()->dispose_world(in_data->effect_ref, outworldP);
 	suites.HandleSuite1()->host_dispose_handle(outworldH);
-	suites.WorldSuite1()->dispose_world(NULL, fillInWorldP);
+	suites.WorldSuite1()->dispose_world(in_data->effect_ref, fillInWorldP);
 	suites.HandleSuite1()->host_dispose_handle(fillinWorldH);
 	suites.HandleSuite1()->host_dispose_handle(simpleBehindH);
 	return err;
@@ -426,7 +448,7 @@ UpdateParameterUI(
 	PF_ParamDef def;
 	AEFX_CLR_STRUCT(def);
 
-	if (outputP) { // !TODO only do this when needed - now done all the time
+	if (outputP) { // !TODO unsure if needed now that in params setup this is ..set up
 		def = *params[ElStAberr_CENTER];
 		def.u.td.x_dephault = outputP->width / 2;
 		def.u.td.y_dephault = outputP->height / 2;
