@@ -81,6 +81,7 @@ enum {
 	ElStAberr_INPUT = 0,
 	ElStAberr_GAIN,
 	ElStAberr_FILLIN,
+	ElStAberr_FILLINMODE,
 	ElStAberr_CENTER,
 	ElStAberr_NUM_PARAMS
 };
@@ -88,6 +89,7 @@ enum {
 enum {
 	GAIN_DISK_ID = 1,
 	FILLIN_CB_ID,
+	FILLINMODE_ID,
 	CENTER_DISK_ID
 };
 
@@ -102,7 +104,14 @@ typedef struct AberInfo{
 	PF_FpLong center_y;
 	// out data
 	PF_LayerDef *outLayerP;
+	int fillinmode;
 } AberInfo, *GainInfoP, **GainInfoH;
+
+enum {
+	DARKOVER = 1,
+	LIGHTOVER,
+	ADD
+};
 
 typedef struct AfterAberInfo{
 	A_long worldHeight, worldWidth;

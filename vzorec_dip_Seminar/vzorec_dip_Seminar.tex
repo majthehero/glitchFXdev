@@ -348,11 +348,11 @@ A proper abstract should contain around 100 words which makes this one way too s
 \chapter{Uvod}
 
 Cilj diplomske naloge je raziskati metode razvoja vtičnikov za programsko orodje Adobe After Effects (v nadaljevanju AE). 
-AE je programski paket, namenjen montaži videa in izdelavi vizualnih efektov. 
+AE je programski paket, namenjen montaži videa in izdelavi vizualnih učinkov. 
 Ena izmed njegovih dobrih lastnosti je razširljivost s pomočjo vtičnikov, ki omogočajo dodajanje poljubnih funckionalnosti programskemu paketu. 
 Razširjanje je omogočeno prek programskega vmesnika in prosto dostopne razvojne dokumentacije za uporabo le tega. 
 
-Vtičnike za AE lahko delimo v 4 kategorije: 
+Vtičnike za AE lahko delimo v štiri kategorije: 
 splošno namenske vtičnike (AEGP), 
 vizualne učinke (effect), 
 vhodno izhodne vtičnike (IO) in 
@@ -362,7 +362,7 @@ Ker sem se odločil za razvoj vizualnih učinkov, je izbira med tipi vtičnikov 
 Vtičniki za vizualne učinke implementirajo VFX kot operacijo nad posameznimi sličicami v videu. 
 Programski vmesnik AE ponuja nemalo operacij, ki pospešijo izvajanje operacij nad piksli in skrajšajo čas razvoja, saj ponujajo visokonivojski dostop do vgrajenih funkcij AE. 
 
-Splošno namenski vtičniki zahtevajo več resursov od sistema, na katerem tečejo, omogočajo pa programerju več možnosti itegracije z AE, spreminjanje uporabniškega vmesnika in odzivanje na interno stanje celotnega programskega paketa. 
+Splošno namenski vtičniki zahtevajo več resursov od sistema, na katerem tečejo, omogočajo pa programerju več možnosti integracije z AE, spreminjanje uporabniškega vmesnika in odzivanje na interno stanje celotnega programskega paketa. 
 Omogočajo mnogo več, kot potrebujemo za implementacijo tipičnih vizualnih učinkov. 
 Vhodno izhodni vtičniki so namenjeni dodajanju podpore za branje in pisanje novih datotečnih formatov, implementaciji kodekov in podobno.
 
@@ -373,9 +373,9 @@ Prva kategorija so vtičniki za popravljanje izvornih posnetkov, kot so odstranj
 Namen teh vtičnikov je reševanje slabih posnetkov, kadar ponovni zajem videa oziroma ponovno snemanje ni mogoče, zaradi cene, pomanjkanja časa ali drugih razlogov. 
 Le redko lahko s pomočjo teh vtičnikov dosežemo rezultate enake kvalitete, kot če bi bili posnetki dobri. 
 
-V drugo kategorijo štejem efekte, ki so namenjeni dodajanju vrednosti posnetki v post produkciji. 
+V drugo kategorijo štejem efekte, ki so namenjeni dodajanju vrednosti posnetku v post produkciji. 
 Večino vizualnih učinkov pravzaprav lahko štejemo v to kategorijo. 
-Sem spadajo tudi vsi tisti efekti, ki vizualno pomagajo pripovedništvu, pomagajo ustvariti fiktiven svet, like in podobno. 
+Sem spadajo tudi vsi tisti efekti, ki vizualno pomagajo pripovedi, pomagajo ustvariti fiktivni svet, like in podobno. 
 
 V tretjo kategorijo uvrščam destruktivne efekte - to so tisti, ki ne dodajajo informacij sliki, ampak nasprotno zmanjšajo kvaliteto slike za dosego nekega vizualnega sloga ali pa pomagajo ustvarjati vzdušje in gledalcu, če so uspešno uporabljeni, lahko vzbudijo določena čustva. 
 Primere takšnih efektov lahko najdemo marsikje, v popularni kulturi (Mr Robot, 2015), %!TODO  slika
@@ -383,40 +383,35 @@ računalniških igrah (SOMA, 2015) % !TODO  slika
  in filmih (The Hunger), % !TODO opklepaj izpolni. - Faster Pussycat Kill Kill in the hunger pravilno lepo napiši
 na različne načine proizvedene vizualne artefakte pa celo v galerijah in knjižnih zbirkah umetniških del (ang. {\it ASCII Graphic Glitch Art}, Rozita Fogelman).
 
- % !TODO zgodovina glitch art IZ KNJIG NOVIH don't translate glitch art
-% !TODO medijski jezik, video jezik, kaj pomenijo glitchi danes in mogoče kaj so včasih.
 
 
 \chapter{Vizualni učinki v filmu in videu}
 
-% !TODO  namen montaže, montaža kot korak postprodukcije, linearna in nelinearna montaža (linearna je lajk sto let zadi)
-% razlika med filmsko in video montažo beyond tech? mogoče ne obstaja
-
 \section{Kaj so vizualni učinki in zakaj jih uporabljamo}
 
 Vizualni učinki so različne metode, kako sliki (filmu, videu, fotografiji ali drugačnemu vizualnemu gradivu) dodamo elemente oziroma spremenimo ali izboljšamo sliko\cite{vesHandbook}.
-Gre za tehnike, ki jih ne moremo posneti na kamero med snemanjem žive  akcije. %!TODO prevod preveri
+Gre za tehnike, ki jih ne moremo posneti s kamero med snemanjem žive  akcije. 
 Uporabljamo jih iz različnih razlogov, predvsem pa kadar bi bilo želeno nemogoče posneti, kot zahteva scenarij (primer potovanje na luno v filmu {\it Apollo 13}, 1995).
 Če bi bilo snemanje prizora prenevarno za igralce ali druge udeležence na snemanju, se prav tako lahko uporabi vizualne učinke za dosego končnega rezultata brez izpostavljanja ljudi pravi nevarnosti. 
-Tako so uporabljeni vizualni efekti naprimer v akcijskih filmih, pa tudi naprimer v filmu {\it Fire Brigade}, 1926, v katerem je prikazana dojenčica v goreči hiši. % !TODO prevod slovenski
+Tako so uporabljeni vizualni efekti naprimer v akcijskih filmih, na primer v filmu {\it Fire Brigade}, 1926, v katerem je prikazana dojenčica v goreči hiši. % !TODO prevod slovenski
 Naslednji razlog za uporabo vizualnih efektov pa je zniževanje cene produkcije. Tako naprimer v filmu Gospodar prstanov: Stolpa (ang. {\it The Lord of the Rings: The Two Towers}, 2002) horde orkov napadajo trdnjavo. Najeti toliko statistov bi bilo drago in nepraktično, saj je vsak moral tudi čez proces maske vsak snemalni dan. Lažje in prav tako dobro je posneti manjšo skupino maskiranih statistov in jih nato v postprodukciji vstaviti v sliko večkrat. 
 
-Med vizualne učinke štejemo na vse načine pridobljene grafiične elemente, ki jih ne moremo posneti hkrati z akcijo. 
+Med vizualne učinke štejemo na vse načine pridobljene grafične elemente, ki jih ne moremo posneti hkrati z akcijo. 
 Ločimo jih od posbnih učinkov oziroma praktičnih učinkov.
-Poseni učinki  pa so tisti, ki jih posnamemo med snemanjem akcije.
-Primeri takšnih učinkov so streli z orožjem, eksplozije, umeten dež s cevi in podobno.
-Danes se jih tipično kombinira z vizualnimi učinki za povečan realizem.
+Posebni učinki  pa so tisti, ki jih posnamemo med snemanjem akcije.
+Primeri takšnih učinkov so streli z orožjem, eksplozije, umetni dež in podobno.
+Danes se jih tipično kombinira z vizualnimi učinki za stopnjevani realizem.
 Primeri kombiniranih efektov so naprimer eksplozije v Transformerjih (ang. {\it Transformers}, 2007). % !TODO slika origial plus VFX.
 
 \section{Primerjava uporabe vizualnih učinkov v filmu in videu}
 
-Ko govorimo o vizualnih učinkih, se je naenostavneje opreti na primere iz sveta filma.
+Ko govorimo o vizualnih učinkih, se je najenostavneje opreti na primere iz sveta filma.
 Filmi večinoma ciljajo na neko mero realizma.
 Seveda se razlikujejo po stopnji realizma - od izjemno realističnih filmov Michaela Hanekeja, naprimer Sedmi kontinent (nem. {\it Der Siebente Kontinent}, 1989), 
-hitro pridemo do fantazijskih filmov in celo popolnoma neprepričljivih filmov, kot je naprimer japosnki eksperimentalni film Tetsuo, železni človek (jap. {\it Tetsuo}, 1989). 
+hitro pridemo do fantazijskih filmov in celo popolnoma neprepričljivih filmov, kot je naprimer japonski eksperimentalni film Tetsuo, železni človek (jap. {\it Tetsuo}, 1989). 
 V filmu se skoraj vedno trudimo skriti vizualne učinke, jih narediti dovolj prepričljive, da jih gledalec ne opazi.
 Skozi leta in razvoj tehnologije so seveda vizualni učinki postajali bolj in bolj prepričljivi.
-Danes jih nepoučen opazovalec le redko opazi, pa še takrat v nizkoproračunskih produkcijah, ki ponavadi uporabljajo cenejšo in starejšo tehnologijo, poleg tega pa ponavadi tudi nimajo dostopa do izkušenih umetnikov vizualnih učinkov.
+Danes jih nepoučni gledalec le redko opazi, pa še takrat v nizkoproračunskih produkcijah, ki ponavadi uporabljajo cenejšo in starejšo tehnologijo, poleg tega pa ponavadi tudi nimajo dostopa do izkušenih umetnikov vizualnih učinkov.
 
 Danes, ko je film vedno pogosteje tudi digitalno posnet in tako z vidika medija pravzaprav video, je ta razlika manjša.
 Z enakimi orodji delajo veliki filmski studiji in alternativni umetniki, ki ustvarjajo umetniški avtorski video.
@@ -424,7 +419,7 @@ Adobejev programski paket Premiere Pro so uporabili v studiju Marvel za montažo
 
 
 Avtorski video pa je po naravi popolnoma drugačen.
-V osnovi se ne opira na vizualni realizem, ampak skozi uporabo vizualnega in zvočnega materiala predvsem poskuša na človeka vplivati čustveno\cite{slepoPolje}.
+V osnovi se ne opira na vizualni realizem, ampak skozi uporabo vizualnega in zvočnega materiala poskuša na človeka vplivati na čustveni ravni\cite{slepoPolje}.
 Pascal Bonitzer primerja video s poezijo, specifično s haikujem.
 Video se odmakne od realizma prav zaradi enostavnosti digitalne manipulacije.
 Za razliko od filmskega traku, ki je enkratno zapisan in je za večino obdelave potrebno presnemavanje na drug trak, skeniranje v digitalno obliko in nato optično tiskanje nazaj na trak,
@@ -438,11 +433,11 @@ Začetek vizualnih učinkov za video predstavlja uporaba slike v sliki med napov
 \section{Vpliv videa na alternativno kulturo}
 
 Avtorski video je bil zelo popularen med alternativnimi umetniki v 70. in 80. letih 20. stoletja.
-Takrat so postale video kamere in sistemi za montažo postopoma dostopni tudi za javnost, ne le za velike televizijske in produkcijske hiš \cite{rekonFikc}.
-Na uporabo videa v umetnosti, sicer predvsem performančni, je močno vplival pojav Sonyjevega Portapacka leta 1967.
+Takrat so postale video kamere in sistemi za montažo postopoma dostopni tudi za javnost, ne le za velike televizijske in produkcijske hiše \cite{rekonFikc}.
+Na uporabo videa v umetnosti, sicer predvsem performativni, je močno vplival pojav Sonyjevega Portapacka leta 1967.
 To je bil majhen prenosen sistem za urejanje videa. 
-Sestavljen je bil iz majhne črno-bele kamere in sistema za zapis, predvajanje in presnemavanje magnetih trakov.
-Zaradi možnosti takojšnjega pregleda video in relativno nizke cene je postal zelo popularen med protivojnimi pprotestniki in umetniki v ZDA, ki so bile takrat v vijni z Vietnamom \cite{videosfera1}.
+Sestavljen je bil iz majhne črno-bele kamere in sistema za zapis, predvajanje in presnemavanje magnetnih trakov.
+Zaradi možnosti takojšnjega pregleda videa in relativno nizke cene je postal zelo popularen med protivojnimi protestniki in umetniki v ZDA, ki so bile takrat v vojni z Vietnamom \cite{videosfera1}.
 Tako se je video utemeljil kot medij alternativne kulture.
 Seveda se je hkrati uporabljal tudi za televizijske produkcije, kar je prineslo razvoj v drugi smeri.
 Za namene televizijskih prenosov so bile razvite tehnike za vstavljanje slike v video, različni prehodi in podobno.
@@ -464,7 +459,7 @@ Pravi, da je montaža najpomembnejša faza filmske produkcije. % !TODO citiraj
 Zgodovinsko se je tehnologija filmske in video montaže začela razvijati že konec 19. stoletja. 
 Leta 1895 je v kratkem filmu Usmrtitev Marije I. Škotske (ang. {\it The Execution of Mary, queen of Scots}, 1895) režiser Alfred Clark prikazal, kako kraljici odsekajo glavo. 
 Navidezno usmrtitev kraljice je dosegel tako, da je tik pred rabljevim zamahom s sekiro kamero ustavil in v tem času zamenjal igralko z lutko, nato pa nadaljeval snemanje. 
-To je prvi dokumentiran vizualni učinek. 
+To je prvi dokumentirani vizualni učinek. 
 Viri navajajo, da je marsikateri gledalec verjel, da so igralko med snemanjem zares usmrtili. % !TODO navedi kateri viri to navajajo iz wikipedije
 Ta film je pokazal, da montaža in vizualni učinki lahko pripomorejo k pripovedni moči filma.
 
@@ -477,11 +472,11 @@ Zanimivo je, da so v 30. letih, v času črnobelih filmov, že začeli uporablja
 Moder zaslon namreč lahko z uporabo modrega filtra na črnobelem posnetku popolnoma izgine in pusti za seboj neizpostavljen film, kamor lahko vstavimo druge slike. 
 
 V 50. letih prejšnjega stoletja so v Disneyevih studijih odkrili tehniko, kako hkrati posneti sliko in potujočo masko (ang. {\it traveling matte} - način maskiranja, pri katerem se masko posname na trak in se le ta zato popolnoma ujema s sliko) s pomočjo modrega zaslona. 
-S to tehniko so posneli film Marry Poppins (195x), v katerem naslovna junakinja leti s pomočjo dežnika, oziroma s pomočjo modrega zaslona in potujoče maske. % !TODO letnica --- vir je VES handbook za vse to
+S to tehniko so posneli film Marry Poppins (1964), v katerem naslovna junakinja leti s pomočjo dežnika, oziroma s pomočjo modrega zaslona in potujoče maske\cite{vesHandbook}.
 Tehniko so v 80. letih izpopolnili s pomočjo na UV svetlobo občutljivega filmskega traku in barvanjem elementov maskiranja z UV odbojno barvo za film Vojna Zvezd (ang. {\it Star Wars}). 
 % !TODO kateri film a se prov spomnm star wars
 
-V naslednjih desetletjih se je razvoj filmskih posebnih učinkov razvijal predvsem v smeri izpopolnjevanja že poznanih tehnik. 
+V naslednjih desetletjih je šel razvoj filmskih posebnih učinkov v smeri izpopolnjevanja že poznanih tehnik. 
 Tako so v 60. letih razvili novo tehniko projeciranja na zaslon v studiju od spredaj, kar je poskrbelo za bolj jasno sliko ozadij, večji kontrast in bolj pravilne barve. 
 V 70. letih se je začela uporabljati tehnika maskiranja z modrim zaslonom tudi za barvne filme, v 80. letih pa so uspeli doseči maskiranje brez uhajanja modre svetlobe na objekte
 \footnote{ang. {\it blue-spill} je odsev modre svetlobe s platna na druge objekte. 
@@ -497,16 +492,16 @@ Podjetje Triple-I je kasneje tehniko razvijalo dalje.
 Nekaj let kasneje so podobne vizualne učinke uporabili v filmu Futureworld (ang. {\it Futureworld}).
 Leta 1982 pa so za film Tron (ang. {\it Tron}, 1982) s pomočjo računalniške 3D CGI upodobili celoten fikcijski svet in objekte v njem.
 V filmu Tron efekti niso bili prepričljivi, kar pa ustvarjalcev ni oviralo, saj film prikazuje digitalen svet oziroma navidezno resničnost.
-Leta 1985 je studio Pixar ustvaril prvi 3D CGI animiran lik.
+Leta 1985 je studio Pixar ustvaril prvi 3D CGI animirani lik.
 To je bil stekleni vitez v filmu Mladi Sherlock Holmes (ang. {\it Young Sherlock Holmes}).
 V 90. letih so digitalni vizualni učinki hitro napredovali zaradi razvoja računalniške tehnologije, ki je postala dostopnejša in končno dovolj zmogljiva za resno delo.
 Leta 1992 so v filmu prvič prikazali prepričljive 3D CGI živali, pingvine in netopirje v filmu Batman se vrača (ang. {\it Batman Returns}, 1992).
 Leto kasneje pa je film Jurski Park (ang. {\it Jurassic Park}, 1993) zelo uspešno kombiniral 3D CGI, lutke, živo igro in posnetke miniatur. 
 
 Danes velika večina filmov in videa uporablja digitalne video učinke. 
-Ti efekti so pogosto popolnoma neopazni, kot naprimer dodan sneg v filmu Kradljivka knjig (ang. {\it The Book Thief}, 2013). %!TODO dopolni
+Ti efekti so pogosto popolnoma neopazni, kot naprimer dodani sneg v filmu Kradljivka knjig (ang. {\it The Book Thief}, 2013).
 V filmski industriji se vizualni efekti večinoma uporabljajo čimbolj neopazno in ne opozarjajo gledalca nase \cite{vesHandbook}.
-Izjema so namerni umetniški učinki, ki na primer v filmu Doktor Strange (ang. {\it Doctor Strange}, 2016) prikazujejo drug svet. 
+Izjema so namerni umetniški učinki, ki na primer v filmu Doktor Strange (ang. {\it Doctor Strange}, 2016) prikazujejo nek drug svet. 
 Tam jih ne moremo zgrešiti, pa jih kljub temu gledalci lahko ignorirajo, saj so uspešno uporabljeni kot pripovedno orodje.
 
 
@@ -521,17 +516,17 @@ After Effects je orodje za video montažo, izdelavo vizualnih učinkov in video 
 
 \section{Kompozicija digitalnega videa}
 
-Primarni namen After Effects je kompozicija videa.
-Kompozicija je postopek, pri katerem iz več videov, slik in drugih vizualnih elementov sestavimo končno sliko tako,
+Primarni namen After Effects je sestavljanje (ang. {\it compositing}) videa.
+Sestavljanje je postopek, pri katerem iz več videov, slik in drugih vizualnih elementov sestavimo končno sliko tako,
 da jih razporedimo enega nad drugega v 2.5D prostoru\footnotemark in nato med seboj kombiniramo\cite{siggraphcomposition}.
-Ko kombiniramo plasti lahko izberemo med več različnimi načini mešanja (ang. {\it blending mode}) oziroma operacija nad piksli.
+Pri kombiniranju plasti lahko izberemo med več različnimi načini mešanja (ang. {\it blending mode}) oziroma operacijami nad piksli.
 
-Današnja definicja kompozicije videa je bila postavljena leta 1984 v članku Compositing Digital Images\cite{siggraphcompostition}.
+Današnja definicja sestavljanja videa je bila postavljena leta 1984 v članku Compositing Digital Images\cite{siggraphComposition}.
 Članek je osnoval nov algoritem za kompozicijo slike s pomočjo uvedbe kanala alpha (ang. {\it alpha chanell}), ki ponazarja pokrivnost piksla.
 %Tako ima slika z 8biti globine na kanal skupno 32bitov na vzorec oziroma piksel.  !TODO kaj s tem stavkom
 Kanal alpha je definiran kot relativna pokrivnost elementa, pri kateri 0 pomeni nično pokrivnost, 1 pa polno pokrivnost.
 Vmesne vrednosti se izračunajo z linearno interpolacijo.
-Slike, ki vsebujejo podatek o pokrivnosti posameznih pikslov tako brez težav lahko definiramo v prostoru RGBA.
+Slike, ki vsebujejo podatek o pokrivnosti posameznih pikslov, tako brez težav lahko definiramo v prostoru RGBA.
 
 V istem članku je bila predstavljena tudi kompozicijska algebra, kakršno uporabljamo še danes.
 Definira skupino operacij nad dvema slikovnima elementoma, pri čimer posebno pozornost namenja ohranjanju pravilne vrednosti kanala alpha v izhodni sliki.
@@ -546,8 +541,8 @@ Operacije so naštete in razložene v tabeli. % !TODO navedi tabelo
 clear & prazno & Izhodna slika je popolnoma nepokrivna oziroma prazna. \\ \hline
 A & A & Izhodna slika je enaka prvemu operandu. \\
 B & B & Izhodna slika je enaka drugemu operandu. \\ \hline
-A over B & A nad B & Izhodna slika je sestavljena iz slike A, postavljene nad B. Kjer ima prvi operand vrednost alpha 1, je v izhod enak prvemu operandu. 
-Sicer je izhod enak linearni kombinaciji $\alpha A  $  \\
+A over B & A nad B & Izhodna slika je sestavljena iz slike A, postavljene nad B. Kjer ima prvi operand vrednost alpha 1, je izhod enak prvemu operandu. 
+Sicer je izhod enak linearni kombinaciji $\alpha A  $  \\ % !TODO linearna kombinacija
 \end{tabular}
 \end{center}
 \caption{Operacije kompozicijske algebre.}
@@ -560,6 +555,11 @@ Sicer je izhod enak linearni kombinaciji $\alpha A  $  \\
 
 \section{Kompozicija videa v After Effects}
 
+V After Effects je osnovna enota dela kompozicija (ang. \it{sequence}).
+Kompozicija vsebuje slikovne plasti in učinke. 
+Plasti lahko razporejamo
+Ko ustvarimo novo kompozicijo, vidimo časovnico te sekvence in prazno platno.
+% !TODO kaj s tem stavkom in sekvenco !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 V After Effects enoto dela, ki ponavadi predstavlja sceno, imenujemo sekvenca\cite{aeclassroom}.
 Ko ustvarimo novo sekvenco, vidimo časovnico te sekvence in prazno platno.
 Platno predstavlja delovno površino, ki tipično predstavlja ciljni format videa, ki določi njeno resolucijo, razmerje med višino in širino in s tem tudi relativno širino piksla.
@@ -568,7 +568,7 @@ Na platnu lahko elemente postavimo v prostoru ekrana,
 časovnico pa uporabljamo za postavitev v časovnem prostoru in jih razporedimo v smeri Z osi.
 
 V AE se video komponira na podlagi kompozicijske algebre, ki poudarja uporabnost kanala alpha.
-Poleg tega pa lahko dele videa tudi ločeno maskiramo oziroma izberemo predele slike, ki bodo vidna.
+Poleg tega pa lahko dele videa tudi ločeno maskiramo oziroma izberemo predele slike, ki bodo vidni.
 Pri tem imamo na izbiro več orodij, kot so:
 \begin{itemize}
 \item{pravokotne maske, ponavadi uporabljane za hitro odstranjevanje elementov iz sicer drugače maskiranega videa, na primer odstranjevanje luči iz videa, posnetega pred zelenim zaslonom,}
@@ -589,38 +589,38 @@ Nastavimo lahko, koliko pikslov daleč od začrtane maske se bo kanal alpha inte
 Pri tem parametru je interpolacija linearna, saj se uporablja le kot način, s katerim masko skrijemo pred gledalcem.
 Ostri robovi pravilnih oblik pritegnejo pozornost, zato jih skoraj vedno vsaj malo zameglimo.
 
-\footnotetext{Popravljenje barv (ang. {\it color correction} ali {\it color grading}) je dvodelen proces spreminjanja barv videa. 
+\footnotetext{Popravljanje barv (ang. {\it color correction} ali {\it color grading}) je dvodelen proces spreminjanja barv videa. 
 V prvem koraku se popravi morebitne napake snemalca, kot so nepravilno izpostavljena slika, napačno izbrana nevtralna belina in podobno.
 Drugi korak je umetniški proces, pri katerem barvni tehnik s pomočjo režiserja prilagodi barve, da z njimi čustveno vpliva na gledalce.
 Primer močno in stilizirano popravljenih barv je film Matrica (ang. {\it The Matrix}, 1999). 
-V filmu je s pomočjo močne zelene obarvanosti loči virtualno resničnost matrice od bolj nevtralno obarvanih prozor, ki se dogajajo v resničnem svetu.}
+V filmu se s pomočjo močne zelene obarvanosti loči virtualno resničnost matrice od bolj nevtralno obarvanih prozorov, ki se dogajajo v resničnem svetu.}
 
 
 \section{Uporaba digitalnih vizualnih učinkov v AE}
 
 Programski paket Adobe After Effects vsebuje veliko izbiro digitalnih vizualnih učinkov.
-Vgrajene, lastne ali druge efektne vtičnike lahko uporabimo na več načinov.
-Najpreprosteje je izbrati plast, ki predstavlja vhodni video, nato pa izbrati željeni učinek z menija \sn{Effects} (slo. {\it Učinki}).
-S tem dodamo efekt na video.
+Vgrajene, lastne ali druge vtičnike za učinke lahko uporabimo na več načinov.
+Najpreprosteje je izbrati plast, ki predstavlja vhodni video, nato pa izbrati željeni učinek iz menija \sn{Effects} (slo. {\it Učinki}).
+S tem dodamo učinek na video.
 V oknu \sn{Effect controls} se s tem prikaže uporabniški vmesnik vtičnika.
 Vsak vtičnik ima lasten uporabniški vmesnik.
 Večinoma so sestavljeni iz vgrajenih klasičnih komponent, kot so drsniki, pojavna okna, gumbi in podobno,
-zato so enostavni za razumevanje uporabnikom AE, ki takšne kontrolnike že poznajo iz programa gostitelja.
+zato jih uporabniki AE z lahkoto razumejo, saj takšne kontrolnike že poznajo iz programa gostitelja.
 
 Na posamezno plast lahko dodamo več učinkov, pri čimer je izhod iz enega uporabljen kot vhod naslednjega.
 Na ta način je omogočeno sestavljanje kompleksnih novih učinkov.
 Pri oblikovanju slike je dobro orodje za minimizacijo kompleksnosti predkompozicija (ang. {\it Precomposing}).
 S tem orodjem lahko eno ali več plasti izvozimo v novo kompozicijo.
 Predkomponirane plasti lahko uporabljamo enako kot enostavne plasti, nanje dodajamo nove učinke in jih naprej komponiramo po želji.
-Prekompozicije lahko urejamo neodvisno od celotne kompozicije.
+Predkompozicije lahko urejamo neodvisno od celotne kompozicije.
 Če se predkompozicija spremeni, je seveda potrebno ponovno upodobiti del kompozicije, na katerega ta sprememba vpliva.
 
 Omogočena je tudi uporaba učinkov nad več plastmi hkrati s pomočjo posebnih prilagoditvenih plasti (ang. {\it Adjustment layer}).
 Če na prilagoditveno plast dodamo učinek, bo deloval nad vsemi učinki, ki so v skladu plasti pod njo.
 To omogoča enostavno in nedestruktivno urejanje celotne slike, kar je zelo priročno v določenih procesih post produkcije, naprimer pri popravljanju barv.
 
-After Effects se pogosto uporablja v kombinaciji s Adobe Premiere Pro\footnote{Adobe Premiere Pro je programski paket, namenjen predvsem video montaži. 
-Sicer se zmogljivosti AE in Premiere Pro močno prekrivajo, vendar je vseeno mnogo lažje uporabljati vsak paket za lasten namen.}.
+After Effects se pogosto uporablja v kombinaciji z Adobe Premiere Pro\footnote{Adobe Premiere Pro je programski paket, namenjen predvsem video montaži. 
+Sicer se zmogljivosti AE in Premiere Pro močno prekrivajo, vendar je vseeno mnogo lažje uporabljati vsak paket za njemu lasten namen.}.
 Med programskima paketoma je omogočena enostavna komunikacija.
 Montažer lahko iz Premiere Pro izvozi sceno ali kader naravnost v AE in jo nadomesti s kompozicijo. 
 Ko v AE shranimo, se kompozicija v Premiere Pro posodobi in montažer lahko uporablja celoten kader z vizualnimi učinki.
@@ -657,12 +657,12 @@ PF_Err plugin_name (
 After Effects ugotovi, kje se nahaja vhodna točka vtičnika s pomočjo resusra PiPL (ang. {\it plug-in property list} - seznam lastnosti vtičnika).
 To je dokument, ki ga napiše programer in katerega vsebina se mora ujemati z implementacijo vtičnika. 
 Moderne verzije AE sicer večino lastnosti pridobijo direktno iz programske kode vtičnike in ne iz datoteke PiPL. 
-Kljub temu se morajo podatki ujemati iz zgodovinkih razlogov in združljivosti s starejšimi verzijami datotek in vtičnikov. 
+Kljub temu se morajo podatki ujemati iz zgodovinskih razlogov in združljivosti s starejšimi verzijami datotek in vtičnikov. 
 
 Ko je vhodna funkcija poklicana, se mora na podlagi ukaznega izbirnika \texttt{cmd} pravilno odzvati. 
 Vtičnik mora nekatere klice nujno podpreti, nekateri pa so opcijski. 
-Vhodna točka je tako funkcija, ki skrbi le za to, da se bo prava funkcija odzvala na klic programa in pravilno reagira v primeru napak. 
-Vrne številko napake in poskusi brez neželjenih stranskih učinkov zalkjučiti izvajanje vtičnika.
+Vhodna točka je tako funkcija, ki skrbi le za to, da se bo prava funkcija odzvala na klic programa in pravilno reagirala v primeru napak. 
+Vrne številko napake in poskusi brez neželjenih stranskih učinkov zaključiti izvajanje vtičnika.
 
 \begin{table}
 \begin{center}
@@ -677,11 +677,11 @@ Vrne številko napake in poskusi brez neželjenih stranskih učinkov zalkjučiti
 \texttt{PF\_Cmd\_PARAM\_SETUP}   & Pripravi uporabniški vmesnik za podajanje parametrov vtičniku.  \\ \hline
 
 \multicolumn{2}{ l } { Za upravljanje s podatki sekvence \footnotemark } \\ \hline
-\texttt{PF\_Cmd\_SEQUENCE\_SETUP} & Rezervija pomnilnik za podatke, ki niso odvisni od sličice, ki se obdeluje, ampak morajo biti dostopni tekom cele sekvence. \\
+\texttt{PF\_Cmd\_SEQUENCE\_SETUP} & Rezervira pomnilnik za podatke, ki niso odvisni od sličice, ki se obdeluje, ampak morajo biti dostopni tekom cele sekvence. \\
 \texttt{PF\_Cmd\_SEQUENCE\_SETDOWN}   & Sprosti ves spomin, ki je bil rezerviran v {\tt PF\_Cmd\_SEQUENCE\_SETUP} \\ \hline
 
 \multicolumn{2}{ l } { Ukazni izbirniki, ki se pošljejo za vsako sličico videa } \\ \hline
-\texttt{PF\_Cmd\_RENDER} & Upodobi sličico. Klic zahteva, da vtičnik pripravi in v dodeljeni spomin zapiše vrednosti vseh pikslov. klic se uporablja samo za prikazovanje slojev z barvno globino 8 ali 16 bitov na kanal. \\
+\texttt{PF\_Cmd\_RENDER} & Upodobi sličico. Klic zahteva, da vtičnik pripravi in v dodeljeni spomin zapiše vrednosti vseh pikslov. Klic se uporablja samo za prikazovanje slojev z barvno globino 8 ali 16 bitov na kanal. \\
 \texttt{PF\_Cmd\_SMART\_PRE\_RENDER} & Se uporablja pri efektih tipa SmartFX. Vtičnik mora glede na željene pogoje prepoznati dele slike, ki jih bo upodobil. \\
 \texttt{PF\_Cmd\_SMART\_PRE\_RENDER} & Klic SmartFX za upodobitev slike. V vnaprej prepoznane ciljne dele slike vpiši nove piksle. \\ \hline
 
@@ -708,7 +708,7 @@ S tem bi se sesul AE in z njim seveda tudi vtičnik, ki je odvisen od izvajanja 
 
 Posebna kategorija so vtičniki SmartFX. 
 Od navadnih efektov se razlikujejo po tem, da omogočajo dvosmerno komunikacijo z AE in podpirajo video z barvno globino 32bitov na kanal\cite{aesdk}. 
-Dvosmerno komunikacijo se doseže z  implementacijo dodetnega ukaznega izbirnika {\tt PF\_Cmd\_SMART\_PRE\_RENDER}, ki AE sporoči, katere dele slike bo upodobil. 
+Dvosmerno komunikacijo se doseže z  implementacijo dodatnega ukaznega izbirnika {\tt PF\_Cmd\_SMART\_PRE\_RENDER}, ki AE sporoči, katere dele slike bo upodobil. 
 Ker vtičnik lahko ugotovi, katere dele slike mora upodobiti, je lahko upodabljanje veliko hitrejše.
 Upodabljanje slike z barvno globino 32 bitov na kanal je sicer lahko zelo počasno, saj uporablja operacije s plavajočo vejico in težje izkorišča vektorske enote modernih procesorjev.
 Za gladko uporabo AE in SmartFX potrebujemo podprto in zmogljivo grafično kartico, da se izognemo artefaktom in počasnemu delovanju\cite{preproccclassroom}.
@@ -722,7 +722,7 @@ Tega lahko nato začnemo postopoma spreminjati in testirati, da spoznamo, kako v
 Marsikateri podatki v navodilih manjkajo ali pa so zastareli, zato je potrebno kar veliko preizkušanja in raziskovanja.  
 Skozi proces spoznavanja interakcije med programom in vtičnikom lahko oblikujemo strukturo vtičnika. 
 Odločiti se moramo, kako razporediti operacije med funkcije in kako  strukturirati podatke, da bodo dostopni ob pravem času in ne bodo ostajali v spominu. 
-Glavno pri razvoju vtičnikov je pravzaprav, da se program pravilne odzove na vse klice gostitelja posamezno, hkrati pa ostane vtičnik logična enota.
+Glavno pri razvoju vtičnikov je pravzaprav, da se program pravilno odzove na vsak klic gostitelja posebej, hkrati pa ostane vtičnik logična enota.
 Seveda je prav tako pomembno, da je vtičnik uporaben in prijeten za uporabo z vidika končnega uporabnika.
 Na to moramo paziti pri oblikovanju uporabniškega vmesnika in tudi pri implementaciji učinka, da ostane odziven v različnih primerih uporabe.
 Med implementacijo si seveda lahko veliko pomagamo s razhroščevalnikom razvojnega okolja, navodili in Adobejevim forumom za razvijalce\footnote{http://forums.adobe.com/community/aftereffects\_general\_discussion/aftereffects\_sdk}.
@@ -731,23 +731,23 @@ Implementacijo začnemo z ravojem prototipa, ki bo pravilno deloval na preprosti
 Na tej točki ni potrebno podpreti videa z večjo barvno globino, prav tako se ni potrebno ukvarjati s formati, katerih piksli niso kvadratni.
 Prototip razvijamo, dokler nismo zadovoljni z izgledom vizualnega učinka na preprostih primerih.
 
-Nasldenji korak je odpravljanje hroščev.
+Naslednji korak je odpravljanje hroščev.
 Največ težav se je pojavilo z uporabo pomnilnika.
 Adobe priporoča uporabo funkcij za dostop do pomnilnika, ki jih ponuja SDK.
 Po mojih lastnih izkušnjah se je tega nasveta zelo pametno držati.
 V nasprotnem primeru imamo hitro lahko veliko puščanja pomnilnika.
-Vsaka sličica videa vzame relativno veliko pomnilnika, saj mora biti med izvajanjem vtičnika shranjena nestisnjeno.
+Vsaka sličica videa zavzame relativno veliko pomnilnika, saj mora biti med izvajanjem vtičnika shranjena nestisnjeno.
 Če nam ostane v pomnilniku, ki ga nismo pravilno sprostili in smo uporabljali sistemske klice za rezervacijo pomnilnika, se bo program AE sesul že po nekaj obdelanih sličicah.
 Do tega pride, ker AE poskusi alocirati pomnilnik, pa mu ga operacijski sistem ne more dodeliti. 
 Če uporabljamo funkcije, ki jih ponuja SDK, se to ne more zgoditi, saj bo AE raje sesul vtičnik.
 S tem se izognemo izgubi podatkov - uporabnik lahko datoteko shrani in problematične vtičnike izklopi.
-Z vidika končnega uporabnika je veliko bolje, da se sesuje samo vtičnik, kot celoten program.
+Z vidika končnega uporabnika je veliko bolje, da se sesuje samo vtičnik, kot pa celoten program.
 
 Stabilne vtičnike, ki delujejo kot željeno, nato testiramo na robnih primerih.
-Ti vključujejo formate s širšimi piksli, večjo barvno globino (čo to želimo podpreti), zelo velikim ali majhnim številom sličic na sekundo in podobno.
+Ti vključujejo formate s širšimi piksli, večjo barvno globino (če to želimo podpreti), zelo velikim ali majhnim številom sličic na sekundo in podobno.
 Odpravljanje težav na tej stopnji je lahko zamudno in zapleteno, sploh če pred tem nismo odpravili bolj pogostih težav.
 Vprašati se je potrebno tudi, kakšne formate videa sploh želimo podpreti.
-Marsikateri vizualni učinek namreč ne bo pridobil ničesar, če ga izvajamo z barvno globino 32 bitov na kanal namesto 16 biti ali celo 8 biti.
+Marsikateri vizualni učinek namreč ne bo pridobil ničesar, če ga izvajamo z barvno globino 32 bitov na kanal namesto s 16 biti ali celo 8 biti.
 Če razvijamo učinek za enkratno uporabo in ga ne nameravamo ponuditi javnosti, je dovolj dobro, da pravilno deluje na tipu videa, ki ga projekt uporablja.
 
 
@@ -756,7 +756,7 @@ Marsikateri vizualni učinek namreč ne bo pridobil ničesar, če ga izvajamo z 
 
 \subsection{Razvoj ideje}
 Prvi vtičnik, za katerega sem dobil idejo, sem poimenoval PixelRain. 
-Ideja je je zelo preprosta: nekatere piksle bo vtičnik prekopiral navzdol, s čimer se bodo na sliki pojavile črte.
+Ideja je zelo preprosta: nekatere piksle bo vtičnik prekopiral navzdol, s čimer se bodo na sliki pojavile črte.
 Kateri piksli se bodo kopirali in kateri ne, določi uporabnik na podlagi izbire barve, kateri podobne piksle bo vtičnik prekopiral.
 Poleg izbire barve bo uporabnik lahko določil tudi maksimalno dolžino sledi - kolikokrat se lahko piksel prekopira navzdol,
 in maksimalno razdaljo med percepcijo izbrane barve in barve piksla, da bo še štel kot podoben.
@@ -767,7 +767,7 @@ Transformacija RGB prostora izhaja iz tega, da človeško oko naprimer zazna ve�
 To upoštevamo v izračunu vizualne podobnosti barv tako, da razdaljo izračunamo po formuli\cite{colordiff2} $$ \sqrt{ 2 R^2 + 4 G^2 + 3 B^2 } . $$ 
 Formula je hiter približek, ki pa deluje dovolj natančno, da človek ne opazi razlike od bolj pravilno deformiranega barvnega prostora.
 Testiranje je to metodo pokazalo kot nerazumljivo in navidez nelogično.
-Pogosto so bili rezultati drugačni, kot bi jih pričakovali, kar z vidika uporabnika pomeni ni zaželjeno\cite{upoprogopr}.
+Pogosto so bili rezultati drugačni, kot bi jih pričakovali, kar je z vidika uporabnika nezaželjeno\cite{upoprogopr}.
 
 Po premisleku smo se odločili za implementacijo izbire barve s pomočjo treh parametrov v barvnem prostoru HSL\cite{colordiff1}.
 Tako lahko uporabnik ločeno izbira barvni odtenek, nasičenost in svetllost.
@@ -778,7 +778,7 @@ Zaradi ločenja na tri izbirnike smo s tem dosegli tudi večjo fleksibilnost vti
 \subsection{Implementacija vtičnika}
 
 Vtičnik implementira odzive na ukazne izbirnike \texttt{PF\_Cmd\_ABOUT}, \texttt{PF\_Cmd\_GLOBAL\_SETUP}, \texttt{PF\_Cmd\_PARAMS\_SETUP} in \texttt{PF\_Cmd\_RENDER}.
-To je minimalen set odzivov za efektni vtičnik.
+To je minimalen nabor odzivov za efektni vtičnik.
 
 
 \subsubsection{Odziv na klic \texttt{PF\_Cmd\_ABOUT}}
@@ -806,26 +806,26 @@ About (
 \end{verbatim}
 
 Vse funkcije, ki implementirajo odziv na ukazni izbirnik, so statične.
-Funkcija potrebuje le dva parametra, vednar so ostali tam zaradi večje berljivosti\cite{aesdk}.
-Ti štirje parametri so namreč prisotni v večini odzivnih funkcij, ki sestavljajo skelet vtičnika in tako lahko prepoznavne. % !TODO nekam napiši kaj so odzivne funkcije
-Podporne funkcije, ki jih kličemo iz odzivnih fukncij, teh parametrov ponavadi nimajo.
-Paramteri so:
+Funkcija potrebuje le dva parametra, vednar so ostali tam zaradi večje berljivosti\cite{aesdk}.	
+Ti štirje parametri so namreč prisotni v večini odzivnih funkcij, ki sestavljajo skelet vtičnika, tako da so hitro prepoznavne. % !TODO nekam napiši kaj so odzivne funkcije
+Podporne funkcije, ki jih kličemo iz odzivnih funkcij, teh parametrov ponavadi nimajo.
+Parametri so:
 \begin{itemize}
 \item{\texttt{PF\_InData *in\_data} je kazalec na strukturo, ki vsebuje podatke o stanju gostitelja in podatke, nad katerimi se vtičnik izvaja. 
 	Vsebina je odvisna tudi od tega, kateri ukazni izbirnik je poklican, saj je od tega odvisno, katere podatke bo vtičnik potreboval. 
-	Poleg tega lahko prek nje dostopamo kazalce na funkcije, ki jih ponuja SDK. 
+	Poleg tega lahko prek strukture dostopamo do kazalcev na funkcije, ki jih ponuja SDK. 
 	V tej funckiji uporabljamo le ta kazelec (\texttt{in\_data->pica\_basicP}). }
 \item{\texttt{PF\_OutData *out\_data} je struktura, ki vsebuje polja za vračanje podatkov iz vtičnika v AE. 
 	Ker se ista struktura uporablja za različne odzive vtičnika, so različna polja veljavna ob različnih časih in klicih. 
 	Tukaj uporabljamo polje \texttt{return\_msg}, v katerega zapišemo tekst, ki se bo pojavil v pogovornem oknu. 
-	Za enostovnejšo lokalizacijo so nizi zapisani v drugi datoteki in se jih dostopa prek globalne strukture s pomočjo makra \texttt{STR( ime\_niza )}.  }
+	Za enostavnejšo lokalizacijo so nizi zapisani v drugi datoteki in se do njih dostopa prek globalne strukture s pomočjo makra \texttt{STR( ime\_niza )}.  }
 \item{\texttt{PF\_ParamDef *params[]} je kazalec na seznam parametrov. V tej funkciji ni veljaven in se ne uporablja.  }
 \item{\texttt{PF\_LayerDef *output} je kazalec na izhod učinka. 
 	\texttt{PF\_LayerDef} je struktura, ki vsebuje sliko kot seznam pikslov in metapodatke. 
 	Vanjo zapisušemo izhod upodobitve učinka. Tukaj kazalec ni veljaven in se ne uporablja.  }
 \end{itemize}
 
-Funkcija \texttt{About} v vseh vtičnikih izgleda približno enako, saj je njem nnamen le to, da napolni dialog o vtičniku z vsebino.
+Funkcija \texttt{About} v vseh vtičnikih izgleda približno enako, saj je njem namen le to, da napolni dialog o vtičniku z vsebino.
 Vrne številko napake.
 V tej funkciji do napake tekom izvajanja ne more priti, razen če so težave prisotne v gostitelju, zato vedno vrne \texttt{PF\_Err\_NONE}.
 
@@ -969,7 +969,7 @@ Funkcija vrača številko napake, ki jo nastavi neuspešno izveden makro.
 
 \subsubsection{Odziv na kliv \texttt{PF\_Cmd\_RENDER}}
 
-Funkcija \texttt{Render} implementira upoodabljanje izhodne slike.
+Funkcija \texttt{Render} implementira upodabljanje izhodne slike.
 To poteka v dveh korakih.
 Prvi korak je generiranje maske na podlagi izbrane barve.
 Drugi korak je generiranje sledov na podlagi maske in vhodne slike.
@@ -1050,18 +1050,18 @@ Ko dostopamo do podatkov, moramo poskrbeti, da podatek pravilno interpretiramo o
     }
 \end{verbatim}
 
-Naslednji del funkcije pripravi masko, katere piskli imajo vrednost alpha 1.0, če so dovolj podobni izbrani barvi - v mejah uporabniško določenih toleranc.
+Naslednji del funkcije pripravi masko, katere piksli imajo vrednost alpha 1.0, če so dovolj podobni izbrani barvi - v mejah uporabniško določenih toleranc.
 Najprej pripravi prazno sliko, v katero se bo maska zapisala.
 Ukaz \verb!suites.HandleSuite1()->host_new_handle( ... );! zahteva od gostitelja, naj mu varno rezervira željeno količino pomnilnika.
 Funkcija vrača ročico (kazalec na kazalec), ki jo shranimo, saj jo bomo potrebovali, da bo gostitelj lahko sprostil pomnilnik, ko ga ne bomo več potrebovali.
 Ta pomnilnik uporabimo, da ustvarimo novo sliko tipa \verb!PF_Effect_World!.
 Tipa \verb!PF_Effect_World! in \verb!PF_Layer_Def! sta enaka, vendar nekatere funkcije SDK zahtevajo parametre prvega tipa, nekatere pa drugega.
-Da se izognemo opozorilom prevajalnika lahko ta dva tipa brez težav spreminjamo iz enega v drugega.
+Da se izognemo opozorilom prevajalnika, lahko ta dva tipa brez težav spreminjamo iz enega v drugega.
 
 S pomočjo iteratorske funkcije ustvarimo masko.
 Iteratorska funkcija \verb!suites.Iterate8Suite1()->iterate( ... )! za nas pokliče funkcijo, podano prek funkcijskega kazalca, ki se izvede nad vsakim pikslom vhodne slike.
 Uporaba iteratorskih funkcij je priporočena, saj so optimizirane za izvajanje na  večjedrnih procesorjih.
-To nam prihrani nekaj dela za hitrjše izvajanje vtičnika.
+To nam prihrani nekaj dela za hitrejše izvajanje vtičnika.
 
 Funkcija za obdelavo piksla \texttt{GenerateMaskPixFunc} kot najpomembnejši vhod prejme piksel.
 Piksli so shranjeni v formatu RGB, zato jih je za filtriranje po kanalih HSL potrebno pretvoriti, kar sem naredil po prilagojeni metodi s spletne strani\cite{rgbhsl}.
@@ -1070,7 +1070,7 @@ Implementacija lastne hitre in dovolj natančne funkcije je pospešila izvajanje
 
 Če je uporabnik izbral način prikazovanja maske (v UI ang. {\it Show mask}), z masko prepišemo izhodno sliko.
 Nadaljno delo ni potrebno, saj smo prikazali masko.
-Namen tega načina delovanja je, da uporabnik vidi, kateri deli slike bodo pustili sledi in s tem lažje oblikuje vizualni učinek.
+Namen tega načina delovanja je, da uporabnik vidi, kateri deli slike bodo pustili sledi, in s tem lažje oblikuje vizualni učinek.
 
 \begin{verbatim}
 /* 2. Generate trails */
@@ -1121,7 +1121,7 @@ Namen tega načina delovanja je, da uporabnik vidi, kateri deli slike bodo pusti
 \end{verbatim}
 
 Drugi del funkcije pripravi podatke, potrebne za prikaz sledi.
-Kot pri genriranju maske tudi tukaj prepišemo potrebne podatke v strukturo \texttt{til}.
+Kot pri generiranju maske tudi tukaj prepišemo potrebne podatke v strukturo \texttt{til}.
 Zaradi preglednosti kode in težav z osveževanjem pomnilnika, ki jih ima AE, vtičnik generira sledi v novo sliko.
 Novo sliko je potrebno ustvariti, ker sicer AE poskuša optimizirati delovanje in se lahko zgodi, da imajo v izhodni sliki prazni piksli vrednosti prejšnjih sličic videa.
 Uporabnikom AE SDK priporočamo, da v primeru artefaktov tipa {\it ghosting} (prikazovanje delov prejšnjih sličic, pogosto deformiranih) poskusijo ročno prepisati izhodno sliko.
