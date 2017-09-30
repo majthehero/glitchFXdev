@@ -34,6 +34,8 @@ TableString		g_strs[StrID_NUMTYPES] = {
 	StrID_Description,				"Mirrors a part of video over a grid with a time delay.",
 	StrID_GridX_Param_Name,			"Grid X resolution",
 	StrID_GridY_Param_Name,			"Grid Y resolution",
+	//StrID_MirrorHor_Param_Name,		"Mirror horizontally",
+	//StrID_MirrorVert_Param_Name,		"Mirror vertically",
 	StrID_MirrorDir_Param_Name,		"Mirroring direction",
 	StrID_DeltaT_Param_Name,		"Time delay in frames",
 };

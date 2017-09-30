@@ -38,6 +38,8 @@
 	2.0 Using template to implement				maj		28/9/2017
 		MirrorMosaic
 
+	3.0 First usable and useful version			maj		30/9/2017
+
 */
 
 #include "MirrorMosaic.h"
@@ -116,11 +118,12 @@ ParamsSetup (
 		GRIDY_DISK_ID);
 	AEFX_CLR_STRUCT(def);
 
+	// replaced with two checkboxes
 	PF_ADD_POPUPX(
 		STR(StrID_MirrorDir_Param_Name),
-		2,
+		3,
 		1,
-		"Horizontal|Vertical",
+		"Horizontal|Vertical|Both",
 		PF_ParamFlag_NONE,
 		MIRRDIR_DISK_ID);
 	AEFX_CLR_STRUCT(def);
@@ -148,9 +151,62 @@ ParamsSetup (
 	return err;
 }
 
+static PF_Err
+MirrorVertPixFunc8(
+	void		*refcon, // MirrorInfo
+	A_long		xL,
+	A_long		yL,
+	PF_Pixel8	*inP, // unused
+	PF_Pixel8	*outP) // only outP is writable
+{
+	PF_Err		err = PF_Err_NONE;
+	MirrorInfo *miP = (MirrorInfo*)refcon;
+	PF_InData *in_data = miP->in_data;
+	PF_Pixel8 *inpixP = NULL;
+	PF_LayerDef *input = (PF_LayerDef*)miP->input;
+	int newX = xL;
+	int newY = yL;
+
+	int rectWidth = miP->rect->right - miP->rect->left;
+	int rectNoX = xL / rectWidth; // starting at 0
+	int rectHeight = miP->rect->bottom - miP->rect->top;
+	int rectNoY = yL / rectHeight; // starting at 0
+
+	//if (miP->mirrdir == MIRR_HOR &&
+	/*rectNoX % 2 == 1) {
+	int relX = xL % rectWidth;
+	newX = xL + rectWidth - 2 * relX;*/
+	//}
+	if (rectNoY % 2 == 1) {
+		int relY = yL % rectHeight;
+		newY = yL + rectHeight - 2 * relY;
+	}
+
+	/*if (miP->mirrhor &&
+	rectNoX % 2 == 1) {
+	int relX = xL % rectWidth;
+	newX = xL + rectWidth - 2 * relX;
+	}
+	if (miP->mirrvert &&
+	rectNoY % 2 == 1) {
+	int relY = yL % rectHeight;
+	newY = yL + rectHeight - 2 * relY;
+	}*/
+
+	ERR(PF_GET_PIXEL_DATA8(miP->input, NULL, &inpixP));
+	if (!err) {
+		inpixP += newY * miP->input->rowbytes / sizeof(PF_Pixel8) + newX;
+		outP->alpha = inpixP->alpha;
+		outP->red = inpixP->red;
+		outP->green = inpixP->green;
+		outP->blue = inpixP->blue;
+	}
+
+	return err;
+}
 
 static PF_Err
-MirrorPixFunc8(
+MirrorHorPixFunc8(
 	void		*refcon, // MirrorInfo
 	A_long		xL, 
 	A_long		yL, 
@@ -168,19 +224,28 @@ MirrorPixFunc8(
 	int rectWidth = miP->rect->right - miP->rect->left;
 	int rectNoX = xL / rectWidth; // starting at 0
 	int rectHeight = miP->rect->bottom - miP->rect->top;
-	int rectNoY = xL / rectHeight; // starting at 0
+	int rectNoY = yL / rectHeight; // starting at 0
 
+	//if (miP->mirrdir == MIRR_HOR &&
+	if (rectNoX % 2 == 1) {
+		int relX = xL % rectWidth;
+		newX = xL + rectWidth - 2 * relX;
+	}
+	//else if (rectNoY % 2 == 1) {
+	//	int relY = yL % rectHeight;
+	//	newY = yL + rectHeight - 2 * relY;
+	//}
 
-	if (miP->mirrdir == MIRROR_LEFT && 
+	/*if (miP->mirrhor && 
 		rectNoX % 2 == 1) {
 		int relX = xL % rectWidth;
 		newX = xL + rectWidth - 2 * relX;
 	}
-	if (miP->mirrdir == MIRROR_DOWN &&
+	if (miP->mirrvert &&
 		rectNoY % 2 == 1) {
 		int relY = yL % rectHeight;
 		newY = yL + rectHeight - 2 * relY;
-	}
+	}*/
 
 	ERR(PF_GET_PIXEL_DATA8(miP->input, NULL, &inpixP));
 	if (!err) {
@@ -227,14 +292,28 @@ Render (
 	PF_Rect mirr_rect = { 0, 0, 0, 0 };
 
 	/* 2. LOOP: checkout frame, place and mirror */
-	PF_ParamDef checkout; // layeer from time+dT goes here
+	PF_ParamDef checkout; // layer from time+dT goes here
 	AEFX_CLR_STRUCT(checkout);
 
 	int dT = (int)params[MIRR_DT]->u.fs_d.value;
 	int iX, iY;
-	for (iX = 0; iX < gridX; iX++) { // vertical
-		for (iY = 0; iY < gridY; iY++) { // horizontal
-			int deltaT = dT * iY; // whole coll of rects same delay
+	for (iX = 0; iX < gridX; iX++) { 
+		for (iY = 0; iY < gridY; iY++) { 
+			/*int deltaHT, deltaVT = 0;
+			if (params[MIRR_MIRRHOR]->u.bd.value) {
+				deltaHT = dT * iY;
+			}
+			if (params[MIRR_MIRRHOR]->u.bd.value) {
+				deltaVT = dT * iY;
+			}
+			int deltaT = deltaHT + deltaVT;*/
+			int deltaT = 0;
+			if (params[MIRR_MIRRDIR]->u.pd.value == MIRR_HOR) {
+				deltaT = dT * iX;
+			}
+			else {
+				deltaT = dT * iY;
+			}
 			// checkout from time
 			AEFX_CLR_STRUCT(checkout);
 			ERR(PF_CHECKOUT_PARAM(
@@ -251,11 +330,6 @@ Render (
 				dest_rect.right = (iX + 1) * dX;
 				dest_rect.top = iY * dY;
 				dest_rect.bottom = (iY + 1) * dY;
-
-				mirr_rect.left = dest_rect.right;
-				mirr_rect.right = dest_rect.left;
-				mirr_rect.top = dest_rect.top;
-				mirr_rect.bottom = dest_rect.bottom;
 
 				// place rect if frame exists
 				if (checkout.u.ld.data) {
@@ -291,18 +365,37 @@ Render (
 	AEFX_CLR_STRUCT(mi);
 	mi.input = outworldP;
 	mi.rect = &in_rect;
-	mi.mirrdir = params[MIRR_MIRRDIR]->u.pd.value;
+	//mi.mirrhor = params[MIRR_MIRRHOR]->u.bd.value;
+	//mi.mirrvert = params[MIRR_MIRRVERT]->u.bd.value;
+	mi.mirrdir = (int)params[MIRR_MIRRDIR]->u.pd.value;
 	mi.in_data = in_data;
 
-	ERR(suites.Iterate8Suite1()->iterate(
-		in_data,
-		0,
-		linesL,
-		outworldP,
-		NULL,
-		&mi,
-		MirrorPixFunc8,
-		output));
+	if (mi.mirrdir == MIRR_HOR) {
+		ERR(suites.Iterate8Suite1()->iterate(
+			in_data,
+			0,
+			linesL,
+			outworldP,
+			NULL,
+			&mi,
+			MirrorHorPixFunc8,
+			output));
+	}
+	if (mi.mirrdir == MIRR_VERT){
+		ERR(suites.Iterate8Suite1()->iterate(
+			in_data,
+			0,
+			linesL,
+			outworldP,
+			NULL,
+			&mi,
+			MirrorVertPixFunc8,
+			output));
+	}
+	
+	// free willy! 
+	suites.WorldSuite1()->dispose_world(in_data->effect_ref, outworldP);
+	suites.HandleSuite1()->host_dispose_handle(outworldH);
 
 	return err;
 }

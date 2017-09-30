@@ -27,6 +27,8 @@ typedef enum {
 	StrID_Description,
 	StrID_GridX_Param_Name,
 	StrID_GridY_Param_Name,
+	//StrID_MirrorHor_Param_Name,
+	//StrID_MirrorVert_Param_Name,
 	StrID_MirrorDir_Param_Name,
 	StrID_DeltaT_Param_Name,
 	StrID_Layer_Param_Name,

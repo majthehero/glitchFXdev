@@ -74,16 +74,17 @@ typedef short int			int16;
 #define	MIRROR_GRID_DEF 4
 #define	MIRROR_GRID_MAX 32
 
-#define MIRROR_DT_MINNN -3000
+#define MIRROR_DT_MINNN -300
 #define MIRROR_DT_MIN -30
 #define MIRROR_DT_DEF 3
 #define MIRROR_DT_MAX 30 // at least one second in usual framerates
-#define MIRROR_DT_MAXXX 3000 // whatever ;; big is good
+#define MIRROR_DT_MAXXX 300 
 
 
-enum {
-	MIRROR_LEFT = 1,
-	MIRROR_DOWN
+enum { // mirroring direction
+	MIRR_HOR = 1,
+	MIRR_VERT,
+	MIRR_BOTH
 };
 
 enum {
@@ -100,12 +101,16 @@ enum {
 	GRIDX_DISK_ID = 1,
 	GRIDY_DISK_ID,
 	MIRRDIR_DISK_ID,
+	//MIRRHOR_ID,
+	//MIRRVERT_ID,
 	DELTAT_DISK_ID,
 	LAYER_DISK_ID
 };
 
 typedef struct MirrorInfo{
 	int mirrdir;
+	//PF_Boolean mirrhor;
+	//PF_Boolean mirrvert;
 	PF_Rect *rect;
 	PF_EffectWorld *input;
 	PF_InData *in_data;
