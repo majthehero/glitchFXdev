@@ -74,13 +74,14 @@ typedef short int			int16;
 #define	ElStAberr_MAGNITUDE_MAX		1.0
 #define	ElStAberr_MAGNITUDE_DFLT	0.02
 
-
+/* Check for easily recognizable blank state */
+#define IS_EMPTY(P)  ( P->alpha == 0 && P->red == 255 && P->green == 0 && P->blue == 255 )
 
 
 enum {
 	ElStAberr_INPUT = 0,
 	ElStAberr_GAIN,
-	ElStAberr_FILLIN,
+	//ElStAberr_FILLIN,
 	ElStAberr_FILLINMODE,
 	ElStAberr_CENTER,
 	ElStAberr_NUM_PARAMS
@@ -88,7 +89,7 @@ enum {
 
 enum {
 	GAIN_DISK_ID = 1,
-	FILLIN_CB_ID,
+	//FILLIN_CB_ID,
 	FILLINMODE_ID,
 	CENTER_DISK_ID
 };
@@ -110,7 +111,8 @@ typedef struct AberInfo{
 enum {
 	DARKOVER = 1,
 	LIGHTOVER,
-	ADD
+	ADD,
+	AVG
 };
 
 typedef struct AfterAberInfo{
