@@ -81,7 +81,7 @@ typedef short int			int16;
 enum {
 	ElStAberr_INPUT = 0,
 	ElStAberr_GAIN,
-	//ElStAberr_FILLIN,
+	ElStAberr_FILLIN,
 	ElStAberr_FILLINMODE,
 	ElStAberr_CENTER,
 	ElStAberr_NUM_PARAMS
@@ -89,7 +89,7 @@ enum {
 
 enum {
 	GAIN_DISK_ID = 1,
-	//FILLIN_CB_ID,
+	FILLIN_CB_ID,
 	FILLINMODE_ID,
 	CENTER_DISK_ID
 };

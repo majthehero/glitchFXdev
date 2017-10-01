@@ -518,7 +518,7 @@ After Effects je orodje za video montažo, izdelavo vizualnih učinkov in video 
 
 Primarni namen After Effects je sestavljanje (ang. {\it compositing}) videa.
 Sestavljanje je postopek, pri katerem iz več videov, slik in drugih vizualnih elementov sestavimo končno sliko tako,
-da jih razporedimo enega nad drugega v 2.5D prostoru\footnotemark in nato med seboj kombiniramo\cite{siggraphcomposition}.
+da jih razporedimo enega nad drugega v 2.5D prostoru\footnotemark in nato med seboj kombiniramo\cite{siggraphComposition}.
 Pri kombiniranju plasti lahko izberemo med več različnimi načini mešanja (ang. {\it blending mode}) oziroma operacijami nad piksli.
 
 Današnja definicja sestavljanja videa je bila postavljena leta 1984 v članku Compositing Digital Images\cite{siggraphComposition}.
@@ -555,7 +555,7 @@ Sicer je izhod enak linearni kombinaciji $\alpha A  $  \\ % !TODO linearna kombi
 
 \section{Kompozicija videa v After Effects}
 
-V After Effects je osnovna enota dela kompozicija (ang. \it{sequence}).
+V After Effects je osnovna enota dela kompozicija (ang. {\it sequence}).
 Kompozicija vsebuje slikovne plasti in učinke. 
 Plasti lahko razporejamo
 Ko ustvarimo novo kompozicijo, vidimo časovnico te sekvence in prazno platno.
@@ -704,7 +704,7 @@ S tem se izognemo situaciji, ko bi vtičnik porabil toliko spomina, da bi ga zma
 S tem bi se sesul AE in z njim seveda tudi vtičnik, ki je odvisen od izvajanja programa gostitelja.
 
 
-\subsection{SmartFX} % !TODO to ni vse kar je razlike seveda, opozori na to
+\subsection{SmartFX}
 
 Posebna kategorija so vtičniki SmartFX. 
 Od navadnih efektov se razlikujejo po tem, da omogočajo dvosmerno komunikacijo z AE in podpirajo video z barvno globino 32bitov na kanal\cite{aesdk}. 
@@ -777,7 +777,7 @@ Zaradi ločenja na tri izbirnike smo s tem dosegli tudi večjo fleksibilnost vti
 
 \subsection{Implementacija vtičnika}
 
-Vtičnik implementira odzive na ukazne izbirnike \texttt{PF\_Cmd\_ABOUT}, \texttt{PF\_Cmd\_GLOBAL\_SETUP}, \texttt{PF\_Cmd\_PARAMS\_SETUP} in \texttt{PF\_Cmd\_RENDER}.
+Vtičnik implementira odzive na ukazne izbirnike \texttt{PF\_Cmd\_ABOUT}, \path{PF\_Cmd\_GLOBAL\_SETUP}, \texttt{PF\_Cmd\_PARAMS\_SETUP} in \texttt{PF\_Cmd\_RENDER}.
 To je minimalen nabor odzivov za efektni vtičnik.
 
 
@@ -806,8 +806,8 @@ About (
 \end{verbatim}
 
 Vse funkcije, ki implementirajo odziv na ukazni izbirnik, so statične.
-Funkcija potrebuje le dva parametra, vednar so ostali tam zaradi večje berljivosti\cite{aesdk}.	
-Ti štirje parametri so namreč prisotni v večini odzivnih funkcij, ki sestavljajo skelet vtičnika, tako da so hitro prepoznavne. % !TODO nekam napiši kaj so odzivne funkcije
+Funkcija potrebuje le dva parametra, vednar so ostali tam zaradi večje ber\-ljivosti\cite{aesdk}.	
+Ti štirje parametri so namreč prisotni v večini odzivnih funkcij, ki sestavljajo skelet vtičnika, tako da so hitro prepoznavne. 
 Podporne funkcije, ki jih kličemo iz odzivnih funkcij, teh parametrov ponavadi nimajo.
 Parametri so:
 \begin{itemize}
@@ -909,38 +909,7 @@ ParamsSetup (
         PF_Precision_THOUSANDTHS,
         0, 0,
         HUETOL_DISK_ID);
-    // luma cb
-    PF_ADD_CHECKBOX(    
-        STR(StrID_LumaCB_Param_Name),
-        STR(StrID_LumaCB_Param_Name),
-        false,
-        NULL,
-        LUMACB_DISK_ID);
-    AEFX_CLR_STRUCT(def);
-    // luma slider
-    PF_ADD_FLOAT_SLIDERX(   
-        STR(StrID_LumaSlider_Param_Name),
-        0, 1, 0, 1, 0.3,
-        PF_Precision_THOUSANDTHS,
-        0, 0,
-        LUMATOL_DISK_ID);
-    AEFX_CLR_STRUCT(def);
-    // sat cb
-    PF_ADD_CHECKBOX(    
-        STR(StrID_SatCB_Param_Name),
-        STR(StrID_SatCB_Param_Name),
-        false,
-        NULL,
-        SATCB_DISK_ID);
-    AEFX_CLR_STRUCT(def);
-    // sat slider
-    PF_ADD_FLOAT_SLIDERX(   
-        STR(StrID_SatSlider_Param_Name),
-        0, 1, 0, 1, 0.3,
-        PF_Precision_THOUSANDTHS,
-        0, 0,
-        SATTOL_DISK_ID);
-    AEFX_CLR_STRUCT(def);
+    ...
     // color picker
     PF_ADD_COLOR(   
         STR(StrID_Color_Param_Name), 
@@ -982,6 +951,8 @@ Render (
         PF_OutData *out_data,
         PF_ParamDef *params[],
         PF_LayerDef *output )
+{
+    ...
 \end{verbatim}
 
 Funkcija sprejme enake parametre kot prej opisane.
@@ -995,22 +966,13 @@ Med klicem za upodobitev pa se \texttt{params} in \texttt{output} obnašata drug
 \end{itemize}
 
 \begin{verbatim}
-{
-
-	PF_Err err = PF_Err_NONE;
-	AEGP_SuiteHandler suites(in_data->pica_basicP);
-
-	A_long linesL = output->extent_hint.bottom - output->extent_hint.top;
-	
-	PixSelInfo psi;
-	AEFX_CLR_STRUCT(psi);
-	psi.hueCheck = params[PIXELRAIN_HUE_CB]->u.bd.value;
-	psi.hueTolerance = params[PIXELRAIN_HUE_TOLERANCE]->u.fs_d.value;
-	psi.lumaCheck = params[PIXELRAIN_LUMA_CB]->u.bd.value;
-	psi.lumaTolerance = params[PIXELRAIN_LUMA_TOLERANCE]->u.fs_d.value;
-	psi.satCheck = params[PIXELRAIN_SAT_CB]->u.bd.value;
-	psi.satTolerance = params[PIXELRAIN_SAT_TOLERANCE]->u.fs_d.value;
-	psi.tgtColor = params[PIXELRAIN_COLOR]->u.cd.value;
+    ...
+    PixSelInfo psi;
+    AEFX_CLR_STRUCT(psi);
+    psi.hueCheck = params[PIXELRAIN_HUE_CB]->u.bd.value;
+    psi.hueTolerance = 
+        params[PIXELRAIN_HUE_TOLERANCE]->u.fs_d.value;
+    ...
 \end{verbatim}
 
 Začetni del kode poskrbi za dostopnost kazalca na funkcije SDK in podatke iz elementov uporabniškega vmesnika prepiše v strukturo, 
@@ -1021,7 +983,8 @@ Ko dostopamo do podatkov, moramo poskrbeti, da podatek pravilno interpretiramo o
 
 \begin{verbatim}
 /* 1. Generate pixel mask */
-    PF_Handle colorMaskH = suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
+    PF_Handle colorMaskH = 
+        suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
     PF_EffectWorld * colorMaskP = (PF_EffectWorld*)*colorMaskH;
     ERR(suites.WorldSuite1()->new_world(NULL,
         output->width,
@@ -1051,8 +1014,29 @@ Ko dostopamo do podatkov, moramo poskrbeti, da podatek pravilno interpretiramo o
 \end{verbatim}
 
 Naslednji del funkcije pripravi masko, katere piksli imajo vrednost alpha 1.0, če so dovolj podobni izbrani barvi - v mejah uporabniško določenih toleranc.
+Po vsakem parametru (odtenek, zasičenost in svetlost) maskiramo ločeno.
+
+\begin{verbatim}
+    ...
+    /* 1. Hue mask */
+    if (psiP->hueCheck) {
+        double maxHueDiff = psiP->hueTolerance / 2.0; 
+            // in UI diff of 1.0 covers all, in code 0.5
+        double hueTgt = tgtHSL->hue;
+        double hueIn = inHSL->hue;
+        double hueDiff = 0.5 - abs(abs(hueTgt - hueIn) - 0.5); 
+            // hue wraps around
+        if (hueDiff > maxHueDiff) {
+            // alpha is mask, color tells which property masked
+            outP->alpha = maskAlpha;
+            outP->red = 255; // red for hue mask
+        }
+    }
+    ...
+\end{verbatim}
+
 Najprej pripravi prazno sliko, v katero se bo maska zapisala.
-Ukaz \verb!suites.HandleSuite1()->host_new_handle( ... );! zahteva od gostitelja, naj mu varno rezervira željeno količino pomnilnika.
+Ukaz \path{suites.HandleSuite1()->host\_new\_handle( ... );} zahteva od gostitelja, naj mu varno rezervira željeno količino pomnilnika.
 Funkcija vrača ročico (kazalec na kazalec), ki jo shranimo, saj jo bomo potrebovali, da bo gostitelj lahko sprostil pomnilnik, ko ga ne bomo več potrebovali.
 Ta pomnilnik uporabimo, da ustvarimo novo sliko tipa \verb!PF_Effect_World!.
 Tipa \verb!PF_Effect_World! in \verb!PF_Layer_Def! sta enaka, vendar nekatere funkcije SDK zahtevajo parametre prvega tipa, nekatere pa drugega.
@@ -1074,14 +1058,7 @@ Namen tega načina delovanja je, da uporabnik vidi, kateri deli slike bodo pusti
 
 \begin{verbatim}
 /* 2. Generate trails */
-    TrailInfo til;
-    AEFX_CLR_STRUCT(til);
-    TrailInfo *tilP = &til;
-    tilP->lengthF = params[PIXELRAIN_LENGTH]->u.fs_d.value;
-    tilP->in_data = in_data;
-    tilP->input = &params[PIXELRAIN_INPUT]->u.ld;
-    tilP->pixelMask = reinterpret_cast<PF_LayerDef*>(colorMaskP);
-
+    ...
     PF_Handle trailsWorldH = 
         suites.HandleSuite1()->host_new_handle(sizeof(PF_EffectWorld));
     PF_EffectWorld * trailsWorldP = (PF_EffectWorld*)*trailsWorldH;
@@ -1169,17 +1146,195 @@ Tej točki je v dejanskem ekranu analogen navidezni izvor elektronskega snopa oz
 Dodali smo tudi možnost zapolnitve lukenj, ki nastanejo, kadar je piksel premaknjen s svojega mesta in na to mesto ni premaknjen noben drug piksel.
 Ta opcija nima analoga v pravem ekranu s katodno cevjo, vendar poveča fleksibilnost učinka in s tem njegovo uporabnost.
 
-Uporabniški vmesnik vsebuje sledče kontrole:
+Uporabniški vmesnik vsebuje sledeče kontrole:
 \begin{itemize}
 \item{moč odklona, ki je lahko pozitiven - svetli piksli so potisnjeni stran od sredine slike, temni pa proti sredini, ali pa negativen z obratnimi rezultati,}
 \item{zapolnitev lukenj - ker premikamo piksle, je možno, da nekateri piksli ostanejo prazni. S to opcijo izbrano se ti prazni piksli zapolnijo s najbližjim sosedom,}
+\item{način delovanja za prepisovanje pikslov, v katere se premakne več kot en vhodni piksel. Lahko damo prednost svetlejšim pikslom, da prepišejo temne,
+	predmost temnih pred svetlimi, seštevanje obeh, kar je najbližje simulaciji ali povprečje obeh pikslov,}
 \item{izbira sredniske točko odklona - izberemo, kje na sliki je središče vizualnega učinka - navidezni izvor elektronskega žarka.}
 \end{itemize}
 
 
 \subsection{Implementacija vtičnika}
 
+Vtičnik implementira odzive na ukazne izbirnike \verb!PF_Cmd_ABOUT!, \path{PF\_Cmd\_GLOBAL\_SETUP}, \verb!PF_Cmd_PARAMS_SETUP!,
+\verb!PF_Cmd_RENDER! in \path{PF\_UPDATE\_PARAMS\_UI}.
+Odziva na ukazna izbirnika \verb!PF_Cmd_ABOUT! in \path{PF\_Cmd\_GLOBAL\_SETUP} sta enaka kot pri vtičniku PixelRain, le da funkcija \verb!GlobalSetup! tudi
+opozori AE na to, da vtičnik implementira tudi odziv na ukazni izbirnik \verb!PF_UPDATE_PARAMS_UI!.
 
+Med upodabljanjem sličic se izračuna okdlon na podlagi svetlosti piskla, nato pa se piksel premakne na novo mesto.
+Pri tem je možno, da se na isto mesto mesto premakne več kot en piksel.
+To težavo rešujemo s prepisovanjem ali mešanjem obeh pikslov na tem mestu.
+Način delovanja izbere uporabnik.
+
+Zaradi premikanja pikslov stran od centra učinka se v izhodni sličici lahko pojavijo prazna območja brez pikslov.
+Uporabnik lahko izbere, da se ta območja zapolnijo, kar pa deluje le za manjše območja. 
+Prazna območja so velika, kadar je moč odklona velika. 
+V takih primerih zapolnjevanje slike nima velikega smisla in ni podprto.
+Ugotavljanje, kateri piksel manjka oziroma s kakšnimi piksli napolniti praznine s trenutno hitro implementacijo ni možno.
+Rešiti ta problem bi bilo zanimivo, najverjetneje bi bilo potrebno implementirati metanje žarkov v 3D prostoru.
+
+\subsubsection{Odziv na klic \texttt{PF\_Cmd\_PARAMS\_SETUP}}
+
+Funkcija \verb!ParamsSetup! je enaka kot pri vtičniku PixelRain.
+V polje parametrov doda paramtre, ki jih vtičnik uporablja.
+Omembe vreden je parameter za izbiro cetralne točke tipa \verb!PF_Param_POINT!.
+Ko ga dodamo, mu seveda lahko nastavimo prednastavljeno vrednost.
+Želimo jo nastaviti na sredino platna, kar bodo uporabniki pričakovali in najverjetneje pogosto uporabljali.
+Ker pa ob dodajanju parametrov še ne vemo, kako veliko je platno, tega ne moremo narediti.
+Lahko bi sklepali, da bo platno dandanes najpogosteje uporabljane velikosti HD (širina 1920 pikslov in višina 1080), vendar se na to ne moremo zanašati.
+Ne želimo, da bi v primeru majhnega platna središče učinka šlo izven platna.
+Temu problemu smo se izognili z implementacijo odziva na ukazni izbirnik \verb!PF_Cmd_UPDATE_PARAMS_UI!.
+Da bo AE poslal ukazni izbirnik, zagotovimo z nastavitvijo zastavice \verb!PF_ParamsFlag_SUPERVISE!.
+
+\begin{verbatim}
+    ...
+    def.flags = PF_ParamFlag_SUPERVISE;
+    PF_ADD_POINT(
+        STR(StrID_Center_Param_Name),
+        50,
+        50,
+        NULL,
+        CENTER_DISK_ID);
+    AEFX_CLR_STRUCT(def);
+    ...
+\end{verbatim}
+
+\subsubsection{Odziv na klic \texttt{PF\_Cmd\_UPDATE\_PARAMS\_UI}}
+
+Funkcija \verb!UpdateParamaterUI! se pokliče, kadar mora AE spremeniti uporabniški vmesnik vtičnika.
+To so lahko kompleksne spremembe, kot je dodajanje parametrov ali spreminjanje tipov parametrov, ali pa preproste,
+kot je na primer spreminjanje vrednosti parametrov.
+Klic lahko tudi programatsko sprožimo s pomočjo vgrajene funkcije.
+
+Funkcijo \verb!UpdateParamaterUI! uporabimo, da nastavimo vrednost parametra za izbiro centra učinka,
+ko je velikost platna že znana.
+Tako se izognemo neželjenim prednastavljenim vrednostim parametra.
+
+\begin{verbatim}
+    // sets up default center point in the center
+    // before this call, canvas size is unknown 
+    if (outputP) { 
+        def = *params[ElStAberr_CENTER];
+        def.u.td.x_dephault = outputP->width / 2;
+        def.u.td.y_dephault = outputP->height / 2;
+        def.u.td.x_value = outputP->width / 2;
+        def.u.td.y_value = outputP->height / 2;
+        suites.ParamUtilsSuite3()->PF_UpdateParamUI(
+            in_data->effect_ref,
+            ElStAberr_CENTER,
+            &def);
+    }
+\end{verbatim}
+
+\subsubsection{Odziv na klic \texttt{PF\_Cmd\_RENDER}}
+
+Funkcija \verb!Render! upodobi sličico korakoma.
+Najprej napolnimo celotno izhodno platno z barvo RGBA(1.0, 0.0, 1.0, 0.0).
+To so popolnoma prozorni piksli magenta barve.
+Ker so v AE piksli z alpha vrednostjo 0 vedno črne barve, nam bo to kaneje pomagalo zaznati nezapolnjene piksle.
+
+\begin{verbatim}
+static PF_Err
+ColorBlankPreAberGapsPixFunc8(
+    void        *refcon, // null
+    A_long      xL,
+    A_long      yL,
+    PF_Pixel8   *inP, // null
+    PF_Pixel8   *outP)
+{
+    outP->alpha = 0;
+    outP->red = 255;
+    outP->green = 0;
+    outP->blue = 255;
+    return PF_Err_NONE;
+    ...
+\end{verbatim}
+
+Naslednji korak je ključen. 
+Vsakemu pikslu se izračuna njegova svetlost in na njeni podlagi tudi moč odklona za piksel.
+Pri tem se seveda upošteva parameter moči učinka.
+Izračuna se nova lokacija piksla na podlagi njegovih koordinat, moči odklona in lokacije centra učinka.
+Nato se piksel zapiše na novo lokacijo v izhodno platno, ki je bilo pred tem označeno kot prazno.
+Pred zapisovanjem se preveri, če je na istih koordinatah že postavljen piksel.
+Če je, se na podlagi izbranega načina prepisovanja ali mešanja primerno izračuna končna barva piksla.
+
+Če uporabnik ne želi polniti praznih območij, se upodobljeno sliko prepiše na izhod.
+
+\begin{verbatim}
+static PF_Err
+LumaAberratePixFunc8 (
+    void        *refcon, 
+    A_long      xL, 
+    A_long      yL, 
+    PF_Pixel8   *inP, 
+    PF_Pixel8   *outP) // output unused
+{
+    ...
+    double luma = lumaFromColor(inP); // luma [0.0, 1.0]
+    // remember state
+    int oldX, oldY;
+    // recenter image
+    int centerX, centerY;
+    centerX = (int)aiP->center_x;
+    centerY = (int)aiP->center_y;
+
+    oldX = xL - centerX;
+    oldY = yL - centerY;
+
+    // calculate scaling factor
+    int newX, newY;
+    double multiplier = aiP->magnitudeF * 2.0; // [-2, 2]
+    double modifier = aiP->magnitudeF * -1.0 + 1.0; // [+2, 0]
+    double scaleDelta = multiplier * luma + modifier;
+    // scale image
+    newX = (int)(oldX * scaleDelta);
+    newY = (int)(oldY * scaleDelta);
+
+    // recenter image
+    newX += centerX;
+    newY += centerY;
+    ...
+\end{verbatim}
+
+Če je izbran način polnjena praznin, se za vsak piksel preveri, če je prazen.
+Brez težav lahko ločimo nezapisane piksle, ki so bili na začetku označeni s prosojno magenta barvo.
+Če je piksel prazen, se poišče najbližji zapisan piksel v smeri proti centru učinka in prepiše na novo mesto.
+Pri tem iščemo le nekaj pikslov daleč, saj velikih lukenj ne polnimo.
+
+\begin{verbatim}
+static PF_Err 
+Render (
+    PF_InData       *in_data,
+    PF_OutData      *out_data,
+    PF_ParamDef     *params[],
+    PF_LayerDef     *output )
+{
+    ...
+    // 3. Fill emptynesses
+    if (params[ElStAberr_FILLIN]->u.bd.value) { // is checked
+        ...
+        // transfer mode for fill in
+        PF_Handle simpleBehindH = 
+            (PF_Handle)suites.HandleSuite1()->host_new_handle(
+                    sizeof(PF_CompositeMode));
+        PF_CompositeMode *simpleBehind = (PF_CompositeMode*)*simpleBehindH;
+        simpleBehind->opacity = 100;
+        simpleBehind->xfer = PF_Xfer_BEHIND;
+        // blend fill in under output
+        suites.WorldTransformSuite1()->composite_rect(
+            in_data->effect_ref,
+            NULL,
+            INT_MAX, // A_long opacitity -- 0 to int32 max
+            fillInWorldP,
+            0, 0,
+            PF_Field_FRAME,
+            PF_Xfer_BEHIND,
+            outworldP
+        );
+    ...
+\end{verbatim}
 
 
 
