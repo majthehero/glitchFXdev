@@ -37,6 +37,8 @@
 \usepackage[hyphens]{url}  % dodal Solina
 \usepackage{comment}       % dodal Solina
 
+\usepackage{float} % DODAL MAJ ker slike povsod 
+
 \usepackage[pdftex, colorlinks=true,
 						citecolor=black, filecolor=black, 
 						linkcolor=black, urlcolor=black,
@@ -165,7 +167,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
 \pdfinfo{%
     /Title    (\ttitle)
-    /Author   (\tauthor, damjan@cvetan.si)
+    /Author   (\tauthor, maj.smerkol@gmail.com)
     /Subject  (\ttitleEn)
     /Keywords (\tkeywordsEn)
     /ModDate  (\pdfcreationdate)
@@ -199,7 +201,7 @@
 %    INTERDISCIPLINARNI UNIVERZITETNI\\ ŠTUDIJSKI PROGRAM PRVE STOPNJE\\ UPRAVNA INFORMATIKA}\par}%
 %    INTERDISCIPLINARNI UNIVERZITETNI\\ ŠTUDIJSKI PROGRAM PRVE STOPNJE\\ MULTIMEDIJA}\par}%
     \vfill\null%
-    {\large \textsc{Mentor}: \par}%doc.\ dr.  Narvika Bovcon
+    {\large \textsc{Mentor}: \par} izr.\ prof.\ dr.  Narvika Bovcon
 %   {\large \textsc{Somentor}:  izr.\ prof.\ dr. Martin Krpan \par}%
     {\vskip 2em \large Ljubljana, 2017 \par}%
 \end{center}
@@ -251,7 +253,9 @@ Besedilo teme diplomskega dela študent prepiše iz študijskega informacijskega
 % zahvala
 \thispagestyle{empty}\mbox{}\vfill\null\it%
 \noindent
-Na tem mestu zapišite, komu se zahvaljujete za izdelavo diplomske naloge. Pazite, da ne boste koga pozabili. Utegnil vam bo zameriti. Temu se da izogniti tako, da celotno zahvalo izpustite.
+Zahvaljujem se prijateljem in družini za podporo pri delu in Heleni Pivec za pomoč.
+Zahvaljujem se tudi profesorju Patriciju Buliću za mentorstvo v prejšnjem letu in seveda mentorici Narviki Bovcon.
+
 \rm\normalfont
 
 % prazna stran
@@ -259,9 +263,9 @@ Na tem mestu zapišite, komu se zahvaljujete za izdelavo diplomske naloge. Pazit
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % posvetilo, če sama zahvala ne zadošča :-)
-\thispagestyle{empty}\mbox{}{\vskip0.20\textheight}\mbox{}\hfill\begin{minipage}{0.55\textwidth}%
-Svoji dragi Alenčici.
-\normalfont\end{minipage}
+%\thispagestyle{empty}\mbox{}{\vskip0.20\textheight}\mbox{}\hfill\begin{minipage}{0.55\textwidth}%
+%posvetilo ho ho moji prihodnosti lol
+%\normalfont\end{minipage}
 
 % prazna stran
 \clearemptydoublepage
@@ -309,8 +313,22 @@ Svoji dragi Alenčici.
 \bigskip
 
 %\noindent\textbf{Povzetek:} 
-\noindent V vzorcu je predstavljen postopek priprave diplomskega dela z uporabo okolja \LaTeX. Vaš povzetek mora sicer vsebovati približno 100 besed, ta tukaj je odločno prekratek.
-Dober povzetek vključuje: (1) kratek opis obravnavanega problema, (2) kratek opis vašega pristopa za reševanje tega problema in (3) (najbolj uspešen) rezultat ali prispevek magistrske naloge.
+\noindent Razvili smo tri različne vtičnike za Adobe After Effects. 
+Vsak implementira originalen vizualni učinek. 
+Pred tem smo opravili pregled vizualnih učinkov.
+Ob tem se nismo omejili na digitalne, ampak tudi vizualne učinke za film in video.
+Moderni digitalni video zaradi visoke kvalitete slike in velike fleksibilnosti omogoča oba pristopa.
+Digitalni vizualni učinki se danes uporabljajo v filmskem svetu in svetu avtorskega videa.
+
+Razvili smo tri vtičnike za vizualne učinke.
+Z vtičnikom PixelRain lahko izdelamo nadzorovane vizualne artefakte.
+Z vtičnikom ElStAberr lahko sliki dodamo globino ali preoblikujemo vizualne elemente.
+Vtičnik MirrorMosaic je namenjen izdelavi ponavljajočih se video vzorcev.
+
+Digitalne vizualne učinke smo razvili kot vtičnike za programski paket After Effects.
+Ta ponuja paket za razvoj programske opreme, ki uporabniku ponudi zmogljiv programski vmesnik.
+Med delom se je izkazalo, da je za zmogljivost in pravilnost delovanja najpomembnejše pravilno delo s pomnilnikom.
+Razviti vtičniki so uporabno orodje za oblikovanje vizualnih učinkov.
 
 \bigskip
 
@@ -331,8 +349,22 @@ Dober povzetek vključuje: (1) kratek opis obravnavanega problema, (2) kratek op
 \bigskip
 
 %\noindent\textbf{Abstract:} 
-\noindent This sample document presents an approach to typesetting your BSc thesis using \LaTeX. 
-A proper abstract should contain around 100 words which makes this one way too short.
+\noindent We developed three different plug-ins for Adobe After Effects. 
+Each of them implements an original visual effect. 
+Before that we made an overview of visual effects. 
+We didn’t limit ourselves to digital ones, but also visual effects for film and video. 
+Digital visual effects are used in the world of cinema as well as the world of video. 
+
+We developed three VFX plug-ins.
+Plug-in PixelRain can be used to create controlled visual glitches.
+Using plug-in ElStAberr we can add depth to image or transform visual elements.
+MirrorMosaic's intended use is to create looping video patterns.
+
+The visual effects were created as plug-ins for the After Effects software. 
+It offers a package for software development, which offers the user a capable program interface. 
+While working on the effects it turned out that the most important aspect in this kind of work is good working memory efficiency. 
+The final plug-ins are a useful tool for creating visual effects.
+
 \bigskip
 
 \noindent\textbf{Keywords:} \tkeywordsEn.
@@ -378,9 +410,9 @@ Večino vizualnih učinkov pravzaprav lahko štejemo v to kategorijo.
 Sem spadajo tudi vsi tisti efekti, ki vizualno pomagajo pripovedi, pomagajo ustvariti fiktivni svet, like in podobno. 
 
 V tretjo kategorijo uvrščam destruktivne efekte - to so tisti, ki ne dodajajo informacij sliki, ampak nasprotno zmanjšajo kvaliteto slike za dosego nekega vizualnega sloga ali pa pomagajo ustvarjati vzdušje in gledalcu, če so uspešno uporabljeni, lahko vzbudijo določena čustva. 
-Primere takšnih efektov lahko najdemo marsikje, v popularni kulturi (Mr Robot, 2015), %!TODO  slika
-računalniških igrah (SOMA, 2015) % !TODO  slika
- in filmih (The Hunger), % !TODO opklepaj izpolni. - Faster Pussycat Kill Kill in the hunger pravilno lepo napiši
+Primere takšnih efektov lahko najdemo marsikje, v popularni kulturi (Mr Robot, 2015),
+računalniških igrah (SOMA, 2015) 
+ in filmih (The Hunger, 1983), 
 na različne načine proizvedene vizualne artefakte pa celo v galerijah in knjižnih zbirkah umetniških del (ang. {\it ASCII Graphic Glitch Art}, Rozita Fogelman).
 
 
@@ -393,7 +425,7 @@ Vizualni učinki so različne metode, kako sliki (filmu, videu, fotografiji ali 
 Gre za tehnike, ki jih ne moremo posneti s kamero med snemanjem žive  akcije. 
 Uporabljamo jih iz različnih razlogov, predvsem pa kadar bi bilo želeno nemogoče posneti, kot zahteva scenarij (primer potovanje na luno v filmu {\it Apollo 13}, 1995).
 Če bi bilo snemanje prizora prenevarno za igralce ali druge udeležence na snemanju, se prav tako lahko uporabi vizualne učinke za dosego končnega rezultata brez izpostavljanja ljudi pravi nevarnosti. 
-Tako so uporabljeni vizualni efekti naprimer v akcijskih filmih, na primer v filmu {\it Fire Brigade}, 1926, v katerem je prikazana dojenčica v goreči hiši. % !TODO prevod slovenski
+Tako so uporabljeni vizualni efekti naprimer v akcijskih filmih, na primer v filmu {\it Fire Brigade}, 1926, v katerem je prikazana dojenčica v goreči hiši. 
 Naslednji razlog za uporabo vizualnih efektov pa je zniževanje cene produkcije. Tako naprimer v filmu Gospodar prstanov: Stolpa (ang. {\it The Lord of the Rings: The Two Towers}, 2002) horde orkov napadajo trdnjavo. Najeti toliko statistov bi bilo drago in nepraktično, saj je vsak moral tudi čez proces maske vsak snemalni dan. Lažje in prav tako dobro je posneti manjšo skupino maskiranih statistov in jih nato v postprodukciji vstaviti v sliko večkrat. 
 
 Med vizualne učinke štejemo na vse načine pridobljene grafične elemente, ki jih ne moremo posneti hkrati z akcijo. 
@@ -401,7 +433,7 @@ Ločimo jih od posbnih učinkov oziroma praktičnih učinkov.
 Posebni učinki  pa so tisti, ki jih posnamemo med snemanjem akcije.
 Primeri takšnih učinkov so streli z orožjem, eksplozije, umetni dež in podobno.
 Danes se jih tipično kombinira z vizualnimi učinki za stopnjevani realizem.
-Primeri kombiniranih efektov so naprimer eksplozije v Transformerjih (ang. {\it Transformers}, 2007). % !TODO slika origial plus VFX.
+Primeri kombiniranih efektov so naprimer eksplozije v Transformerjih (ang. {\it Transformers}, 2007). 
 
 \section{Primerjava uporabe vizualnih učinkov v filmu in videu}
 
@@ -415,7 +447,7 @@ Danes jih nepoučni gledalec le redko opazi, pa še takrat v nizkoproračunskih 
 
 Danes, ko je film vedno pogosteje tudi digitalno posnet in tako z vidika medija pravzaprav video, je ta razlika manjša.
 Z enakimi orodji delajo veliki filmski studiji in alternativni umetniki, ki ustvarjajo umetniški avtorski video.
-Adobejev programski paket Premiere Pro so uporabili v studiju Marvel za montažo filma Deadpool (ang. {\it Deadpool}, 2016), % !TODO poišči z AE narjeno underground stvar
+Adobejev programski paket Premiere Pro so uporabili tudi v studiju Marvel za montažo filma Deadpool (ang. {\it Deadpool}, 2016).
 
 
 Avtorski video pa je po naravi popolnoma drugačen.
@@ -454,27 +486,26 @@ Tehnika imenovana feedback loop (vstaljanje zakasnjenega  videa samega vase) je 
 Filmska montaža je postopek, pri katerem iz posnetkov sestavimo zgodbo. 
 Je ključna dejavnost v postprodukciji. 
 Sergej Mihajlovič Eisenstein, ruski filmar (Oklepnica Potemkin, 1925), celo postavi montažo na prvo mesto v filmskem procesu.
-Pravi, da je montaža najpomembnejša faza filmske produkcije. % !TODO citiraj
+Pravi, da je montaža najpomembnejša faza filmske produkcije. 
 
 Zgodovinsko se je tehnologija filmske in video montaže začela razvijati že konec 19. stoletja. 
 Leta 1895 je v kratkem filmu Usmrtitev Marije I. Škotske (ang. {\it The Execution of Mary, queen of Scots}, 1895) režiser Alfred Clark prikazal, kako kraljici odsekajo glavo. 
 Navidezno usmrtitev kraljice je dosegel tako, da je tik pred rabljevim zamahom s sekiro kamero ustavil in v tem času zamenjal igralko z lutko, nato pa nadaljeval snemanje. 
 To je prvi dokumentirani vizualni učinek. 
-Viri navajajo, da je marsikateri gledalec verjel, da so igralko med snemanjem zares usmrtili. % !TODO navedi kateri viri to navajajo iz wikipedije
+Viri navajajo, da je marsikateri gledalec verjel, da so igralko med snemanjem zares usmrtili.
 Ta film je pokazal, da montaža in vizualni učinki lahko pripomorejo k pripovedni moči filma.
 
 Razvoj vizualnih učinkov gre z roko v roki z novimi montažerskimi prijemi, novo filmsko tehnologijo in razcvetom filma v 20. stoletju. 
 Že nekaj let kasneje je za film Veliki rop vlaka (ang. {\it The Great Train Robbery}, 1903) studio Thomasa Edisona razvil tehnologijo maskiranja filma (ang. {\it black matte}) in ponovne ekspozicije maskiranega predela, da je v studiju lahko prikazal pogled skozi okno, v katerega je vstavil razgled. 
 V 1930. letih so začeli z uporabo projekcije ozadij ali drugih elementov na platno, pred katerega so nato postavili scenografijo in igralce. 
-Istočasno se je razvila tudi uporaba pomanjšanih setov in figur oziroma miniatur, ki so jih lahko animirali na način stop motion in kasneje z uporabo projekcije ali maskiranja kombinirali s posnetki igrane akcije. % !TODO prevod ali nekaj podobnega stop motion je ustavljeno gibanje se mi zdi
+Istočasno se je razvila tudi uporaba pomanjšanih setov in figur oziroma miniatur, ki so jih lahko animirali na način {\it stop motion} in kasneje z uporabo projekcije ali maskiranja kombinirali s posnetki igrane akcije. 
 V tem času se je uporabljala tudi tehnika slikanja na steklo, ki se je postavilo pred lečo kamere za dodajanje vizualnih elementov. 
 Zanimivo je, da so v 30. letih, v času črnobelih filmov, že začeli uporabljati tehniko odstranjevanja ozadja s pomočjo modrega zaslona. 
 Moder zaslon namreč lahko z uporabo modrega filtra na črnobelem posnetku popolnoma izgine in pusti za seboj neizpostavljen film, kamor lahko vstavimo druge slike. 
 
 V 50. letih prejšnjega stoletja so v Disneyevih studijih odkrili tehniko, kako hkrati posneti sliko in potujočo masko (ang. {\it traveling matte} - način maskiranja, pri katerem se masko posname na trak in se le ta zato popolnoma ujema s sliko) s pomočjo modrega zaslona. 
 S to tehniko so posneli film Marry Poppins (1964), v katerem naslovna junakinja leti s pomočjo dežnika, oziroma s pomočjo modrega zaslona in potujoče maske\cite{vesHandbook}.
-Tehniko so v 80. letih izpopolnili s pomočjo na UV svetlobo občutljivega filmskega traku in barvanjem elementov maskiranja z UV odbojno barvo za film Vojna Zvezd (ang. {\it Star Wars}). 
-% !TODO kateri film a se prov spomnm star wars
+Tehniko so v 80. letih izpopolnili s pomočjo na UV svetlobo občutljivega filmskega traku in barvanjem elementov maskiranja z UV odbojno barvo za film Vojna zvezd (ang. {\it Star Wars}, 1977). 
 
 V naslednjih desetletjih je šel razvoj filmskih posebnih učinkov v smeri izpopolnjevanja že poznanih tehnik. 
 Tako so v 60. letih razvili novo tehniko projeciranja na zaslon v studiju od spredaj, kar je poskrbelo za bolj jasno sliko ozadij, večji kontrast in bolj pravilne barve. 
@@ -486,7 +517,7 @@ Prvi računalniško ustvarjeni vizualni efekti so se pojavili že v 50. letih 20
 John Whitney je uporabil odslužen analogni računalnik za vodenje protiletalskih izstrelkov kot pripomoček za animacijo. 
 Na podlagi njegovega dela so kasneje razvili tudi tehniko, s katero so v filmu Odiseja 2001 posneli sekvenco potovanja skozi črvino.
 
-Prvi pravi digitalni posebni učinki pa so bili uporabljeni v filmu Westworld (ang. {\it Westworld}, 1973). % !TODO studio, slika, digitalni efekti pred tem v umetniškem videu
+Prvi pravi digitalni posebni učinki pa so bili uporabljeni v filmu Westworld (ang. {\it Westworld}, 1973).
 V tem filmu so prikazali človeku podobne robote in v nekaterih prizorih dele igralcev nadomestili s 3D računalniško generirano grafiko. 
 Podjetje Triple-I je kasneje tehniko razvijalo dalje.
 Nekaj let kasneje so podobne vizualne učinke uporabili v filmu Futureworld (ang. {\it Futureworld}).
@@ -507,14 +538,11 @@ Tam jih ne moremo zgrešiti, pa jih kljub temu gledalci lahko ignorirajo, saj so
 
 \chapter{Uporaba After Effects za vizualne učinke}
 
-ghdfgh
-
 \section{Hiter pregled After Effects}
 
-After Effects je orodje za video montažo, izdelavo vizualnih učinkov in video kompozicijo.
-% !TODO ajges da prepiši iz kšnega opisa UI wut lol 
+After Effects je orodje za video montažo, izdelavo vizualnih učinkov in sestavljanje videa.
 
-\section{Kompozicija digitalnega videa}
+\section{Sestavljanje digitalnega videa}
 
 Primarni namen After Effects je sestavljanje (ang. {\it compositing}) videa.
 Sestavljanje je postopek, pri katerem iz več videov, slik in drugih vizualnih elementov sestavimo končno sliko tako,
@@ -522,8 +550,7 @@ da jih razporedimo enega nad drugega v 2.5D prostoru\footnotemark in nato med se
 Pri kombiniranju plasti lahko izberemo med več različnimi načini mešanja (ang. {\it blending mode}) oziroma operacijami nad piksli.
 
 Današnja definicja sestavljanja videa je bila postavljena leta 1984 v članku Compositing Digital Images\cite{siggraphComposition}.
-Članek je osnoval nov algoritem za kompozicijo slike s pomočjo uvedbe kanala alpha (ang. {\it alpha chanell}), ki ponazarja pokrivnost piksla.
-%Tako ima slika z 8biti globine na kanal skupno 32bitov na vzorec oziroma piksel.  !TODO kaj s tem stavkom
+Članek je osnoval nov algoritem za sestavljanje slike s pomočjo uvedbe kanala alpha (ang. {\it alpha chanell}), ki ponazarja pokrivnost piksla.
 Kanal alpha je definiran kot relativna pokrivnost elementa, pri kateri 0 pomeni nično pokrivnost, 1 pa polno pokrivnost.
 Vmesne vrednosti se izračunajo z linearno interpolacijo.
 Slike, ki vsebujejo podatek o pokrivnosti posameznih pikslov, tako brez težav lahko definiramo v prostoru RGBA.
@@ -531,7 +558,7 @@ Slike, ki vsebujejo podatek o pokrivnosti posameznih pikslov, tako brez težav l
 V istem članku je bila predstavljena tudi kompozicijska algebra, kakršno uporabljamo še danes.
 Definira skupino operacij nad dvema slikovnima elementoma, pri čimer posebno pozornost namenja ohranjanju pravilne vrednosti kanala alpha v izhodni sliki.
 S tem je dosežena možnost kombiniranja mnogih slojev videa s kombiniranjem binarnih operacij med sosednjimi sloji.
-Operacije so naštete in razložene v tabeli. % !TODO navedi tabelo
+Operacije so naštete in razložene v tabeli. 
 
 \begin{table}
 \begin{center}
@@ -540,12 +567,12 @@ Operacije so naštete in razložene v tabeli. % !TODO navedi tabelo
 {\bf operacija} & {\bf prevod } & {\bf pomen} \\ \hline
 clear & prazno & Izhodna slika je popolnoma nepokrivna oziroma prazna. \\ \hline
 A & A & Izhodna slika je enaka prvemu operandu. \\
-B & B & Izhodna slika je enaka drugemu operandu. \\ \hline
+A add B & A plus B & Izhodna slika je enaka seštevku obeh operandov. \\ \hline
 A over B & A nad B & Izhodna slika je sestavljena iz slike A, postavljene nad B. Kjer ima prvi operand vrednost alpha 1, je izhod enak prvemu operandu. 
-Sicer je izhod enak linearni kombinaciji $\alpha A  $  \\ % !TODO linearna kombinacija
+Sicer je izhod linearna kombinacija ober pikslov s kanalom alpha.  \\ 
 \end{tabular}
 \end{center}
-\caption{Operacije kompozicijske algebre.}
+\caption{Nekaj operacij kompozicijske algebre. }
 \label{tbl:kompOperacije}
 \end{table}
 
@@ -553,21 +580,16 @@ Sicer je izhod enak linearni kombinaciji $\alpha A  $  \\ % !TODO linearna kombi
 \footnotetext{2.5D je izraz, ki pomeni 2 dimenzionalen prostor, v katerem pa lahko posamezne 2D objekte razporedimo enega nad drugega v smeri tretje osi Z.}
 
 
-\section{Kompozicija videa v After Effects}
+\section{Sestavljanje videa v After Effects}
 
-V After Effects je osnovna enota dela kompozicija (ang. {\it sequence}).
+V After Effects je osnovna enota dela kompozicija (ang. {\it composition})\cite{aeclassroom}.
 Kompozicija vsebuje slikovne plasti in učinke. 
-Plasti lahko razporejamo
-Ko ustvarimo novo kompozicijo, vidimo časovnico te sekvence in prazno platno.
-% !TODO kaj s tem stavkom in sekvenco !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-V After Effects enoto dela, ki ponavadi predstavlja sceno, imenujemo sekvenca\cite{aeclassroom}.
-Ko ustvarimo novo sekvenco, vidimo časovnico te sekvence in prazno platno.
 Platno predstavlja delovno površino, ki tipično predstavlja ciljni format videa, ki določi njeno resolucijo, razmerje med višino in širino in s tem tudi relativno širino piksla.
-V časovnico ali pa na platno lahko dodajamo video, slike in druge elemente.
 Na platnu lahko elemente postavimo v prostoru ekrana,
-časovnico pa uporabljamo za postavitev v časovnem prostoru in jih razporedimo v smeri Z osi.
+časovnico pa uporabimo za premikanje elemntov po času.
+Plasti lahko tudi razporejamo po osi Z enega nad drugega.
 
-V AE se video komponira na podlagi kompozicijske algebre, ki poudarja uporabnost kanala alpha.
+V AE se video sestavlja na podlagi kompozicijske algebre, ki poudarja uporabnost kanala alpha.
 Poleg tega pa lahko dele videa tudi ločeno maskiramo oziroma izberemo predele slike, ki bodo vidni.
 Pri tem imamo na izbiro več orodij, kot so:
 \begin{itemize}
@@ -578,7 +600,7 @@ Pri tem imamo na izbiro več orodij, kot so:
 \item{efektov, ki ustvarijo masko na podlagi različnih parametrov in slike, in drugih.}
 \end{itemize}
 
-Tipično se orodja za hitro maskiranje uporabljajo v kombinaciji z drugimi metodami kompozicije, na primer odstranjevanjem zelenih zaslonov in podobno.
+Tipično se orodja za hitro maskiranje uporabljajo v kombinaciji z drugimi metodami sestavljanja, na primer odstranjevanjem zelenih zaslonov in podobno.
 Pri vseh orodjih lahko pozicijo, velikost in obliko animiramo. 
 To storimo tako, da na določenih sličicah masko oblikujemo, med temi ključnimi sličicami pa bo AE za nas animacijo interpoliral. 
 Ker je interpolacija lahko nenatančna, imamo na voljo tudi urejevalnik krivulj, s pomočjo katerega lahko natančneje določamo način interpolacije.
@@ -777,7 +799,7 @@ Zaradi ločenja na tri izbirnike smo s tem dosegli tudi večjo fleksibilnost vti
 
 \subsection{Implementacija vtičnika}
 
-Vtičnik implementira odzive na ukazne izbirnike \texttt{PF\_Cmd\_ABOUT}, \path{PF\_Cmd\_GLOBAL\_SETUP}, \texttt{PF\_Cmd\_PARAMS\_SETUP} in \texttt{PF\_Cmd\_RENDER}.
+Vtičnik implementira odzive na ukazne izbirnike \texttt{PF\_Cmd\_ABOUT}, \path{PF_Cmd_GLOBAL_SETUP}, \texttt{PF\_Cmd\_PARAMS\_SETUP} in \texttt{PF\_Cmd\_RENDER}.
 To je minimalen nabor odzivov za efektni vtičnik.
 
 
@@ -861,6 +883,14 @@ Parametri so enaki kot pri funkciji \texttt{About}.
 V tej funkciji sicer ne potrebujemo niti kazalca na vgrajeno funkcionalnost SDK.
 
 \subsubsection{Odziv na klic \texttt{PF\_Cmd\_PARAMS\_SETUP}}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=10cm]{img/pixelrainUI.png}
+\end{center}
+\caption{Uporabniški vmesnik za nastavljanje parametrov.}
+\label{ui1}
+\end{figure}
 
 Funkcija \texttt{ParamsSetup} pripravi uporabniški vmesnik.
 Pripravljenih je kup makrov, ki poenostavijo dodajanje elementov uporabniškega vmesnika.
@@ -1036,7 +1066,7 @@ Po vsakem parametru (odtenek, zasičenost in svetlost) maskiramo ločeno.
 \end{verbatim}
 
 Najprej pripravi prazno sliko, v katero se bo maska zapisala.
-Ukaz \path{suites.HandleSuite1()->host\_new\_handle( ... );} zahteva od gostitelja, naj mu varno rezervira željeno količino pomnilnika.
+Ukaz \path{suites.HandleSuite1()->host_new_handle( ... );} zahteva od gostitelja, naj mu varno rezervira željeno količino pomnilnika.
 Funkcija vrača ročico (kazalec na kazalec), ki jo shranimo, saj jo bomo potrebovali, da bo gostitelj lahko sprostil pomnilnik, ko ga ne bomo več potrebovali.
 Ta pomnilnik uporabimo, da ustvarimo novo sliko tipa \verb!PF_Effect_World!.
 Tipa \verb!PF_Effect_World! in \verb!PF_Layer_Def! sta enaka, vendar nekatere funkcije SDK zahtevajo parametre prvega tipa, nekatere pa drugega.
@@ -1117,7 +1147,21 @@ V novo vrstico istega stolpca se premaknemo s
 \verb!inP += tilP->input->rowbytes / sizeof(PF_Pixel8);!
 , kjer je \texttt{inP} kazalec na piksel, \verb!tilP->input! pa kazalec na sliko.
 
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=10cm]{img/colorfulhills.PNG}
+\end{center}
+\caption{Primer vhodne slike.}
+\label{orig1}
+\end{figure}
 
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=10cm]{img/colorfulhillsPIXELRAIN.PNG}
+\end{center}
+\caption{Primer slike z vizualnim učinkom, ki uporablja vtičnik PixelRain.}
+\label{demo1}
+\end{figure}
 
 
 \section{Vtičnik ElStAberr}
@@ -1128,9 +1172,9 @@ Osnovna ideja za tem vizualnim učinkom je simulacija elektro statičnega odklon
 Gre za pojav, ki ga je potrebno aktivno negirati pri oblikovanju katodnih ekranov, naprimer televizij.
 Takšni ekrani vsebujejo elektronski top in elektromagnete, s katerimi se snop elektronov usmerja.
 Vsak piksel mora biti ob pravem času \sn{osvetljen} s primerno močnim elektronskim snopom, da florescentni premaz zažari s primerno svetlostjo.
-Eleketronski žarek z večjo energijo pa potrenuje več energije, da se ga preusmeri.
-Zato ekrani potrebujejo logiko, ki povečajo moč elektromagnetov za preusmerjanje žarka, kadar ima žarek večjo energijo.
-Vizualni učinek ElStAberr približno simulira kako bi izgledala slika, če bi bila prikazana na katodnem zaslonu brez takšne logike.
+Eleketronski žarek z večjo energijo pa potrebuje več energije, da se ga preusmeri.
+Zato ekrani potrebujejo vezje, ki poveča moč elektromagnetov za preusmerjanje žarka, kadar ima žarek večjo energijo.
+Vizualni učinek ElStAberr približno simulira, kako bi izgledala slika, če bi bila prikazana na katodnem zaslonu brez takšne logike.
 
 Pri barvnem katodnem ekranu je vsak piksel sestavljen iz treh delov - en zažari rdeče, en zeleno, en pa modro. 
 Zato mora tudi elektronski snop zadeti te tri točke ločeno in z različno močjo.
@@ -1149,33 +1193,40 @@ Ta opcija nima analoga v pravem ekranu s katodno cevjo, vendar poveča fleksibil
 Uporabniški vmesnik vsebuje sledeče kontrole:
 \begin{itemize}
 \item{moč odklona, ki je lahko pozitiven - svetli piksli so potisnjeni stran od sredine slike, temni pa proti sredini, ali pa negativen z obratnimi rezultati,}
-\item{zapolnitev lukenj - ker premikamo piksle, je možno, da nekateri piksli ostanejo prazni. S to opcijo izbrano se ti prazni piksli zapolnijo s najbližjim sosedom,}
+\item{zapolnitev lukenj - ker premikamo piksle, je možno, da nekateri piksli ostanejo prazni. S to opcijo se prazni piksli zapolnijo z najbližjim sosedom,}
 \item{način delovanja za prepisovanje pikslov, v katere se premakne več kot en vhodni piksel. Lahko damo prednost svetlejšim pikslom, da prepišejo temne,
-	predmost temnih pred svetlimi, seštevanje obeh, kar je najbližje simulaciji ali povprečje obeh pikslov,}
-\item{izbira sredniske točko odklona - izberemo, kje na sliki je središče vizualnega učinka - navidezni izvor elektronskega žarka.}
+	prednost temnih pred svetlimi, seštevanje obeh, kar je najbližje simulaciji, ali povprečje obeh pikslov,}
+\item{izbira sredinske točke odklona - izberemo, kje na sliki je središče vizualnega učinka - navidezni izvor elektronskega žarka.}
 \end{itemize}
-
 
 \subsection{Implementacija vtičnika}
 
-Vtičnik implementira odzive na ukazne izbirnike \verb!PF_Cmd_ABOUT!, \path{PF\_Cmd\_GLOBAL\_SETUP}, \verb!PF_Cmd_PARAMS_SETUP!,
-\verb!PF_Cmd_RENDER! in \path{PF\_UPDATE\_PARAMS\_UI}.
-Odziva na ukazna izbirnika \verb!PF_Cmd_ABOUT! in \path{PF\_Cmd\_GLOBAL\_SETUP} sta enaka kot pri vtičniku PixelRain, le da funkcija \verb!GlobalSetup! tudi
+Vtičnik implementira odzive na ukazne izbirnike \verb!PF_Cmd_ABOUT!, \path{PF_Cmd_GLOBAL_SETUP}, \verb!PF_Cmd_PARAMS_SETUP!,
+\verb!PF_Cmd_RENDER! in \path{PF_UPDATE_PARAMS_UI}.
+Odziva na ukazna izbirnika \verb!PF_Cmd_ABOUT! in \path{PF_Cmd_GLOBAL_SETUP} sta enaka kot pri vtičniku PixelRain, le da funkcija \verb!GlobalSetup! tudi
 opozori AE na to, da vtičnik implementira tudi odziv na ukazni izbirnik \verb!PF_UPDATE_PARAMS_UI!.
 
-Med upodabljanjem sličic se izračuna okdlon na podlagi svetlosti piskla, nato pa se piksel premakne na novo mesto.
-Pri tem je možno, da se na isto mesto mesto premakne več kot en piksel.
+Med upodabljanjem sličic se izračuna odklon na podlagi svetlosti piksla, nato pa se piksel premakne na novo mesto.
+Pri tem je možno, da se na isto mesto premakne več kot en piksel.
 To težavo rešujemo s prepisovanjem ali mešanjem obeh pikslov na tem mestu.
 Način delovanja izbere uporabnik.
 
 Zaradi premikanja pikslov stran od centra učinka se v izhodni sličici lahko pojavijo prazna območja brez pikslov.
-Uporabnik lahko izbere, da se ta območja zapolnijo, kar pa deluje le za manjše območja. 
+Uporabnik lahko izbere, da se ta območja zapolnijo, kar pa deluje le za manjša območja. 
 Prazna območja so velika, kadar je moč odklona velika. 
 V takih primerih zapolnjevanje slike nima velikega smisla in ni podprto.
-Ugotavljanje, kateri piksel manjka oziroma s kakšnimi piksli napolniti praznine s trenutno hitro implementacijo ni možno.
+Ugotavljanje, kateri piksel manjka oziroma s kakšnimi piksli napolniti praznine, s trenutno hitro implementacijo ni možno.
 Rešiti ta problem bi bilo zanimivo, najverjetneje bi bilo potrebno implementirati metanje žarkov v 3D prostoru.
 
 \subsubsection{Odziv na klic \texttt{PF\_Cmd\_PARAMS\_SETUP}}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=10cm]{img/elstaberrUI.png}
+\end{center}
+\caption{Uporabniški vmesnik za nastavljanje parametrov.}
+\label{ui2}
+\end{figure}
 
 Funkcija \verb!ParamsSetup! je enaka kot pri vtičniku PixelRain.
 V polje parametrov doda paramtre, ki jih vtičnik uporablja.
@@ -1206,7 +1257,7 @@ Da bo AE poslal ukazni izbirnik, zagotovimo z nastavitvijo zastavice \verb!PF_Pa
 Funkcija \verb!UpdateParamaterUI! se pokliče, kadar mora AE spremeniti uporabniški vmesnik vtičnika.
 To so lahko kompleksne spremembe, kot je dodajanje parametrov ali spreminjanje tipov parametrov, ali pa preproste,
 kot je na primer spreminjanje vrednosti parametrov.
-Klic lahko tudi programatsko sprožimo s pomočjo vgrajene funkcije.
+Klic lahko tudi programsko sprožimo s pomočjo vgrajene funkcije.
 
 Funkcijo \verb!UpdateParamaterUI! uporabimo, da nastavimo vrednost parametra za izbiro centra učinka,
 ko je velikost platna že znana.
@@ -1233,7 +1284,7 @@ Tako se izognemo neželjenim prednastavljenim vrednostim parametra.
 Funkcija \verb!Render! upodobi sličico korakoma.
 Najprej napolnimo celotno izhodno platno z barvo RGBA(1.0, 0.0, 1.0, 0.0).
 To so popolnoma prozorni piksli magenta barve.
-Ker so v AE piksli z alpha vrednostjo 0 vedno črne barve, nam bo to kaneje pomagalo zaznati nezapolnjene piksle.
+Ker so v AE piksli z alpha vrednostjo 0 vedno črne barve, nam bo to kasneje pomagalo zaznati nezapolnjene piksle.
 
 \begin{verbatim}
 static PF_Err
@@ -1298,7 +1349,7 @@ LumaAberratePixFunc8 (
     ...
 \end{verbatim}
 
-Če je izbran način polnjena praznin, se za vsak piksel preveri, če je prazen.
+Če je izbran način polnjenja praznin, se za vsak piksel preveri, če je prazen.
 Brez težav lahko ločimo nezapisane piksle, ki so bili na začetku označeni s prosojno magenta barvo.
 Če je piksel prazen, se poišče najbližji zapisan piksel v smeri proti centru učinka in prepiše na novo mesto.
 Pri tem iščemo le nekaj pikslov daleč, saj velikih lukenj ne polnimo.
@@ -1336,379 +1387,327 @@ Render (
     ...
 \end{verbatim}
 
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=10cm]{img/hills2.PNG}
+\end{center}
+\caption{Primer vhodne slike.}
+\label{orig1}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=10cm]{img/hills2ELSTABERR.PNG}
+\end{center}
+\caption{Primer slike z vizualnim učinkom, ki uporablja vtičnik ElStAberr.}
+\label{demo1}
+\end{figure}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%\chapter{od tu naprej je vzorec}
-%
-%Prvi koristen nasvet v zvezi uporabo \LaTeX{a} je, da ta dokument preberete v celoti!
-%
-%Datoteka {\tt vzorec\_dip\_Seminar.tex} na kratko opisuje, kako se pisanja diplomskega dela lotimo z uporabo programskega okolja \LaTeX~\cite{lamport,nenajkrajsi}. 
-%V tem dokumentu bomo predstavili nekaj njegovih prednosti in hib. Kar se slednjih tiče, nam pride na misel ena sama. 
-%Ko se srečamo z njim prvič nam izgleda morda kot kislo jabolko, nismo prepričani, ali bi želeli vanj ugrizniti. 
-%Toda prav iz kislih jabolk lahko pripravimo odličen jabolčni zavitek in s praktičnim preizkusom \LaTeX a najlažje pridemo na njegov pravi okus.
-%
-%\LaTeX\ omogoča logično urejanje besedil, ki ima v primerjavi z vizualnim urejanjem številne prednosti, saj se problema urejanja besedil loti s programerskega stališča.
-%Logično urejanje besedil omogoča večjo konsistentnost, uniformnost in  prenosljivost. Vsebinska struktura nekega besedila pa se odraža v strukturiranem \LaTeX ovem kodiranju besedila.
-%
-%V \ref{ch0}.~poglavju bomo spoznali osnovne gradnike \LaTeX{a}.
-%V \ref{ch1}.~poglavju bomo na hitro spoznali besedilne konstrukte kot so izreki, enačbe in dokazi. 
-%Naučili se bomo, kako se na njih sklicujemo. 
-%\ref{ch2}.~poglavje bo predstavilo vključevanje plovk: slik in tabel. 
-%Poglavje \ref{stroka} na kratko predstavi tipične sestavne dele strokovnega besedila.
-%V \ref{slo}.~poglavju omenjamo nekaj najpogostejših slovničnih napak, ki jih delamo v slovenščini.
-%V \ref{latex}.~poglavju je še nekaj koristnih nasvetov v zvezi z uporabo \LaTeX{a}.
-%V \ref{lit}.~poglavju se bomo srečali s sklicevanjem na literaturo,
-%\ref{PDF}.~poglavje pa govori o formatu PDF/A, v katerem morate svojo diplomo oddati v sistemu STUDIS.
-%Sledil bo samo še zaključek.
-%
-%\chapter{Osnovni gradniki \LaTeX{a}}
-%\label{ch0}
-%
-%\LaTeX\ bi lahko najbolj preprosto opisali kot programski jezik namenjen oblikovanju besedil.
-%Tako kot vsak visokonivojski programski jezik ima tudi \LaTeX\  številne ukaze za oblikovanje  besedila in okolja, ki omogočajo strukturiranje besedila.
-%
-%Vsi \LaTeX ovi ukazi se začnejo z levo poševnico  \verb=\=, okolja pa definiramo bodisi s parom zavitih oklepajev \{ in \} ali z ukazoma \verb=\begin{ }= in   \verb=\end{ }=.
-%Ukazi imajo lahko tudi argumente, obvezni argumenti so podani v zavitih oklepajih, opcijski argumenti pa v oglatih oklepajih.
-%
-%Z ukazi torej definiramo naslov in imena avtorjev besedila, poglavja in podpoglavja in po potrebi bolj podrobno strukturiramo besedila na spiske, navedke itd.
-%Posebna okolja so namenjena zapisu matematičnih izrazov, kratki primeri so v naslednjem poglavju.
-%
-%Vse besedilne konstrukte lahko poimenujemo in se s pomočjo teh imen nato  kjerkoli v besedilu na njih  tudi sklicujemo.
-%
-%\LaTeX\ sam razporeja besede v odstavke tako, da optimizira razmike med besedami v celotnem odstavku.
-%Nov odstavek začnemo tako, da izpustimo v izvornem besedilu prazno vrstico. Da besedilo skoči v novo vrstico pa ukažemo z dvema levima poševnicama.
-%Število presledkov med besedami v izvornem besedilo ni pomembno.
-%
-%
-%\chapter{Matematično okolje in sklicevanje na besedilne konstrukte}
-%\label{ch1}
-%
-%
-%
-%Matematična ali popolna indukcija je eno prvih orodij, ki jih spoznamo za dokazovanje trditev pri matematičnih predmetih.
-%\begin{izrek}
-%\label{iz:1}
-%Za vsako naravno število $n$ velja
-%\begin{equation}
-%n < 2^n.
-%\label{eq:1}
-%\end{equation}
-%\end{izrek}
-%\begin{dokaz}
-%Dokazovanje z indukcijo zahteva, da neenakost~\eqref{eq:1} najprej preverimo za najmanjše naravno število -- $0$. 
-%Res, ker je $0 < 1 = 2^0$, je neenačba~\eqref{eq:1} za $n=0$ izpolnjena.
-%
-%Sledi indukcijski korak. S predpostavko, da je neenakost~\eqref{eq:1} veljavna pri nekem naravnem številu $n$, je potrebno pokazati, da je ista neenakost v veljavi tudi pri njegovem nasledniku -- naravnem številu $n+1$. 
-%Računajmo.
-%\begin{align}
-%n+1 & < 2^n + 1       \label{eq:2}\\
-%       & \le 2^n + 2^n \label{eq:3}\\
-%       & = 2^{n+1}       \nonumber
-%\end{align}
-%Neenakost~\eqref{eq:2} je posledica indukcijske predpostavke, neenakost~\eqref{eq:3} pa enostavno dejstvo, da je za vsako naravno število $n$ izraz $2^n$ vsaj tako velik kot 1. 
-%S tem je dokaz Izreka~\ref{iz:1} zaključen.
-%\end{dokaz}
-%
-%Opazimo, da je \LaTeX\ številko izreka podredil številki poglavja.
-%Na podoben način se lahko sklicujemo tudi na druge besedilne konstrukte, kot so med drugim poglavja, podpoglavja in plovke, ki jih bomo spoznali v naslednjem poglavju.
-%
-%
-%\chapter{Plovke: slike in tabele}
-%\label{ch2}
-%
-%Slike in daljše tabele praviloma vključujemo v dokument kot plovke. 
-%Pozicija plovke v končnem izdelku ni pogojena s tekom besedila, temveč z izgledom strani. 
-%\LaTeX\ bo skušal plovko postaviti samostojno, praviloma na mestu, kjer se pojavi v izvornem besedilu, sicer pa na 
-%vrhu strani, na kateri se na takšno plovko prvič sklicujemo. 
-%Pri tem pa bo na vsako stran končnega izdelka želel postaviti tudi sorazmerno velik del besedila. 
-%V skrajnem primeru, če imamo res preveč plovk na enem mestu besedila, ali če je plovka previsoka, se bo \LaTeX\ odločil za stran popolnoma zapolnjeno s plovkami.
-%
-%Poleg tega, da na položaj plovke vplivamo s tem, kam jo umestimo v izvorno besedilo, lahko na položaj plovke na posamezni strani prevedenega besedila dodatno vplivamo z opcijami \texttt{here, top} in \texttt{bottom}.
-%Zelo velike slike je najbolje postaviti na posebno stran z opcijo \texttt{page}.
-%Skaliranje slik po njihovi širini lahko prilagodimo širini strani tako, da kot enoto za dolžino uporabimo kar širino strani, npr. \verb=0.5\textwidth= bo raztegnilo sliko na polovico širine strani.
-%
-%Na vse plovke se moramo v besedilu sklicevati, saj kot beseda pove, plovke plujejo po besedilu in se ne pojavijo točno tam, kjer nastopajo v izvornem besedilu.
-%Sklic na plovko v besedilu in sama plovka naj bosta čimbližje skupaj, tako da bralcu ne bo potrebno listati po diplomi. 
-%Upoštevajte pa, da se naloge tiska dvostransko in da se hkrati vidi dve strani v dokumentu!
-%Na to, kje se bo slika ali druga plovka pojavila v postavljenem besedilu torej najbolj vplivamo tako, da v izvorni kodi plovko premikamo po besedilu nazaj ali naprej!
-%
-%Tabele ja najbolje oblikovati kar neposredno v \LaTeX u, saj za oblikovanje tabel obstaja zelo fleksibilno okolje \texttt{tabular} (glej tabelo~\ref{tbl:1}).
-%Slike po drugi strani pa je bolje oblikovati oziroma izdelati z drugimi orodji in programi in se v \LaTeX u le sklicevati na ustrezno slikovno datoteko.
-%
-%
-%\section{Formati slik}
-%
-%Bitne slike, vektorske slike, kakršnekoli slike, z \LaTeX{}om lahko vključimo vse.
-%Slika~\ref{pic1} je v {\tt .pdf} formatu.
-%\begin{figure}[h]
-%\begin{center}
-%\includegraphics[width=0.6\textwidth]{pic1.pdf}
-%\end{center}
-%\caption{Herschelov graf, vektorska grafika.}
-%\label{pic1}
-%\end{figure}
-%Pa res lahko vključimo slike katerihkoli formatov? 
-%Žal ne. 
-%Programski paket \LaTeX\ lahko uporabljamo v več dialektih. 
-%Ukaz {\tt latex} ne mara vključenih slik v formatu Portable Document Format {\tt .pdf}, ukaz {\tt pdflatex} pa ne prebavi slik v Encapsulated Postscript Formatu {\tt .eps}.
-%Strnjeno v tabeli~\ref{tbl:1}.
-%
-%\begin{table}
-%\begin{center}
-%\begin{tabular}{l|ccc}
-%ukaz/format & {\tt .pdf} & {\tt .eps} & ostali formati \\ \hline
-%{\tt pdflatex} & da & ne & da \\
-%{\tt latex}   & ne & da  & da
-%\end{tabular}
-%\end{center}
-%\caption{}
-%\label{tbl:1}
-%\end{table}
-%
-%Nasvet? 
-%Odločite se za uporabo ukaza {\tt pdflatex}. Vaš izdelek bo brez vmesnih stopenj na voljo v {.pdf} formatu in ga lahko odnesete v vsako tiskarno. 
-%Če morate na vsak način vključiti sliko, ki jo imate v {\tt .eps} formatu, jo vnaprej pretvorite v alternativni format, denimo {\tt .pdf}.
-%
-%Včasih se da v okolju za uporabo programskega paketa \LaTeX\ nastaviti na kakšen način bomo prebavljali vhodne dokumente. 
-%Spustni meni na Sliki~\ref{pic2} odkriva uporabo \LaTeX{}a v njegovi pdf inkarnaciji --- {\tt pdflatex}.
-%\begin{figure}[t]
-%\begin{center}
-%\includegraphics[width=10cm]{pic2.png}
-%\end{center}
-%\caption{Kateri dialekt uporabljati?}
-%\label{pic2}
-%\end{figure}
-%Vključena Slika~\ref{pic2} je seveda bitna.
-%
-%Na vse slike in tabele se moramo v besedilu tudi sklicevati, saj kot plovke v oblikovanem besedilo niso nujno na istem mestu kot v izvornem besedilu.
-%
-%
-%\subsection{Podnapisi k slikam in tabelam}
-%
-%Vsaki sliki ali tabeli moramo dodati podnapis, ki na kratko pojasnuje, kaj je na sliki ali tabeli. 
-%Če nekdo le prelista diplomsko delo, naj bi že iz slik in njihovih podnapisov lahko na grobo razbral, kakšno temo naloga obravnava.
-%
-%Če slike povzamemo iz drugih virov, potem se moramo v podnapisu k taki sliki sklicevati na ta vir!
-%
-%
-%\chapter{Struktura strokovnih besedil}
-%\label{stroka}
-%
-%Strokovna besedila imajo ustaljeno strukturo, da bi lahko hitreje in lažje brali in predvsem razumeli taka besedila, saj načeloma vemo vnaprej, 
-%kje v besedilu se naj bi nahajale določene informacije.
-%
-%Najbolj osnove sestavine strokovnega besedila so:
-%\begin{description}
-%\item[naslov besedila,] ki naj bo sicer kratek, a kljub temu dovolj poveden o vsebini besedila,
-%\item[imena avtorjev] so običajno navedena po teži prispevka, prvi avtor je tisti, ki je besedilo dejansko pisal, zadnji pa tisti, ki je raziskavo vodil,
-%\item[kontaktni podatki] -- poleg imena in naslova institucije je potreben vsaj naslov elektronske pošte,
-%\item[povzetek] je kratko besedilo, ki povsem samostojno povzame vsebino in izpostavi predvsem  glavne rezultate ali zaključke,
-%\item[ključne besede] so tudi namenjene iskanju vsebin med množico člankov,
-%\item[uvodno poglavje] uvede bralca v tematiko besedila, razloži kaj je namen besedila, predstavi področje o katerem besedilo piše 
-%(če temu ni namenjeno v celoti posebno poglavje) ter na kratko predstavi strukturo celotnega besedila,
-%\item[poglavja] tvorijo zaokrožene celote, ki se po potrebi še nadalje členijo na podpoglavja, namenjena so recimo opisu orodij, 
-%ki smo jih uporabili pri delu, teoretičnim rezultatom ali predstavitvi rezultatov, ki smo jih dosegli,
-%\item[zaključek] še enkrat izpostavi glavne rezultate ali ugotovitve, jih primerja z dosedanjimi in morebiti poda tudi ideje za nadaljne delo,
-%\item[literatura] je seznam vseh virov, na katere smo se pri svojem delu opirali, oziroma smo se na njih sklicevali v svojem besedilu.
-%\end{description}
-%
-%Strokovna besedila običajno pišemo v prvi osebi množine, v nevtralnem in umirjenem tonu. 
-%Uporaba sopomenk ni zaželjena, saj želimo zaradi lažjega razumevanja za iste pojme vseskozi uporabljati iste besede.
-%Najpomenbnejše ugotovitve je smiselno večkrat zapisati, na primer v povzetku, uvodu, glavnem delu in zaključku.
-%Vse trditve naj bi temeljile bodisi na lastnih ugotovitvah (izpeljavah, preizkusih, testiranjih) ali pa z navajanjem ustreznih virov.
-%
-%Največ se lahko naučimo s skrbnim branjem dobrih zgledov takih besedil.
-%
-%
-%\chapter{Pogoste napake pri pisanju v slovenščini}  % poglavje dodal Solina
-%\label{slo}
-%
-%V slovenščini moramo paziti  pri uporabi pridevnikov, ki se ne sklanjajo kot so npr. kratice. 
-%Pravilno pišemo model CAD in \textbf{ne} CAD model!
-%
-%Pri sklanjanju tujih imen ne uporabljamo vezajev, pravilno je Applov operacijski sistem in \textbf{ne} Apple-ov.
-%
-%Pika, klicaj in vprašaj so levostični: pred njimi ni presledka, za njimi pa. 
-%Klicajev in vprašajev se v strokovnih besedilih načeloma izogibamo. Oklepaji so desnostični in zaklepaji levostični (takole).
-%
-%V slovenščini pišemo narekovaje drugače kot v angleščini!   
-%Običajno uporabljamo dvojne spodnje-zgornje narekovaje:  \sn{slovenski narekovaji}.
-%Za slovenske narekovaje je v tej predlogi definiran nov ukaz \verb+ \sn{ ... }+.
-%
-%Vezaj  je levo in desno stičen: \verb=slovensko-angleški slovar= in ga pišemo z enim pomišljajem.
-%
-%V slovenščini je pred in po pomišljaju presledek, ki ga v LaTeXu pišemo z dvema pomišljajema: \verb=Pozor -- hud pes!=
-%V angleščini pa je za razliko pomišljaj levo in desno stičen in se v LaTeXu piše s tremi  pomišljaji: \verb=---=.
-%S stičnim pomišljajem pa lahko nadomeščamo predlog od \dots do, denimo pri navajanju strani, npr. preberite strani 7--11 (\verb=7--11=).
-%
-%
-%
-%\sn{Pred ki, ko, ker, da, če vejica skače}. To osnovnošolsko pravilo smo v življenju po potrebi uporabljali, dopolnili, morda celo pozabili. 
-%Pravilo sicer drži, ampak samo če je izpolnjenih kar nekaj pogojev (npr. da so ti vezniki samostojni, enobesedni, ne gre za vrivek itd.).
-%Povedki so med seboj ločeni z vejicami, razen če so zvezani z in, pa, ter, ne–ne, niti–niti, ali, bodisi, oziroma.
-%Sicer pa je bolje pisati kratke stavke kot pretirano dolge.
-%
-%V računalništvu se stalno pojavljajo novi pojmi in nove besede, za katere pogosto še ne obstajajo uveljavljeni slovenski izrazi.
-%Kadar smo v dvomih, kateri slovenski izraz je primeren, si lahko pomagamo z Računalniškim slovarčkom~\cite{slovarcek}.
-%
-%
-%
-%
-%
-%\chapter{Koristni nasveti pri pisanju v \LaTeX{u}}   % poglavje dodal Solina
-%\label{latex}
-%
-%Programski paket \LaTeX\ je bil prvotno predstavljen v priročniku~\cite{lamport} in je v resnici nadgradnja sistema \TeX\ avtorja Donalda Knutha~\cite{knuth}, 
-%znanega po svojih knjigah o umetnosti programiranja, 
-%ter Knuth-Bendixovem algoritmu~\cite{knuth1983simple}.
-%
-%Različnih implementacij \LaTeX{}a je cela vrsta.
-%Za OS X priporočamo TeXShop, za Windows PC pa MikTeX. Spletna verzija, ki poenostavi sodelovanje pri pisanju, je npr. ShareLaTeX.
-%
-%Včasih smo si pri pisanju v \LaTeX{}u  pomagali predvsem s tiskanimi pri\-ro\-čni\-ki, danes pa je enostavneje in hitreje, da ob vsakem problemu za pomoč enostavno povprašamo Google, 
-%saj je na spletu cela vrsta forumov za pomoč pri \TeX{}iranju.
-%
-%\LaTeX\ včasih ne zna deliti slovenskih besed, ki vsebujejo črke s strešicami. 
-%Če taka beseda štrli preko desnega roba,  \LaTeX{}u pokažemo, kje lahko tako besedo deli, takole: \verb=ra\-ču\-nal\-ni\-štvo=.
-%Katere vrstice štrlijo preko desnega roba, se lahko prepričamo tako, da dokument prevedemo s vključeno opcijo \texttt{draft}: \verb=\documentclass[a4paper, 12pt, draft]{book}=.
-%
-%
-%Predlagamo, da v izvornem besedilu začenjate vsak stavek v novi vrstici, saj \LaTeX\ sam razporeja besede po vrsticah postavljenega besedila. 
-%Bo pa zato iskanje po izvornem besedilu in popravljanje veliko hitrejše. 
-%Večina sistemov za \TeX{}iranje sicer omogoča s klikanjem enostavno preklapljanje  iz prevedenega besedila na ustrezno mesto v izvornem besedilu in obratno.
-%
-%Boljšo preglednost dosežemo, tako kot pri pisanju programske kode, tudi z izpuščanjem praznih vrstic za boljšo preglednost strukture izvornega besedila.
-%
-%S pomočjo  okolja \verb=\begin{comment} ... \end{comment}= lahko  hkrati zakomentiramo več vrstic izvornega besedila.
-%
-%Pri spreminjanju in dodajanju izvornega besedila je najbolje pogosto prevajati, da se sproti prepričamo, če so naši nameni izpolnjeni pravilno.
-%
-%Kadar besedilo, ki je že bilo napisano z nekim vizualnim urejevalnikom (npr. z Wordom), želimo prenesti v \LaTeX, je tudi najbolje to delati postopoma s posameznimi bloki besedila, 
-%tako da lahko morebitne napake hitro identificiramo in odpravimo.
-%Za prevajanje Wordovih datotek v \LaTeX\ sicer obstajajo prevajalniki, ki pa običajno ne generirajo take čiste logične strukture besedila, kot jo  \LaTeX\ omogoča.
-%Hiter in enostaven način prevedbe besedila, ki  zahteva sicer ročne dopolnitve, poteka tako, da besedilo urejeno z vizualnim urejevalnikom najprej shranimo v formatu pdf, 
-%nato pa to besedilo uvozimo v urejevalnik, kjer urejamo izvorno besedilo v formatu \LaTeX.
-%
-%
-%\section{Pisave v \LaTeX u}
-%
-%V  \LaTeX ovem okolju lahko načeloma uporabljamo poljubne pisave. 
-%Izbira poljubne pisave pa ni tako enostavna kot v vizualnih urejevalnikih besedil.
-%Posamezne oblikovno medseboj usklajene pisave so običajno združene v družine pisav.
-%V \LaTeX u se privzeta družina pisav imenuje Computer Modern,
-%kjer so poleg navadnih črk (roman v \LaTeX u) na voljo tudi kurzivne črke (\textit{italic} v \LaTeX u), 
-%krepke (\textbf{bold} v \LaTeX u), kapitelke (\textsc{small caps} v \LaTeX u), linearne črke ({\textsf{san serif} v \LaTeX u),                                                                                                                                                                                                                                                                                                                           
-%in druge pisave.
-%V istem dokumentu zaradi skladnega izleda uporabljamo običajno le pisave ene družine. 
-%
-%Ko začenjamo uporabljati \LaTeX, je zato najbolj smiselno uporabljati kar privzete pisave, s katerimi je napisan tudi ta dokument.
-%Z ustreznimi ukazi  lahko nato preklapljamo med navadnimi, kurzivnimi, krepkimi in drugimi pisavami. 
-%Zelo enostavna je tudi izbira velikosti črk.
-%\LaTeX\  odlično podpira večjezičnost, tudi v sklopu istega dokumenta, saj obstajajo pisave za praktično vse jezike, tudi take, ki ne uporabljajo latinskih črk.
-%
-%Za prikaz programske kode se pogosto uporablja pisava, kjer imajo vse črke enako širino, kot so bile nekdaj črke na pisalnem stroju ({\texttt{typewriter} v \LaTeX u).
-%
-%Najbolj priročno okolje za pisanje kratkih izsekov programske kode je okolje \texttt{verbatim}, saj ta ohranja vizualno organizacijo izvornega besedila in ima privzeto pisavo pisalnega stroja.
-%
-%\begin{verbatim}
-%for (i = 0; i < 100; i++)
-%   for (j = i; j < 10; j++)
-%      some_function(i, j);
-%\end{verbatim}
-%
-%
-%\chapter{Kaj pa literatura?}
-%\label{lit}
-%
-%Kot smo omenili že v uvodu, je pravi način za citiranje literature uporaba \BibTeX{}a~\cite{bib}. 
-%\BibTeX\ zagotovi, da nobene obvezne informacije pri določeni vrsti literature ne izpustimo in da vse informacije o določeni vrsti vira dosledno navajamo na enak način.
-%
-%Osnovna ideja \BibTeX{a} je, da vse informacije o literaturi zapisujete v posebno datoteko, v našem primeru je to \texttt{literatura.bib}.
-%Vsakemu viru v tej datoteki določimo simbolično ime.
-%V  našem primeru je v tej datoteki nekaj najbolj značilnih zvrsti literature, kot so knjige~\cite{lamport}, 
-%članki v revijah~\cite{leonardo} in zbornikih konferenc~\cite{poglavje_springer}, 
-%spletni viri~\cite{bib,slovarcek,video}, 
-%tehnično poročilo~\cite{andersen2012kinect}, 
-%diplome~\cite{diploma} itd.
-%Diploma~\cite{diploma} iz leta 1990 je bila prva diploma na Fakulteti za elektrotehniko in računalništvo, ki je bila oblikovana z \LaTeX om!
-%
-%Po vsaki spremembi pri sklicu na literaturo moramo najprej prevesti izvorno besedilo s prevajalnikom \LaTeX, nato s prevajalnikom  \BibTeX, ki ustvari datoteko  {\tt vzorec\_dip\_Seminar.bbl}, in nato še dvakrat s prevajalnikom  \LaTeX.
-%
-%Kako natančno se spisek literature nato izpiše (ali po vrstnem redu sklicevanja, ali po abecedi priimkov prvih avtorjev, ali se imena avtorjev pišejo pred priimki itd.) je odvisno od stilske datoteke.
-%V diplomi bomo uporabili osnovno stilsko datoteko \texttt{plain}, ki vire razporedi po abecedi.
-%Zato je potrebno pri določenih zvrsteh literature, ki nima avtorjev, dodati polje \texttt{key}, ki določi vrstni red vira po abecedi.
-%
-%Z uporabo \BibTeX{a} v slovenščini je še nekaj nedoslednosti, saj so pomožne besede, ki jih \BibTeX\ sam doda,  kot so \textit{editor},  \textit{pages} in besedica  \textit{and} pred zadnjim avtorjem, 
-%če ima vir več avtorjev~\cite{andersen2012kinect}, zapisane v angleščini,
-%čeprav smo izbrali opcijo \texttt{slovene} pri paketu \texttt{babel}.
-%To nedoslednost je možno popraviti z ročnim urejanjem datoteke {\tt vzorec\_dip\_Seminar.bbl}, 
-%kar pa je smiselno šele potem, ko bibliografije v datoteki \texttt{literatura.bib} ne bomo več spreminjali,
-%oziroma ne bomo več dodajali novih sklicev na literaturo v izvornem besedilu.
-%Vsebino datoteke {\tt vzorec\_dip\_Seminar.bbl} lahko na koncu urejanja tudi vključimo kar v izvorno besedilo diplome, tako da je vso besedilo, vključno z literaturo, zajeto le v eni datoteki.
-%
-%Ko začenjamo uporabljati \BibTeX\ je lažje, če za urejanje datoteke .bib uporabljamo kar isti urejevalnik kot za urejanje datotek .tex, 
-%čeprav obstajajo tudi posebni urejevalniki oziroma programi za delo z \BibTeX om.
-%
-%Le če se bomo na določen vir v besedilu tudi sklicevali, se bo pojavil tudi v spisku literature.
-%Tako je avtomatično zagotovljeno, da se na vsak vir v seznamu literature tudi sklicujemo v besedilu diplome.
-%V datoteki \texttt{.bib} imamo sicer lahko veliko več virov za literaturo, kot jih bomo uporabili v diplomi.
-%
-%Vire v formatu \BibTeX\ lahko enostavno poiščemo in prekopiramo iz akademskih portalov za iskanje znanstvene literature v našo datoteko \texttt{.bib}, na primer v Google učenjaku.
-%Izvoz v Google učenjaku še dodatno poenostavimo, če v nastavitvah izberemo \BibTeX\ kot želeni format za izvoz navedb.
-%Navedbe, ki jih na tak način prekopiramo, pa moramo pred uporabo vseeno preveriti, saj so taki navedki običajno generirani povsem avtomatično.
-%
-%Pri sklicevanju na literaturo na koncu stavka pazite, da je pika po ukazu \verb=\cite{ }=.
-%Da \LaTeX\ ne bi delil vrstico ravno tako, da bi sklic na literaturo v oglatih oklepajih začel novo vrstico, lahko pred sklicem na literaturo dodamo nedeljiv presledek: \verb=~\cite{ }=.
-%
-%
-%\section{Izbiranje virov za spisek literature}
-%
-%Dandanes  se skoraj  vsi pri iskanju informacij vedno najprej lotimo iskanja preko svetovnega spleta.
-%Rezultati takega iskanja pa so pogosto spletne strani, ki danes obstajajo, jutri pa jih morda ne bo več, ali pa vsaj ne v taki obliki, kot smo jo prebrali.
-%Smisel navajanja literature pa je, da tudi po dolgih letih nekdo, ki bo bral vašo diplomo, lahko poišče vire, ki jih navajate v diplomi.
-%Taki viri pa so predvsem članki v znanstvenih revijah, ki se arhivirajo v knjižnicah, založniki teh revij pa večinoma omogočajo tudi elektronski dostop do arhiva vseh njihovih člankov.
-%
-%Znanstveni rezultati, ki so objavljeni v obliki recenziranih člankov, bodisi v konferenčnih zbornikih, še bolje pa v znanstvenih revijah, so veliko bolj izčiščen in zanesljiv vir informacij, saj
-%so taki članki šli skozi recenzijski postopek.
-%Zato na svetovnem spletu začenjamo iskati vire za strokovna besedila predvsem preko akademskih spletnih portalov, kot so npr. Google učenjak, Research Gate ali Academia, saj
-% so tam rezultati iskanja akademske publikacije.
-%Če je za dostop do nekega članka potrebno plačati, se obrnemo za pomoč in dodatne informacije na  našo knjižnico.
-%
-%Če res ne gre drugače, pa je pomembno, da pri sklicevanju na spletni vir, vedno navedemo tudi datum, kdaj smo dostopali do tega vira.
-%
-%
-%
-%\chapter{Sistem STUDIS in PDF/A}
-%\label{PDF}
-%
-%Elektronsko verzijo diplome moramo oddati preko sistema STUDIS v formatu PDF/A ~\cite{pdfa}.
-%Natančneje v formatu PDF/A-1b. 
-%
-%\LaTeX\ in omenjeni format imata še nekaj težav s sobivanjem. 
-%Paket \texttt{pdfx.sty}, ki naj bi \LaTeX{u} omogočal podporo formatu PDF/A ne deluje v skladu s pričakovanji. 
-%Ta predloga delno ustreza formatu, vsekakor dovolj, da jo študentski informacijski sistem sprejme. 
-%Znaten del rešitve je prispeval Damjan Cvetan.
-%
-%V predlogi, poleg izvornega  dokumenta \texttt{.tex} in vloženih slik \texttt{pic1.pdf} in \texttt{pic2.png}, 
-%potrebujemo še predlogo datoteke z metapodatki \texttt{pdfa-1b.xmp} in datoteko z barvnim profilom \texttt{sRGBIEC1966-2.1.icm}.
-%
-%
-%
-%
-%\chapter{Sklepne ugotovitve}
-%
-%Uporaba \LaTeX{a} in \BibTeX{a} je v okviru Diplomskega seminarja \textbf{obvezna}!
-%Izbira \LaTeX\ ali ne \LaTeX\ pri pisanju dejanske diplomske naloge pa je pre\-pu\-šče\-na dogovoru med vami in vašim mentorjem.
-%
-%Res je, da so prvi koraki v \LaTeX{}u težavni. 
-%Ta dokument naj vam služi kot začetna opora pri hoji.
-%Pri kakršnihkoli nadaljnih vprašanjih ali napakah pa svetujem uporabo Googla, saj je spletnih strani za pomoč pri odpravljanju težav pri uporabi \LaTeX{}a ogromno.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=10cm]{img/test2.PNG}
+\end{center}
+\caption{Primer vhodne slike.}
+\label{orig1}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=10cm]{img/test2ELSTABERR.PNG}
+\end{center}
+\caption{Primer preoblikovanja vizualnih elementov z vtičnikom ElStAberr.}
+\label{demo1}
+\end{figure}
 
 
-\newpage %dodaj po potrebi, da bo številka strani za Literaturo v Kazalu pravilna!
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=10cm]{img/todo.PNG}
+\end{center}
+\caption{Primer vhodne slike.}
+\label{orig1}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=10cm]{img/todoELSTABERR.PNG}
+\end{center}
+\caption{Primer slike z dodano globino oziroma učinkom reliefnega tiska, narejene s pomočjo vtičnika ElStAberr.}
+\label{demo1}
+\end{figure}
+
+%\newpage
+
+\section{Vtičnik MirrorMosaic}
+
+\subsection{Razvoj ideje}
+
+Idejo za vtičnik je prispeval umetnik Vanja Mervič.
+Gre za digitalni vizualni učinek, ki sestavi video iz več kopij dela videa.
+Vsak naslednji video je za nekaj sličic zamaknjen v času in prezrcaljen.
+Rezultat je delno simetričen video mozaik.
+
+\subsection{Implementacija vtičnika}
+
+Vtičnik MirrorMosaic je strukturno enak vtičniku PixelRain.
+Vtičnik deluje tako, da na podlagi uporabniško izbranih parametrov najprej sestavi sliko iz delov, nato pa prezrcali željene dele slike.
+Vtičnik mora za implementacijo časovnega zamika dostopati do sličic videa ob različnih časih.
+V AE je vsaka sličica videa iz vhodne datoteke dekodirana, kadar se jo potrebuje, saj nestisnjen video zavzame veliko preveč spomina, da bi lahko bil v celoti naložen.
+Do sličic videa ob drugih časih, kot je truntni\footnote{Trenutni čas je čas sličice, ki jo obdelujemo.}, dostopamo s temu namenjenimi funkcijami. 
+Pomembno je, da pazljivo delamo s pomnilnikom, ki se lahko hitro zapolni in sesuje vtičnik ali celo program AE.
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=10cm]{img/mirrormosaicUI.png}
+\end{center}
+\caption{Uporabniški vmesnik za nastavljanje parametrov.}
+\label{ui3}
+\end{figure}
+
+\subsubsection{Odziv na ukazni izbirnik \texttt{PF\_Cmd\_GLOBAL\_SETUP}}
+
+Funkcija \texttt{GlobalSetup} je enaka kot pri drugih vtičnikih, s to razliko, da mora vtičnik opozoriti gostitelja na to, da dostopa do sličic v \sn{ne-trenutnem času}.
+Če bi vtičnik podprl barve z globino 32bit na kanal v plavajoči vejici, bi za povečanje hitrosti delovanja nastavil še zastavico, ki AE prisili v predčasno nalaganje sličic.
+Za video manjše barvne globine to ni podprto.
+
+\begin{verbatim}
+    ...
+    // using frames from other times, not just current_time
+    out_data->out_flags = PF_OutFlag_WIDE_TIME_INPUT; 
+    // for 32bpc float colors, unsuported
+    //out_data->out_flags2 = PF_OutFlag2_AUTO_WIDE_TIME;
+    ...
+\end{verbatim}
+
+\subsubsection{Odziv na ukazni izbirnik \texttt{PF\_Cmd\_RENDER}}
+
+Funkcija \texttt{Render} na podlagi vhodnih parametrov pripravi pravokotnik, ki predstavlja eno kopija videa v končnem mozaiku.
+Velikost se preprosto izračuna na podlagi željenega števila horizontalnih in vertikalnih ponovitev.
+
+\begin{verbatim}
+    ...
+    /* 1. Grid setup */
+    int gridX, gridY;
+    gridX = (int)params[MIRR_GRIDX]->u.fs_d.value;
+    gridY = (int)params[MIRR_GRIDY]->u.fs_d.value;
+    int dX = output->width / gridX; // width of rect
+    int dY = output->height / gridY; // height of rect
+    PF_Rect in_rect = { 0, 0, dX, dY }; // rect coords type: A_long
+    ...
+\end{verbatim}
+
+Naslednji korak je kopiranje vhodnega videa po platnu.
+To opravimo v zanki, v kateri s pomočjo makra \texttt{PF\_CHECKOUT\_PARAM} dostopamo do vhodnega videa ob poljubnem času.
+Za vsako kopijo izračunamo koordinate izhodnega območja in relativen zamik v času.
+V ciljno območje prepišemo sličico.
+Če je časovni zamik večji kot preostala dolžina videa, pustimo območje prazno.
+S tem omogočimo uporabo učinka za generiranje neopazno ponavljajočega se videa v AE.
+Po zaključku izvajanja zanke je video sestavljen kot mozaik časovno zamaknjenih kopij sebe.
+
+\begin{verbatim}
+    /* 2. LOOP: checkout frame, place and mirror */
+    PF_ParamDef checkout; // layer from time+dT goes here
+    AEFX_CLR_STRUCT(checkout);
+
+    int dT = (int)params[MIRR_DT]->u.fs_d.value;
+    int iX, iY;
+    for (iX = 0; iX < gridX; iX++) { 
+        for (iY = 0; iY < gridY; iY++) { 
+            int deltaT = 0;
+            if (params[MIRR_MIRRDIR]->u.pd.value == MIRR_HOR) {
+                deltaT = dT * iX;
+            }
+            else {
+                deltaT = dT * iY;
+            }
+            // checkout from time
+            AEFX_CLR_STRUCT(checkout);
+            ERR(PF_CHECKOUT_PARAM(
+                in_data,
+                MIRR_LAYER,
+                (in_data->current_time + deltaT * in_data->time_step),
+                in_data->time_step,
+                in_data->time_scale,
+                &checkout));
+
+            if (!err) {
+                // prepare dest rect
+                dest_rect.left = iX * dX;
+                dest_rect.right = (iX + 1) * dX;
+                dest_rect.top = iY * dY;
+                dest_rect.bottom = (iY + 1) * dY;
+
+                // place rect if frame exists
+                if (checkout.u.ld.data) {
+                    // first copy, then mirror
+                    ERR(suites.WorldTransformSuite1()->copy(
+                        in_data->effect_ref,
+                        &checkout.u.ld,
+                        output,
+                        &in_rect,
+                        &dest_rect));
+                    
+                }
+                // if frame not exist, empty black instead
+                else {
+                    ERR(PF_FILL(NULL, &dest_rect, output)); 
+                      // NULL = RGBA(0,0,0,0)
+                    continue;
+                }
+            }
+            // every checkout must be checked-in
+            PF_CHECKIN_PARAM(in_data, &checkout);
+        }
+    }
+\end{verbatim}
+
+Naslednji korak, zrcaljenje, je implementiran z dvema funkcijama za piksle, \texttt{MirrorHorPixFunc8(...)} in \texttt{MirrorHorPixFunc8(...)}.
+Razlog za ločeno implementacijo horizontalnega in vertikalnega zrcaljenja je večja enostavnost kode.
+Tako je tudi nadgradnja učinka, da bi omogačal zrcaljenje v obe smeri hkrati, preprosta.
+
+Delovanje obeh funkcij je podobno.
+Za vhodni piksel se na podlagi njegovih koordinat izračuna, če ga je potrebno zrcaliti ali ne.
+Preveri se, v katerem pravokotnem območju se nahaja.
+V tem območju se nato izračunajo njegove relativne koordinate in nove koordinate po zrcaljenju.
+Piksel se nato prepiše v izhodno območje. 
+Da ne pride do napak tipa pisanje pred branjem ali pisanje pred pisanjem, morata biti vhodno in izhodno platno različni.
+To sicer porabi nekaj dragocenega pomnilniškega prostora, ki pa ga kmalu sprostimo.
+
+\begin{verbatim}
+static PF_Err
+MirrorHorPixFunc8(
+    void        *refcon, // MirrorInfo
+    A_long      xL, 
+    A_long      yL, 
+    PF_Pixel8   *inP, // unused
+    PF_Pixel8   *outP) // only outP is writable
+{
+    PF_Err      err = PF_Err_NONE;
+    MirrorInfo *miP = (MirrorInfo*)refcon;
+    PF_InData *in_data = miP->in_data;
+    PF_Pixel8 *inpixP = NULL;
+    PF_LayerDef *input = (PF_LayerDef*)miP->input;
+    int newX = xL;
+    int newY = yL;
+    
+    int rectWidth = miP->rect->right - miP->rect->left;
+    int rectNoX = xL / rectWidth; // starting at 0
+    int rectHeight = miP->rect->bottom - miP->rect->top;
+    int rectNoY = yL / rectHeight; // starting at 0
+
+    if (rectNoX % 2 == 1) {
+        int relX = xL % rectWidth;
+        newX = xL + rectWidth - 2 * relX;
+    }
+
+    ERR(PF_GET_PIXEL_DATA8(miP->input, NULL, &inpixP));
+    if (!err) {
+        inpixP += newY * miP->input->rowbytes / sizeof(PF_Pixel8) + newX;
+        outP->alpha = inpixP->alpha;
+        outP->red = inpixP->red;
+        outP->green = inpixP->green;
+        outP->blue = inpixP->blue;
+    }
+    
+    return err;
+}     
+\end{verbatim}
+
+Vtičniku bi bilo za lepši rezultat treba dodati nekaj funkcij, kot so mehčanje prehodov med posameznimi kopijami videa in bolj zanesljivo zrcaljenje 
+- trenutna implementacija za nekatere nastavitve parametrov ne producira pravilnih rezultatov. 
+
+\newpage
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=10cm]{img/naziflower.PNG}
+\end{center}
+\caption{Primer vhodne slike.}
+\label{orig3}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=10cm]{img/naziflowerMIRRORMOSAIC.PNG}
+\end{center}
+\caption{Primer slike, ustvarjene z vtičnikom MirrorMosaic brez časovnega zamika.}
+\label{demo3}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=10cm]{img/microbubble.PNG}
+\end{center}
+\caption{Primer vhodne slike.}
+\label{orig4}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=10cm]{img/microbubbleMIRRORMOSAIC.PNG}
+\end{center}
+\caption{Primer slike, ustvarjene z vtičnikom MirrorMosaic s časovnim zamikom.}
+\label{demo4}
+\end{figure}
+
+
+\chapter{Zaključek in ugotovitve}
+
+Tekom dela smo opravili pregled zgodovinskega razvoja vizualnih učinkov skozi razvoj različnih tehnologij.
+Novi vizualni učinki so se ponavadi razvijali na osnovi starejših, po namenu podobnih.
+Nove tehnologije so skozi zgodovino prinašale nove metode dela z vizualnimi učinki.
+Na primeru razlike med uporabo vizualnih učinkov v filmu in videu je očitno,
+kako se tehnološka razlika pozna tudi v umetniški uporabi medija.
+Film, katerega uporaba je zaradi tehnoloških omejitev draga in časovno potratna, se uporablja za pripovedovanje zgodb.
+Skozi leta se je razvijala kvaliteta slike, zvoka, filmski jezik se je razvijal in vizualni učinki so postajali bolj in bolj prepričljivi.
+Video se je zaradi lastnosti medija in tehnoloških možnosti in omejitev razvijal v drugo smer.
+Uporabljal se je za izdelavo avtorskih umetniških izdelkov, ki so raziskovali meje tehnologije in umetniškega izražanja skozi eksperimentiranje.
+Pojav in hiter razvoj digitalnega videa je oba pristopa približal.
+Danes se digitalni video uporablja v filmskem svetu in kot video v umetniških produkcijah.
+Razvil je tudi lasten izrazni jezik, ki pa je marsikaj prevzel iz filmskega jezika in tudi videa.
+
+Razvili smo tri vtičnike za vizualne efekte.
+Prvi, ki smo ga zaradi načina delovanja poimenovali PixelRain, omogoča kontrolirano ustvarjanje vizualnih artefaktov.
+Piksle, ki jih lahko izberemo na podlagi barve, kopira navzdol in s tem prepisuje druge piksle.
+S pomočjo tehnik sestavljanja vizualnih učinkov, ki jih ponuja AE, lahko sledem tudi spremenimo smer.
+
+Drugi vtičnik je poimenovan ElStAberr.
+Inspiriral ga pojav, imenovan elektrostatični odklon (ang. {\it electro static aberration}).
+Deluje tako, da premika piksle stran alin proti izbranemu centru učinka, s tem da močneje deluje na svetlejše piksle.
+Z njim lahko dosežemo različne vizualne rezultate, na primer ustvarimo iluzijo reliefnega tiska ali oblikujemo slike s pomočjo pazljivega nadzora nad svetlostjo delov slike.
+
+Tretji vtičnik smo poimenovali MirrorMosaic, saj sestavi platno iz večih kopij videa, ki so zrcaljnene, tako da dobimo vtis simetrije.
+Vtičnik različne kopije videa zamakne v času.
+Z njegovo pomočjo lahko ustvarjamo različne vdeo tapete in animirane vzorce.
+Namenjen je delu videa, ki se ga lahko neopazno zanka.
+
+Razvoj digitalnih vizualnih učinkov je zanimiv tako s tehnološkega vidika kot z izraznega.
+Pomembno je, da digitalni vizualni učinki niso končni cilj ampak le orodje, ki ga uporabljamo za oblikovanje digitalnega videa.
+Veselim se dela z vtičniki, ki sem jih razvil, tudi s tega vidika - ne le razvoja, temveč tudi prihodnje uporabe,
+saj so vsi razviti vtičniki uporabni in jih bom vprihodnje naprej razvijal in tudi uporabljal.
+
+Primerjava z vtičniki vgrajenimi v AE je pokazala, da se izvajajo približno enako hitro in zasedejo primerljivo količino pomnilnika.
+Eksplicitno se z optimizacijo nisem ukvarjal, sem pa pri implementaciji ves čas imel hitrost izvajanja v mislih.
+Pri razvoju programske opreme, ki se ukvarja z videom, je pravilno delo s pomnilnikom ključnega pomena,
+saj je video po naravi pomnilniško zahteven.
+Vsaka napaka pri delu s pomnilnikom se je med razvojem pokazala med uporabo kot izjemno počasno delovanje ali pa sesutje vtičnika,
+programa in v redkih primerih celotnega sistema že po nekaj obdelanih sličicah.
+
+Delo z AE SDK je zanimivo, med drugim zato, ker ima zelo veliko podporo za podporo starejših verzij programa AE.
+Tako lahko skozi uporabo AE SDK vidimo tudi razvoj programa gostitelja skozi leta.
+Vse, ki jih razvoj vtičnikov za AE zanima, pa bi rad opozoril na to, da je priročnik \cite{aesdk} mestoma zastarel in celo napačen.
+Marsikateri podatek manjka in veliko sem odkril eksperimentalno.
+
+Celotna programska koda je na voljo na naslovu \url{https://github.com/majthehero/glitchFXdev} in prek programa Git na naslovu \url{https://github.com/majthehero/glitchFXdev.git}
+
+%% no cite
+\nocite{manovichnewmedia}
+
+
+%\newpage %dodaj po potrebi, da bo številka strani za Literaturo v Kazalu pravilna!
 \ \\
 \clearpage
 \addcontentsline{toc}{chapter}{Literatura}
