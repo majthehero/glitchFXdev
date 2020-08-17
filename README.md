@@ -15,4 +15,6 @@ Thesis text. I'll probably start by typing txt files and then edit them using La
 Overly fancy folder name for 'other' 
 
 ###### Who am I
-Maj Smerkol, currently working on this ^.
+Maj Smerkol, bc comp sci
+"Jožef Stefan" institute, Ljubljana, Slovenia
+Department of Intelligent Systems
