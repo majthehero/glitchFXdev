@@ -17,4 +17,5 @@ Overly fancy folder name for 'other'
 ###### Who am I
 Maj Smerkol, bc comp sci
 "Jožef Stefan" institute, Ljubljana, Slovenia
+
 Department of Intelligent Systems
